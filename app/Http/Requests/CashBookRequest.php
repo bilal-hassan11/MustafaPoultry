@@ -25,12 +25,12 @@ class CashBookRequest extends FormRequest
     {
         return [
             'date'     => ['required', 'date'],
-            'bil_no'          => [ 'integer', 'min:0'],
+            'bil_no'          => [ 'string'],
             'narration'           => ['nullable', 'string'],
             'account_id'        => ['required', 'string'],
             'payment_ammount'    => [ 'integer'],
             'receipt_ammount'    => [ 'integer'],
-            'status'       => ['required', 'string', 'min:0'],
+            'status'       => ['string'],
             'remarks'           => ['nullable', 'string'],
         ];
     }

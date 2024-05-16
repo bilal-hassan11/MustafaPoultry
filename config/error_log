@@ -1,0 +1,184 @@
+[31-May-2023 00:02:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/session.php on line 21
+[31-May-2023 00:02:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/session.php on line 21
+[31-May-2023 00:02:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/session.php on line 21
+[31-May-2023 00:02:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/session.php on line 21
+[31-May-2023 00:02:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function storage_path() in /home3/poultryt/public_html/FeedSystem/config/dompdf.php:48
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/dompdf.php on line 48
+[31-May-2023 00:02:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function storage_path() in /home3/poultryt/public_html/FeedSystem/config/dompdf.php:48
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/dompdf.php on line 48
+[31-May-2023 00:02:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function storage_path() in /home3/poultryt/public_html/FeedSystem/config/dompdf.php:48
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/dompdf.php on line 48
+[31-May-2023 00:02:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function storage_path() in /home3/poultryt/public_html/FeedSystem/config/dompdf.php:48
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/dompdf.php on line 48
+[31-May-2023 00:02:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php on line 18
+[31-May-2023 00:02:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php on line 18
+[31-May-2023 00:02:56 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php on line 18
+[31-May-2023 00:03:04 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem/config/broadcasting.php on line 18
+[03-Aug-2023 09:40:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/services.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/services.php on line 18
+[03-Aug-2023 09:40:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/session.php on line 21
+[03-Aug-2023 09:44:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/app.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/app.php on line 18
+[03-Aug-2023 09:45:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/broadcasting.php on line 18
+[03-Aug-2023 09:46:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/cache.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/cache.php on line 18
+[03-Aug-2023 09:47:45 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/database.php on line 18
+[03-Aug-2023 09:48:09 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function storage_path() in /home3/poultryt/public_html/FeedSystem22/config/dompdf.php:48
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/dompdf.php on line 48
+[03-Aug-2023 09:48:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/filesystems.php:16
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/filesystems.php on line 16
+[03-Aug-2023 09:48:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/hashing.php:32
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/hashing.php on line 32
+[03-Aug-2023 09:49:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/jwt.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/jwt.php on line 18
+[03-Aug-2023 09:49:20 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function resource_path() in /home3/poultryt/public_html/FeedSystem22/config/livewire.php:30
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/livewire.php on line 30
+[03-Aug-2023 09:49:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function config() in /home3/poultryt/public_html/FeedSystem22/config/log-viewer.php:26
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/log-viewer.php on line 26
+[03-Aug-2023 09:49:55 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/logging.php:20
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/logging.php on line 20
+[03-Aug-2023 09:50:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/mail.php:16
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/mail.php on line 16
+[03-Aug-2023 09:50:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/queue.php:16
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/queue.php on line 16
+[03-Aug-2023 09:53:09 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function resource_path() in /home3/poultryt/public_html/FeedSystem22/config/view.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/view.php on line 17
+[03-Aug-2023 10:05:05 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/sanctum.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/sanctum.php on line 18
+[03-Aug-2023 10:12:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/session.php on line 21
+[03-Aug-2023 10:13:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/services.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/services.php on line 18
+[03-Aug-2023 10:47:10 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function resource_path() in /home3/poultryt/public_html/FeedSystem22/config/view.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/view.php on line 17
+[03-Aug-2023 10:47:21 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/queue.php:16
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/queue.php on line 16
+[03-Aug-2023 10:47:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/mail.php:16
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/mail.php on line 16
+[03-Aug-2023 10:47:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/logging.php:20
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/logging.php on line 20
+[03-Aug-2023 10:47:55 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function config() in /home3/poultryt/public_html/FeedSystem22/config/log-viewer.php:26
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/log-viewer.php on line 26
+[03-Aug-2023 10:48:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function resource_path() in /home3/poultryt/public_html/FeedSystem22/config/livewire.php:30
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/livewire.php on line 30
+[03-Aug-2023 10:48:16 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/jwt.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/jwt.php on line 18
+[03-Aug-2023 10:48:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/hashing.php:32
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/hashing.php on line 32
+[03-Aug-2023 10:48:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/filesystems.php:16
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/filesystems.php on line 16
+[03-Aug-2023 10:48:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function storage_path() in /home3/poultryt/public_html/FeedSystem22/config/dompdf.php:48
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/dompdf.php on line 48
+[03-Aug-2023 10:48:46 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/database.php on line 18
+[03-Aug-2023 10:48:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/cache.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/cache.php on line 18
+[03-Aug-2023 10:49:00 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/broadcasting.php on line 18
+[03-Aug-2023 10:49:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/app.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/app.php on line 18
+[03-Aug-2023 10:50:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home3/poultryt/public_html/FeedSystem22/config/sanctum.php:18
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/config/sanctum.php on line 18

@@ -42,7 +42,7 @@ table, th, td {
   <h2 class="text-decoration-underline" style=" margin-left:58px; float:left; display:center;"> <u>Bilal Feed</u> | <u>Ledger Statement</u></h2>
     <br /><br /><br /><br /><br />
     <div>
-    <img src="{{ ('admin_assets') }}/images/m1.png" style="width:40px; height:40px; margin-left:-250px;" alt=""><h4 style="color:green; margin-left:-70px;">{{$item_name->name}} {{$days}} Days</h4>
+    <img src="{{ ('admin_assets') }}/images/m1.png" style="width:40px; height:40px; margin-left:-250px;" alt=""><h4 style="color:green; margin-left:-70px;">{{$account_name[0]->name}} {{$days}} Days</h4>
     
     </div>
     <p>From {{$from_date}} to {{$to_date}}</p>
@@ -82,7 +82,7 @@ table, th, td {
           <td >{{ $purchase->vehicle_no }}</td>
 
           <td >{{ $purchase->account->name }}</td>
-          <td>{{ $purchase->item->name }}</td>
+          <td>{{ @$purchase->item->name }}</td>
           <td>{{ $purchase->posted_weight }}</td>
           <td>{{ $purchase->bag_rate }}</td>
           <td></td>

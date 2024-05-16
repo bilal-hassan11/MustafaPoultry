@@ -9,10 +9,14 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    public function index(){
+    public function index(Request $req){
         $data = array(
             'title'     => 'Accounts',
-            'accounts'  => Account::with(['grand_parent', 'parent'])->latest()->get(),
+            'grand_parent' => AccountType::whereNull('parent_id')->get(),
+            'accounts'  => Account::with(['grand_parent', 'parent'])->when(isset($req->parent_id), function($query) use ($req){
+                                    $query->where('parent_id', hashids_decode($req->parent_id));
+                                })->latest()->get()->sortBy('name'),
+            
         );
         return view('admin.account.index')->with($data);
     }
@@ -22,9 +26,12 @@ class AccountController extends Controller
             'title' => 'Add Accounts',
             'grand_parent_id'=> $grand_parent_id,
             'parent_id'     => $parent_id,
+            'accounts'  => Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name'),
             'grand_parent'=> AccountType::where('id',hashids_decode($grand_parent_id))->get(),
             'parent'     => AccountType::where('id',hashids_decode($parent_id))->get(),
             'grand_parents' => AccountType::whereNull('parent_id')->get(),
+            'account_types' => AccountType::whereNull('parent_id')->get(), 
+        
         );
         return view('admin.account.add')->with($data);
     }
@@ -63,6 +70,10 @@ class AccountController extends Controller
         $data = array(
             'title' => 'Edit Account',
             'grand_parent' => AccountType::whereNull('parent_id')->get(),
+            'accounts'  => Account::with(['grand_parent', 'parent'])->latest()->get(),
+            
+            'account_types' => AccountType::whereNull('parent_id')->get(), 
+
             'edit_account'  => Account::findOrFail(hashids_decode($id)),
             'is_update'     => true
         );

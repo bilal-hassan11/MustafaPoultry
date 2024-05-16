@@ -25,7 +25,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="name">Name<span class="text-danger">*</span></label>
-                                <input type="text" name="name" parsley-trigger="change" data-parsley-required placeholder="Enter first name" class="form-control" id="name" value="{{ $user->name ?? '' }}">
+                                <input type="text" name="name" parsley-trigger="change" data-parsley-required placeholder="Enter first name" class="form-control" id="name" value="{{ $user->first_name ?? '' }}">
                             </div>
                         </div>
 
@@ -45,26 +45,11 @@
                             </div>
                         </div>
 
-                        {{-- <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="Discipline">Discipline<span class="text-danger">*</span></label>
-                                 
-                                <select class="form-control select2" name="discipline"  id="discipline" required>
-                                    <option value="" disabled {{!isset($user) ?'selected' : ''}}>Select Discipline</option>
-                                    
-                                    @foreach ($discipline as $key=>$val)
-                                        <option value="{{$val->id}}" {{($val->id==@$user->discipline) ? 'selected' : '' }}>{{$val->discipline}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
+                        
                     </div>
                 </div>
 
-                {{-- <div class="form-group mb-3">
-                    <label for="last_name">Last Name<span class="text-danger">*</span></label>
-                    <input type="text" name="last_name" parsley-trigger="change" data-parsley-required placeholder="Enter last name" class="form-control" id="last_name" value="{{ $user->last_name ?? '' }}">
-                </div> --}}
+                
                 <br />
                  <div class="form-group mb-3">
                     <label for="user_type">User Type<span class="text-danger">*</span></label>
@@ -76,7 +61,7 @@
                 </div> <br />
                 <input type="hidden" value='normal' name="user_type">
 
-                <div class="form-group " >
+                <div class="form-group col-md-12" >
                     <label for="permissions">User Permissions</label>
                     <select class="form-control select2" multiple name="permissions[]" >
                         @foreach ($permissions as $permission)

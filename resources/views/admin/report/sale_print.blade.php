@@ -1,120 +1,145 @@
-<!-- This site is developed by Alphinex solutions {alphinex.com} -->
-<!DOCTYPE html>
-
-<html lang="en" class="loading">
-
-<head>
-<style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ledger</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <style>
+       .challan_details {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+    margin: 25px 0px;
+    width: 100%;
 }
-</style>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-
-    <meta name="author" content="Bilal Feed">
-
-    <title> "Accounts"</title>
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
-    <meta name="apple-touch-fullscreen" content="yes">
-
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+.bottom{
+    margin-top: 100px;
+}
+p{
+    font-size: 14px;
+}
+h3{
+    margin-top: 50px;
+    text-decoration: underline;
+}
+h4{
+    margin-top: 15px;
+}
+h5{
+    margin: 30px 0px;
+    color: rgb(24, 94, 225);
+    font-size: 18px;
+}
+    </style>
   </head>
+  <body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="challan_wrapper">
+                    <h3 class="text-center">SONA FEEDS | Ledger Statement</h3>
+                    <h4 class="text-center"><i class="bi bi-people-fill"></i>ASLAM MEMON 40 DAYS</h4>
+                  
+                    <h5 class="text-center">From 15-May-2022 to 30-Jun-2022</h5>
 
-  <body data-col="2-columns" class=" 2-columns ">
+                    <h6 class="text-end">Balance: 30,322,090 Dr.</h6>
+                  
 
+                    <table class="table table-bordered border-primary">
+                       <thead>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                       </thead>
+                       <tbody>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>Opening Balance</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[603] ANEES NATHANI KARACHI (Brokery + U.O) *PLANT MEAL CREDITORS* , Instrument
+                                    No.AL Habib 13/5</td>
+                                <td>0</td>
+                                <td>1,000,000</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[1483] Ocean Commodity Broker *RICE AND MAIZE CREDITORS* , Instrument No.Al Habib Chq
+                                    21/5 via HMB</td>
+                                <td>783,783</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
 
-</div>
-    <div class="wrapper">
-<div class="main-content">
-<img src="{{ ('new_assets') }}/images/main-logo.jpeg" style="width:120px; height:120px; float:left; margin-left:18px; " alt="">
-  <br />
-  
-<center>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[1483] Ocean Commodity Broker *RICE AND MAIZE CREDITORS* , Instrument No.Al Habib Chq
+                                    21/5 via HMB</td>
+                                <td>783,783</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
 
-    
-  <h2 class="text-decoration-underline" style=" margin-left:58px; float:left; display:center;"> <u>Bilal Feed</u> | <u>Ledger Statement</u></h2>
-    <br /><br /><br /><br /><br />
-    <div>
-    <img src="{{ ('admin_assets') }}/images/m1.png" style="width:40px; height:40px; margin-left:-250px;" alt=""><span style="margin-top:-120px">{{$account_name->name}}</span><h4 style="color:green; margin-left:-70px;">{{$item_name->name}} {{$days}} Days</h4>
-    
-    </div>
-    <p>From {{$from_date}} to {{$to_date}}</p>
-</center>
-<div class="row">
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title"></h4>
-      </div>
-      <div class="card-body">
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[1483] Ocean Commodity Broker *RICE AND MAIZE CREDITORS* , Instrument No.Al Habib Chq
+                                    21/5 via HMB</td>
+                                <td>783,783</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
 
-        <div class="card-block mcontainer">
-        <table class="table dt_table table-bordered w-100 nowrap" id="laravel_datatable" style="border: 1px;">
-    <thead>
-        <tr style="background-color:black;">
-            <th style="color:white;">Id.No</th>
-            <th style="color:white;">Date</th>
-            <th style="color:white;">GP.No</th>
-            <th style="color:white;">Vehicle No</th>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[1483] Ocean Commodity Broker *RICE AND MAIZE CREDITORS* , Instrument No.Al Habib Chq
+                                    21/5 via HMB</td>
+                                <td>783,783</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
 
-            <th style="color:white;"> Account Name </th>
-            <th style="color:white;"> Item Name </th>
-            <th style="color:white;"> Posted Weight </th>
-            <th style="color:white;"> Rate </th>
-            <th style="color:white;"> Gross Ammount </th>
-            <th style="color:white;"> Fare </th>
-            <th style="color:white;"> Net Value </th>
-          </tr>
-    </thead>
-    <tbody>
-        @foreach($purchases AS $purchase)
-        <tr >
-          <td >{{ $loop->iteration }}</td>
-          <td >{{ date('d-m-Y', strtotime($purchase->date)) }}</td>
-          <td >{{ $purchase->gp_no }}</td>
-          <td >{{ $purchase->vehicle_no }}</td>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[1483] Ocean Commodity Broker *RICE AND MAIZE CREDITORS* , Instrument No.Al Habib Chq
+                                    21/5 via HMB</td>
+                                <td>783,783</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
 
-          <td >{{ $purchase->account->name }}</td>
-          <td>{{ $purchase->item->name }}</td>
-          <td>{{ $purchase->posted_weight }}</td>
-          <td>{{ $purchase->bag_rate }}</td>
-          <td></td>
-          <td>{{ $purchase->fare }}</td>
-          <td>{{ $purchase->net_amount }}</td>
-        </tr>
-      @endforeach
-    </tbody>
-</table>
-          <div class="clearfix">
-          </div>
+                            <tr>
+                                <td>15-May2022</td>
+                                <td>[1483] Ocean Commodity Broker *RICE AND MAIZE CREDITORS* , Instrument No.Al Habib Chq
+                                    21/5 via HMB</td>
+                                <td>783,783</td>
+                                <td>0</td>
+                                <td>18,378,266 Dr.</td>
+                            </tr>
+                       </tbody>
+                    </table>
+
+                  
+                </div>
+            </div>
+       
+           
         </div>
-      </div>
-
-    </div>
-
-  </div>
+       
+    
 </div>
-<script>
-    window.addEventListener('load', function() {
-        window.print();
-    });
-</script>
-
-</div>
-
-
-
-</body>
-
-
-
-
-
-</html>  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    <script>
+      window.addEventListener('load', function() {
+          window.print();
+      });
+    </script>
+  </body>
+</html>

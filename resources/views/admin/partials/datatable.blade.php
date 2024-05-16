@@ -34,6 +34,7 @@
         ],
         "paging": false,
         "bInfo" : false,
+        "footer": true,
         //"ordering": false,
         //"info": false,
         //"searching" : false,

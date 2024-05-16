@@ -5,7 +5,17 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Administrator\AdminController;
 use App\Models\Consumption;
 use App\Models\SaleBook;
+use App\Models\SaleFeed;
+use App\Models\PurchaseFeed;
+use App\Models\ReturnFeed;
+
+use App\Models\SaleMedicine;
+use App\Models\SaleChick;
+use App\Models\PurchaseChick;
+use App\Models\PurchaseMurghi;
+use App\Models\SaleMurghi;
 use App\Models\PurchaseBook;
+use App\Models\PurchaseMedicine;
 use App\Models\Item;
 use App\Models\Inward;
 use App\Models\Outward;
@@ -18,11 +28,59 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
+
+
 class HomeController extends AdminController
 {
     public function index()
     {   
+            //  $accounts = Account::where('account_nature','credit')->orderBy("id", "asc")->latest()->get();
+            
+        //dd("dfds");
+            
+        $current_month = date('Y-m-d');
         
+        $tot_sale_feed_begs = SaleFeed::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_sale_feed_ammount = SaleFeed::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        
+        $tot_Return_feed_begs = ReturnFeed::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_Return_feed_ammount = ReturnFeed::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        
+
+        $tot_purchase_feed_begs = PurchaseFeed::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_purchase_feed_ammount = PurchaseFeed::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        
+        //Medicine
+        $tot_sale_medicine_qty = SaleMedicine::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_sale_medicine_ammount = SaleMedicine::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        
+        $tot_purchase_medicine_qty = PurchaseMedicine::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_purchase_medicine_ammount = PurchaseMedicine::where('date', $current_month)->latest()->get()->sum('net_ammount');
+
+
+        //Chicks 
+        $tot_sale_chick_qty = SaleChick::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_sale_chick_ammount = SaleChick::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        
+        $tot_purchase_chick_qty = PurchaseChick::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_purchase_chick_ammount = PurchaseChick::where('date', $current_month)->latest()->get()->sum('net_ammount');
+
+
+        //Murghi 
+        $tot_sale_murghi_qty = SaleMurghi::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_sale_murghi_ammount = SaleMurghi::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        
+        $tot_purchase_murghi_qty = PurchaseMurghi::where('date', $current_month)->latest()->get()->sum('quantity');
+        $tot_purchase_murghi_ammount = PurchaseMurghi::where('date', $current_month)->latest()->get()->sum('net_ammount');
+
+
+
+
+        $newDateTime = Carbon::now()->addMonth(2);
+        $d = $newDateTime->toDateString();
+        
+        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->orderBy('created_at', 'desc')->latest()->get();
+        //dd($expire_medicine);
         $sale = SaleBook::select(DB::raw("COUNT(*) as count, Month(date) as month, SUM(no_of_bags) as bag"))
                 ->whereYear('date', date('Y'))
                 ->groupBy(DB::raw("Month(date)"))
@@ -69,23 +127,39 @@ class HomeController extends AdminController
         $data = array(
             "title"     => "Dashboad",
             'sale'      => $sale_array,
+            // 'cr'        =>$accounts,
+            // 'dr'        =>$dr_accounts,
             'sale_bags' => $sale_bag_array,
+            'tot_sale_feed_begs' => $tot_sale_feed_begs,
+            'tot_sale_feed_ammount' => $tot_sale_feed_ammount,
+            'tot_Return_feed_begs' => $tot_Return_feed_begs,
+            'tot_Return_feed_ammount' => $tot_Return_feed_ammount,
+            
+            'tot_purchase_feed_begs' => $tot_purchase_feed_begs,
+            'tot_purchase_feed_ammount' => $tot_purchase_feed_ammount,
+            
+            'tot_purchase_medicine_qty' => $tot_sale_medicine_qty,
+            'tot_purchase_medicine_ammount' => $tot_sale_medicine_ammount,
+            'tot_purchase_medicine_qty' => $tot_purchase_medicine_qty,
+            'tot_purchase_medicine_ammount' => $tot_purchase_medicine_ammount,
+            
+            'tot_sale_chick_qty' => $tot_sale_chick_qty,
+            'tot_sale_chick_ammount' => $tot_sale_chick_ammount,
+            'tot_purchase_chick_qty' => $tot_purchase_chick_qty,
+            'tot_purchase_chick_ammount' => $tot_purchase_chick_ammount,
+
+            'tot_sale_murghi_qty' => $tot_sale_murghi_qty,
+            'tot_sale_murghi_ammount' => $tot_sale_murghi_ammount,
+            'tot_purchase_murghi_qty' => $tot_purchase_murghi_qty,
+            'tot_purchase_murghi_ammount' => $tot_purchase_murghi_ammount,
+            
+
             'consumption' => $consumption_array,
             'consumption_qty' =>   $consumption_qty,
             'labels' => $labels,
             'prices' => $price,
-            'total_sales' => SaleBook::with(['item', 'account'])->whereMonth('created_at', '=', $month)->orderBy('created_at', 'desc')->take(10)->latest()->get(),
-            'total_purchases' => PurchaseBook::with(['item', 'account'])->whereMonth('created_at', '=', $month)->orderBy('created_at', 'desc')->take(10)->latest()->get(),
+            'expire_medicine' => $expire_medicine, 
             'active_item'  => Item::where('status', '1')->latest()->get()->count(),
-            'item_consumption' => Consumption::sum('qunantity'),
-            'inward_vehicle_daily' => Inward::where('created_at',date('Y-m-d'))->get()->count(),
-            'inward_vehicle_monthly' => Inward::where('created_at',date('m'))->get()->count(),
-            'outward_vehicle_daily' => Outward::where('created_at',date('Y-m-d'))->get()->count(),
-            'outward_vehicle_monthly' => Outward::where('created_at',date('m'))->get()->count(),
-            'waiting_list'  => Outward::where('vehicle_status', 'pending')->latest()->get()->count(),
-            'item_formulas'  => Formulation::latest()->get()->count(),
-            'item_purchase' => PurchaseBook::sum('net_weight'),
-            'item_purchase_ammount' => PurchaseBook::sum('net_ammount'),
             'active_accounts'  => Account::where('status', '1')->latest()->get()->count(),
             'active_users'  => Staff::where('is_active', '1')->latest()->get()->count(),
 
@@ -93,7 +167,7 @@ class HomeController extends AdminController
 
 
         );
-       //dd($data['labels']);
+       //dd($data);
         return view('admin.home')->with($data);
     }
 

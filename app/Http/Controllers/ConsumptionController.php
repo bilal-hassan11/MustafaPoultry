@@ -13,7 +13,7 @@ class ConsumptionController extends Controller
     public function index(Request $req){
         $data = array(
             'title'         => 'Consumption',
-            'items'         => Item::latest()->get(),
+            'items'         => Item::where('type','purchase')->latest()->get(),
             'consumptions'  => Consumption::with(['item'])
                                 ->when(isset($req->item_id), function($query) use ($req){
                                     $query->where('item_id', hashids_decode($req->item_id));
@@ -37,10 +37,13 @@ class ConsumptionController extends Controller
         }
 
         $consumption->item_id  = hashids_decode($req->item_id);
-        $consumption->qunantity = $req->quantity;
+        $consumption->quantity = $req->quantity;
         $consumption->date     = date('Y-m-d', strtotime($req->date));
         $consumption->save();
         
+        Item::find(hashids_decode($req->item_id))->decrement('stock_qty', $req->quantity);//decrement item stock
+
+
         return response()->json([
             'success'   => $msg,
             'redirect'  => route('admin.consumptions.index'),

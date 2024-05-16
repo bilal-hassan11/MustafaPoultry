@@ -61,7 +61,7 @@ class StaffController extends Controller
     {
         $rules = [
             // 'first_name' => ['required', 'string', 'max:80'],
-            'name' => ['required', 'string', 'max:80'],
+            'name' => ['string', 'max:80'],
             'user_type' => ['required', 'string', 'in:admin,normal'],
             // 'company_id' => ['required'],
             'email' => ['required', 'string', 'email', 'max:190'],
@@ -122,7 +122,7 @@ class StaffController extends Controller
         }
 
         $staff->email = $request->email;
-        $staff->name = $request->name;
+        $staff->username = $request->name;
         $staff->user_type = $request->user_type;
         $staff->user_permissions = $permissions;
         // $staff->company_id = $request->company_id;

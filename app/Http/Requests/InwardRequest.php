@@ -32,13 +32,11 @@ class InwardRequest extends FormRequest
             'no_of_bags'     => ['nullable', 'integer'],
             'fare'           => ['nullable', 'integer'],
             'bilty_no'       => ['nullable', 'string'],
-            'gp_no'          => ['nullable', 'string'],
             'company_weight' => ['nullable', 'integer'],
             'party_weight' => ['nullable', 'integer'],
             'first_weight'   => ['nullable', 'integer'],
             'second_weight'  => ['nullable', 'integer'],
             'weight_difference'  => ['nullable', 'integer'],
-            'party_weight_difference'  => ['nullable', 'integer'],
             'remarks'        => ['nullable', 'string'],
         ];
     }

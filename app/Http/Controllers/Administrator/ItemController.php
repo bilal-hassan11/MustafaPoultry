@@ -7,15 +7,16 @@ use App\Http\Requests\ItemRequest;
 use App\Models\Category;
 use App\Models\Item;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class ItemController extends Controller
 {
     public function index(Request $req){
         $data = array(
             'title' => 'Items',
+            'getitems' => Item::latest()->where('type','sale')->get(),
             'items' => Item::latest()->where('type','sale')
-                        ->when(isset($req->item_type), function($query) use ($req){
-                            $query->where('type', $req->item_type);
+                        ->when(isset($req->item_id), function($query) use ($req){
+                            $query->where('id', $req->item_id);
                         })
                         ->when(isset($req->status), function($query) use ($req){
                             $query->where('status', $req->status);
@@ -26,11 +27,15 @@ class ItemController extends Controller
     }
 
     public function purchase_item(Request $req){
+        
         $data = array(
             'title' => 'Purchase Items',
+            'getitems' => Category::latest()->get(),
+            'tot_stock' => Item::latest()->where('type','purchase')->sum('stock_qty'),
+            'tot_stock_value' => Item::latest()->where('type','purchase')->select(DB::raw('sum(stock_qty*price) AS total_sales')),
             'items' => Item::latest()->where('type','purchase')
-                        ->when(isset($req->item_type), function($query) use ($req){
-                            $query->where('type', $req->item_type);
+                        ->when(isset($req->category_id), function($query) use ($req){
+                            $query->where('category_id', $req->category_id);
                         })
                         ->when(isset($req->status), function($query) use ($req){
                             $query->where('status', $req->status);
@@ -62,6 +67,8 @@ class ItemController extends Controller
         $item->name        = $req->name;
         $item->type        = $req->type;
         $item->price       = $req->price;
+        $item->code       = $req->code;
+        
         $item->stock_status= $req->stock_status;
         $item->status      = $req->item_status;
         $item->remarks     = $req->remarks;
@@ -69,7 +76,7 @@ class ItemController extends Controller
 
         return response()->json([
             'success'   => $msg,
-            'redirect'    => route('admin.items.index'),
+            'redirect'    => route('admin.items.add'),
         ]);
     }
 

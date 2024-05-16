@@ -2,597 +2,622 @@
 
 @section('content')
 
-
-<br /><br />
-<div class="row">
-                <!-- Total Active Item -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<span style="color:green; font-size:40px;"> <i class="fa-solid fa-truck"></i></span>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40">{{$active_item}} <small class="text-danger ps-10"><i class="mdi mdi-arrow-down text-danger"></i> -7.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-success btn-sm float-end">Active Item</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline0" class="mt-40 mr-55 float-right"><a href="{{ route('admin.details.active_item')}}"> View details </a><i class=" ti-arrow-circle-right"></i></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Item Consume Monthly  -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc NEO fs-40" title="ETH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$item_consumption}} Kg<small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end">Items Consume Monthly</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline1" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Inward Vehicle Daily -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-								<span style="color:green; font-size:40px;"> <i class="fa-solid fa-truck"></i></span>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$inward_vehicle_daily}} <small class="text-danger ps-10"><i class="mdi mdi-arrow-down text-danger"></i> -4.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-success btn-sm float-end">Inward vehicle Daily</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline2" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Inward Vehicle Monthly -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc LTC fs-40" title="LTC"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$inward_vehicle_monthly}} <small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end"><strong>Inward Vehicle Monthly</strong></a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline3" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Outward Vehicle Daily -->
-                <div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc NEO fs-40" title="ETH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$outward_vehicle_daily}}  <small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end">Outward Vehicle daily</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline1" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Outward Vehicle Monthly -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc DASH fs-40" title="DASH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$outward_vehicle_monthly}} <small class="text-danger ps-10"><i class="mdi mdi-arrow-down text-danger"></i> -4.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-success btn-sm float-end">Outward Vehicle Monthly</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline2" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Vehicle On waiting -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc LTC fs-40" title="LTC"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$waiting_list}} <small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end"><strong>Waiting Vehicle</strong></a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline3" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-                 <!-- Total Formulas of Items -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc BTC fs-40" title="BTC"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$item_formulas}} <small class="text-danger ps-10"><i class="mdi mdi-arrow-down text-danger"></i> -7.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-success btn-sm float-end">Items Formulas</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline0" class="mt-40 mr-55 float-right"> View details <i class=" ti-arrow-circle-right"></i></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Item Quantity Purchase Monthly  -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc NEO fs-40" title="ETH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$item_purchase}} kg<small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end">Total Purchase Qty</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline1" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Item Purchases Monthly  -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc NEO fs-40" title="ETH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40">{{$item_purchase_ammount}} <small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end">Total Purchase </a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline1" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total  Active Accounts -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc DASH fs-40" title="DASH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$active_accounts}} <small class="text-danger ps-10"><i class="mdi mdi-arrow-down text-danger"></i> -4.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-success btn-sm float-end">Active Accounts</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline2" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Staff/Users Monthly -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc LTC fs-40" title="LTC"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> {{$active_users}} <small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end"><strong>Total Users</strong></a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline3" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total  Orders Pending -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc DASH fs-40" title="DASH"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> 458 <small class="text-danger ps-10"><i class="mdi mdi-arrow-down text-danger"></i> -4.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-success btn-sm float-end">Pending Orders</a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline2" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-                <!-- Total Orders Monthly -->
-				<div class="col-md-6 col-xl-3">
-					<div class="box pull-up">
-						<div class="box-body">
-							<div class="row align-items-center">
-								<div class="col-3">
-									<i class="cc LTC fs-40" title="LTC"></i>
-								</div>
-								<div class="col-6">
-									<h4 class="counter text-center mb-0 fs-40"> 145 <small class="text-success ps-10"><i class="mdi mdi-arrow-up text-success"></i> +5.45%</small></h4>
-								</div>
-								<div class="col-3">
-									<a href="#" class="btn btn-danger btn-sm float-end"><strong>Total Orders Monthly</strong></a>
-								</div>
-								<div class="col-12">
-									<div id="sparkline3" class="mt-40"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-                
-			</div>
-            <!-- Order List -->
-            <!-- <div class="col-12">
-				<div class="box">
-				  <div class="box-body tickers-block">
-					  <ul id="webticker-1">
-						<li><i class="cc BTC"></i> BTC <span class="text-warning"> $11.039232</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">1.11%</span></li> 
-						<li><i class="cc ETH"></i> ETH <span class="text-warning"> $1.2792</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">2.11%</span></li> 
-						<li><i class="cc GAME"></i> GAME <span class="text-warning"> $11.039232</span> <i class="fa fa-angle-down text-danger"></i><span class="text-danger">-1.11%</span></li> 
-						<li><i class="cc LBC"></i> LBC <span class="text-warning"> $0.588418</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">3.01%</span></li> 
-						<li><i class="cc NEO"></i> NEO <span class="text-warning"> $161.511</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">2.10%</span></li> 
-						<li><i class="cc STEEM"></i> STE <span class="text-warning"> $0.551955</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">4.01%</span></li> 
-						<li><i class="cc LTC"></i> LIT <span class="text-warning"> $177.80</span> <i class="fa fa-angle-down text-danger"></i><span class="text-danger">-0.11%</span></li> 
-						<li><i class="cc NOTE"></i> NOTE <span class="text-warning"> $13.399</span> <i class="fa fa-angle-down text-danger"></i><span class="text-danger">-4.11%</span></li>
-						<li><i class="cc MINT"></i> MINT <span class="text-warning"> $0.880694</span> <i class="fa fa-angle-down text-danger"></i><span class="text-danger">-0.31%</span></li> 
-						<li><i class="cc IOTA"></i> IOT <span class="text-warning"> $2.555</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">3.11%</span></li> 
-						<li><i class="cc DASH"></i> DAS <span class="text-warning"> $769.22</span> <i class="fa fa-angle-up text-success"></i><span class="text-success">2.11%</span></li>   
-					  </ul>
-				  </div>
-			  </div>
-			</div> -->
-            <div class="col-xl-6 ">
-				  <div class="box">
-					<div class="box-header">
-					  <h4 class="box-title">Resent Purchases</h4>
-					</div>
-					<div class="box-body">
-						<div class="table-responsive">
-						  <table class="table">
-                          <thead>							  	
-                                <tr >
-                                    <th >#</th>
-                                    <th >Date</th>
-                                    <th > Account Name </th>
-                                    <th > Item Name </th>
-                                    <th > Rate</th>
-                                    <th > other charges </th>
-                                    
-                                </tr>
-							</thead>
-							<tbody class="text-fade">
-                            
-                                @foreach($total_purchases AS $p)
-                                    <tr>
-                                        <td >{{ $loop->iteration }}</td>
-                                        <td >{{ date('d-m-Y', strtotime($p->date)) }}</td>
-                                        <td ><span class="badge bg-info">{{ @$p->account->name }}</span></td>
-                                        <td >{{ $p->item->name }}</td>
-                                        <td ><span class="badge bg-danger">{{ $p->bag_rate }}</span></td>
-                                        <td >{{ $p->others_charges }}</td>
-                                        
-                                    </tr>
-                                @endforeach
-                                
-								
-							  </tbody>
-							</table>
-						</div>
-					</div>
-				  </div>
-				</div>
-				<div class="col-xl-6 ">
-				  <div class="box">
-					<div class="box-header">
-					  <h4 class="box-title">Recent Sales Orders</h4>
-					</div>
-					<div class="box-body">
-						<div class="table-responsive">
-						  <table class="table">
-							<thead>							  	
-                                <tr >
-                                    <th >#</th>
-                                    <th >Date</th>
-                                    <th > Account Name </th>
-                                    <th > Item Name </th>
-                                    <th > No of Begs </th>
-                                    <th > Fare </th>
-                                    
-                                </tr>
-							</thead>
-							<tbody class="text-fade">
-                            
-                                @foreach($total_sales AS $s)
-                                    <tr>
-                                        <td >{{ $loop->iteration }}</td>
-                                        <td >{{ date('d-m-Y', strtotime($s->date)) }}</td>
-                                        <td ><span class="badge bg-info">{{ $s->account->name }}</span></td>
-                                        <td >{{ @$s->item->name }}</td>
-                                        <td ><span class="badge bg-danger">{{ $s->no_of_bags }}</span></td>
-                                        <td >{{ $s->fare }}</td>
-                                        
-                                    </tr>
-                                @endforeach
-                                
-								
-							  </tbody>
-							</table>
-						</div>
-					</div>
-					<!-- /.box-body -->
-				  </div>
-				  <!-- /.box -->
-
-				</div>
-
-
-<div id="hightChart">
-
-</div>
-<div id="consumption_chart">
-
-</div>
-<!-- start page title -->
-{{-- <div class="row">
-    <div class="col-12">
-        <div class="page-title-box">
-            <div class="page-title-right d-none">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control border-white" id="dash-daterange">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-blue border-blue text-white">
-                                    <i class="mdi mdi-calendar-range font-13"></i>
-                                </span>
+<div class="main-content app-content mt-0">
+  <div class="side-app">
+    <!-- CONTAINER --> 
+    <div class="main-container container-fluid">
+        <br /><br />
+        <div class="row"> 
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12"> 
+                <div class="row total-sales-card-section"> 
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
+                    <div class="card custom-card overflow-hidden"> <div class="card-body"> 
+                        <div class="row"> <div class="col"> <h6 class="fw-normal fs-14">Total Sales</h6> <h3 class="mb-2 number-font fs-24">34,516</h3> <p class="text-muted mb-0"> <span class="text-primary"> <i class="ri-arrow-up-s-line bg-primary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 3%</span> last month </p></div> 
+                                <div class="col col-auto mt-2"> <div class="counter-icon bg-primary-gradient box-shadow-primary rounded-circle ms-auto mb-0"> <i class="fe fe-trending-up mb-5 "></i> 
+                            </div> 
+                        </div> 
+                            </div> 
+                            </div> 
+                            </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                <div class="card custom-card overflow-hidden"> 
+                                    <div class="card-body"> 
+                                        <div class="row"> 
+                                        <div class="col"> <h6 class="fw-normal fs-14">Total Leads</h6> <h3 class="mb-2 number-font fs-24">56,992</h3> <p class="text-muted mb-0"> <span class="text-secondary"> <i class="ri-arrow-up-s-line bg-secondary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 3%</span> last month </p></div> 
+                                        <div class="col col-auto mt-2"> 
+                                            <div class="counter-icon bg-danger-gradient box-shadow-danger rounded-circle  ms-auto mb-0"> <i class="ri-rocket-line mb-5  "></i> </div> </div> </div> </div> </div> </div> <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> <div class="card custom-card overflow-hidden"> <div class="card-body"> <div class="row"> <div class="col"> <h6 class="fw-normal fs-14">Total Profit</h6> <h3 class="mb-2 number-font fs-24">$42,567</h3> <p class="text-muted mb-0"> <span class="text-success"> <i class="ri-arrow-down-s-line bg-primary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 0.5%</span> last month </p></div> <div class="col col-auto mt-2"> <div class="counter-icon bg-secondary-gradient box-shadow-secondary rounded-circle ms-auto mb-0"> <i class="fe fe-dollar-sign  mb-5 "></i> </div> </div> </div> </div> </div> </div> <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> <div class="card custom-card overflow-hidden"> <div class="card-body"> <div class="row"> <div class="col"> <h6 class="fw-normal fs-14">Total Cost</h6> <h3 class="mb-2 number-font fs-24">$34,789</h3> <p class="text-muted mb-0"> <span class="text-danger"> <i class="ri-arrow-down-s-line bg-danger text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 0.2%</span> last month </p></div> <div class="col col-auto mt-2"> <div class="counter-icon bg-success-gradient box-shadow-success rounded-circle  ms-auto mb-0"> <i class="fe fe-briefcase mb-5 "></i> </div> </div> </div> </div> </div> </div> </div> </div> </div>
+            <br /><br />
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-4 border-info">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h4 class="mb-0 text-secondary"> Feed Bags Sale (ٹوٹل فیڈ بوریا سیل)</h4><br />
+                                    <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_sale_feed_begs }} Bags</h4><br />
+                                    <p class="mb-0  font-13 text-success">+00 This Month </p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <a href="javascript: void(0);" class="btn btn-blue btn-sm ml-2">
-                        <i class="mdi mdi-autorenew"></i>
-                    </a>
-                    <a href="javascript: void(0);" class="btn btn-blue btn-sm ml-1">
-                        <i class="mdi mdi-filter-variant"></i>
-                    </a>
-                </form>
+                </div>
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-4 border-danger">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-info"> Feed Sale Ammount (فیڈ سیل کی کل رقم)</h4> <br />
+                                <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_feed_ammount}}</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-4 border-success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h4 class="mb-0 text-success">Feed Bags Purchase (فیڈ بیگز کی کل خریداری)</h4><br />
+                                    <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_purchase_feed_begs }} Bags</h4><br />
+                                    <p class="mb-0  font-13 text-success">+00 This Month </p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-4 border-warning">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-warning">Feed Purchase Ammount (فیڈ کی خریداری کی کل رقم)</h4> <br />
+                                <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_feed_ammount}}</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            
             </div>
-            <div class="text-center">
-                <h1 class="page-title mb-0 mt-2" style="line-height: normal; font-size: 35px;">Minister's Monitoring Unit</h1>
-                <h4>Department of Health, Government of Sindh</h4>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-info">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-secondary"> Medicine Qty Purchase(دوائیوں کے تھیلوں کی کل خریداری)</h4><br />
+                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_purchase_medicine_qty }} Qty</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div> --}}
-<!-- end page title -->
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-danger">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-info">Medicine Purchase Ammount (ادویات کی خریداری کی کل رقم)</h4> <br />
+                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_medicine_ammount}}</h4><br />
+                            <p class="mb-0  font-13 text-success">+00 This Month </p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-success">Medicine Quantity Sale (دوائیوں کے تھیلوں کی کل فروخت)</h4><br />
+                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_sale_medicine_qty }} Qty</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-warning">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-warning"> Sale Medicine Ammount (ادویات کی فروخت کی کل رقم)</h4> <br />
+                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_medicine_ammount}}</h4><br />
+                            <p class="mb-0  font-13 text-success">+00 This Month </p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-info">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-secondary"> Chicks Qty Purchase (چوزوں کی کل مقدار خریداری)</h4><br />
+                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_purchase_chick_qty }} Qty</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-danger">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-info"> Chicks Purchase Amount (چوزوں کی خریداری کی کل رقم)</h4> <br />
+                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_chick_ammount}}</h4><br />
+                            <p class="mb-0  font-13 text-success">+00 This Month </p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-success"> Chicks Quantity Sale (چوزوں کی کل مقدار فروخت)</h4><br />
+                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_sale_chick_qty }} Qty</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-warning">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-warning"> Sale Chicks Ammount (چوزوں کی فروخت کی کل رقم)</h4> <br />
+                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_chick_ammount}}</h4><br />
+                            <p class="mb-0  font-13 text-success">+00 This Month </p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-info">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-secondary"> Murghi Qty Purchase (مرغی کی خریداری کی کل مقدار)</h4><br />
+                                <h4 class="my-1 text-info"><i class="mdi mdi-basket-fill fs-80 text-danger me-3"></i>&nbsp&nbsp{{ @$tot_purchase_murghi_qty }} Qty</h4><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-danger">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-info"> Murghi Purchase Amount (مرغی کی خریداری کی کل رقم)</h4> <br />
+                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_murghi_ammount}}</h4><br />
+                            <p class="mb-0  font-13 text-success">+00 This Month </p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4 class="mb-0 text-success"> Murghi Quantity Sale (کل مرغی کی مقدار میں فروخت)</h4><br />
+                                <h3 class="my-1 text-info"><i class="mdi mdi-basket-fill fs-80 text-danger me-3"></i>&nbsp&nbsp{{ @$tot_sale_murghi_qty }} Qty</h3><br />
+                                <p class="mb-0  font-13 text-success">+00 This Month </p>
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-warning">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-warning"> Sale Murghi Ammount ( مرغی کی فروخت کی کل رقم)</h4> <br />
+                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_murghi_ammount}}</h4><br />
+                            <p class="mb-0  font-13 text-success">+00 This Month </p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+            </div>
+            
+            <br /><br />
 
-{{-- <div class="row">
-    <h3 class="page-title" style="font-size: 18px;">STATISTICS FOR THE MONTH</h3>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">Total Facilities Monitored</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{number_format($grand_total_visit ?? 0)}}</span></h3>
+        </div>
+        <div class="row">
+    
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card custom-card">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-primary">
+                        <i class="fe fe-file-text mx-2 fs-20 text-primary-shadow  align-middle"></i>
+                    </span>
+                    Total Feed Purchase
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{@$tot_purchase_feed_ammount}}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped bg-primary w-70"
+                        role="progressbar"
+                    >
+                        
                     </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-primary" style="font-size: 25px"></i>
                     </div>
+                    <div class="row mt-4">
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted"> Bags </span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_purchase_feed_begs }}</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Ammount</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font2">{{@$tot_purchase_feed_ammount}}</h4>
+                    </div>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card overflow-hidden">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-secondary">
+                        <i class="ri-group-line mx-2 fs-20 text-secondary-shadow align-middle"></i>
+                    </span>
+                    Total Feed Sale 
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{@$tot_sale_feed_ammount}}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped  bg-secondary w-50"
+                        role="progressbar"
+                    ></div>
+                    </div>
+                    <div class="row mt-4">
+                    
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Bags</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_feed_begs }}</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Ammount</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{@$tot_sale_feed_ammount}}</h4>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card overflow-hidden">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-success">
+                        <i class="fe fe-award mx-2 fs-20 text-success-shadow  align-middle"></i>
+                    </span>
+                    Total Feed Return 
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{@$tot_Return_feed_ammount}}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped  bg-success w-60"
+                        role="progressbar"
+                    >
+                        
+                    </div>
+                    </div>
+                    <div class="row mt-4">
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Bags</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{@$tot_Return_feed_begs}}</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Ammount</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{@$tot_Return_feed_ammount}}</h4>
+                    </div>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card overflow-hidden">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-info">
+                        <i class="fe fe-tag mx-2 fs-20 text-info-shadow  align-middle"></i>
+                    </span>
+                    Total Profit
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{ (@$tot_purchase_feed_ammount + @$tot_Return_feed_ammount) - @$tot_sale_feed_ammount }}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped progress-bar-animated bg-info w-40"
+                        role="progressbar"
+                    ></div>
+                    </div>
+                    <div class="row mt-4">
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Weekly</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">35</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Monthly</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">56</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Total</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">91</h4>
+                    </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">Facilities Monitored Today</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{number_format($total_visit_today ?? 0)}}</span></h3>
+        <div class="row">
+    
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card custom-card">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-primary">
+                        <i class="fe fe-file-text mx-2 fs-20 text-primary-shadow  align-middle"></i>
+                    </span>
+                    Total Chick Purchase
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{@$tot_purchase_chick_ammount}}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped bg-primary w-70"
+                        role="progressbar"
+                    >
+                        
                     </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-danger" style="font-size: 25px"></i>
                     </div>
+                    <div class="row mt-4">
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted"> Chicks </span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_purchase_chick_qty }}</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Ammount</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font2">{{@$tot_purchase_chick_ammount}}</h4>
+                    </div>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card overflow-hidden">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-secondary">
+                        <i class="ri-group-line mx-2 fs-20 text-secondary-shadow align-middle"></i>
+                    </span>
+                    Total Feed Sale 
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{@$tot_sale_feed_ammount}}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped  bg-secondary w-50"
+                        role="progressbar"
+                    ></div>
+                    </div>
+                    <div class="row mt-4">
+                    
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Bags</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_feed_begs }}</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Ammount</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{@$tot_sale_feed_ammount}}</h4>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card overflow-hidden">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-success">
+                        <i class="fe fe-award mx-2 fs-20 text-success-shadow  align-middle"></i>
+                    </span>
+                    Total Feed Return 
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{@$tot_Return_feed_ammount}}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped  bg-success w-60"
+                        role="progressbar"
+                    >
+                        
+                    </div>
+                    </div>
+                    <div class="row mt-4">
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Bags</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{@$tot_Return_feed_begs}}</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Ammount</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">{{@$tot_Return_feed_ammount}}</h4>
+                    </div>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-12 col-lg-6">
+                
+                <div class="card overflow-hidden">
+                
+                <div class="card-body text-center">
+                    
+                    <h6 class="">
+                    <span class="text-info">
+                        <i class="fe fe-tag mx-2 fs-20 text-info-shadow  align-middle"></i>
+                    </span>
+                    Total Profit
+                    </h6>
+                    <h4 class="text-dark counter mt-0 mb-3 number-font">{{ (@$tot_purchase_feed_ammount + @$tot_Return_feed_ammount) - @$tot_sale_feed_ammount }}</h4>
+                    <div class="progress h-1 mt-0 mb-2">
+                    
+                    <div
+                        class="progress-bar progress-bar-striped progress-bar-animated bg-info w-40"
+                        role="progressbar"
+                    ></div>
+                    </div>
+                    <div class="row mt-4">
+                    
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Weekly</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">35</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Monthly</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">56</h4>
+                    </div>
+                    <div class="col text-center">
+                        
+                        <span class="text-muted">Total</span>
+                        <h4 class="fw-normal mt-2 mb-0 number-font1">91</h4>
+                    </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">Facilities Monitored This Week</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{number_format($total_visit_week ?? 0)}}</span></h3>
-                    </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-primary" style="font-size: 25px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">Fully Functional Facilities</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup"></span>%</h3>
-                    </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-danger" style="font-size: 25px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">BEmONC Functionality</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup"></span>%</h3>
-                    </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-primary" style="font-size: 25px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">ANC/PNC Functionality</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{number_format($anc_percentage,2)}}</span>%</h3>
-                    </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-danger" style="font-size: 25px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">Medicine Availablity</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup"></span>%</h3>
-                    </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-primary" style="font-size: 25px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <div class="widget-rounded-circle card">
-            <div class="card-body">
-                <div class="row">
-                    <p class="mb-3">Contraceptive Availablity</p>
-                    <div class="col-6">
-                        <h3 class="text-dark mt-1"><span data-plugin="counterup"></span>%</h3>
-                    </div>
-                    <div class="col-6 text-end">
-                        <i class="fas fa-chart-bar avatar-title text-primary" style="font-size: 25px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
+        <!-- <div id="hightChart">
 
-{{-- <div class="row mt-2">
-    <div class="col-md-6">
-        <h3 class="page-title mb-3" style="font-size: 18px;">VISIT COVERAGE</h3>
-        <div id="visit_cov" style="width:100%; height:300px;"></div>
-    </div>
-    <div class="col-md-6">
-        <h3 class="page-title mb-3" style="font-size: 18px;">FULLY FUNCTIONAL FACILITIES</h3>
-        <div id="fun_facil" style="width: 100%; height: 300px;" ></div>
-    </div>
-</div>
-<div class="row mt-2">
-    <div class="col-md-12">
-        <h3 class="page-title mb-3" style="font-size: 18px;">CLOSED FACILITIES</h3>
-        <div id="close_facil" style="width:100%; height:300px;"></div>
-    </div>
-</div> --}}
-<br />
-<div id="sale_chart" class="chart"></div>
+                </div>
+                <div id="consumption_chart">
 
-<div class="map_canvas">
-  
-            <canvas id="myChart" width="auto" height="100"></canvas>
+                </div>
+
+                <br />
+                <div id="sale_chart" class="chart"></div>
+
+                <div class="map_canvas">
+                
+                            <canvas id="myChart" width="auto" height="100"></canvas>
+                </div> -->
+            <!-- CONTAINER END --> 
+    </div>
 </div>
 
 @endsection

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Cards</title>
+  <style>
+  @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+body {
+  background-color: #000;
+}
+
+.container {
+  width: 100%;
+  padding: 0px 30px;
+  
+}
+
+.package{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    
+    
+    margin-top: 25px;
+    gap: 60px;
+}
+
+.package-text {
+    text-align: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    margin-top: 50px;
+}
+
+.package-text h1{
+    text-align: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #fff;
+    font-weight: 600;
+   
+}
+
+.package-text p{
+    text-align: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 700;
+    margin-top: 10px;
+    
+}
+
+.package-card1 {
+  
+  height: 100%;
+  display: flex;
+  justify-content: center ;
+  padding: 20px;
+  margin-top: 15px;
+  margin-left: 30px;
+  box-shadow: 0px 2px 12px 0px rgba(20, 20, 43, 0.08);
+  border-radius: 24px;
+  border: 1px solid #777983;
+}
+
+.package-details p{
+    font-size: 34px;
+    color: #fff;
+    align-items: first baseline;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 11px;
+}
+
+.package-card2 {
+  
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 15px;
+  margin-left: 10px;
+  box-shadow: 0px 2px 12px 0px rgba(20, 20, 43, 0.08);
+  border-radius: 24px;
+  border: 1px solid #777983;
+}
+
+.package-card2 .items-details{
+    justify-content: center;
+    margin-bottom: 8px;
+    margin-top: 20px;
+}
+
+.package-card2 .items-details h1{
+    font-size: 30px;
+    color: #fff;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.package-card2 .items-details button{
+    
+    display: flex;
+    padding: 23px 14px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 37px;
+    border-radius: 19px;
+    background-color: rgb(32 27 27);
+    color: white;
+    font-size: 23px;
+    font-weight: 800;
+    border: 1px solid rgb(152 142 142);
+    cursor: pointer;
+}
+
+.package-card2 .items-details p{
+    font-size: 16px;
+    color: #fff;
+    justify-content: center;
+    font-weight: 400;
+    margin-bottom: 12px;
+}
+
+.package-wrapper .package-details button {
+   
+    padding: 23px 14px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 37px;
+    border-radius: 19px;
+    background-color: rgb(32 27 27);
+    color: white;
+    font-size: 23px;
+    font-weight: 800;
+    border: 1px solid rgb(152 142 142);
+    cursor: pointer;
+}
+
+
+
+.price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 37px;
+}
+
+.price-card1 {
+  width: 100%;
+ 
+  display: flex;
+  padding: 20px;
+  margin-top: 15px;
+  margin-left: 30px;
+  box-shadow: 0px 2px 12px 0px rgba(20, 20, 43, 0.08);
+  border-radius: 24px;
+  border: 1px solid #777983;
+}
+
+.price-card2 {
+  width: 100%;
+  
+  display: flex;
+  padding: 20px;
+  margin-top: 15px;
+  margin-left: 30px;
+  box-shadow: 0px 2px 12px 0px rgba(20, 20, 43, 0.08);
+  border-radius: 24px;
+  border: 1px solid #777983;
+}
+
+.price-card3 {
+  width: 100%;
+ 
+  display: flex;
+  padding: 20px;
+  margin-top: 15px;
+  margin-left: 30px;
+  box-shadow: 0px 2px 12px 0px rgba(20, 20, 43, 0.08);
+  border-radius: 24px;
+  border: 1px solid #777983;
+}
+
+.heading {
+    font-size: 25px;
+    color: #fff;
+    font-weight: 700;
+}
+.heading p {
+  font-size: 16px;
+  color: #fff;
+  color: #4a3aff;
+}
+.heading h2 {
+  font-size: 50px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.price-wrapper {
+  
+  margin: 0px 0;
+}
+
+
+.info {
+  display: flex;
+  padding: 0 18px;
+  gap: 18px;
+  & p {
+    font-size: 18px;
+  }
+  & b {
+    font-size: 24px;
+  }
+}
+
+.text p {
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+  
+}
+
+.head-details p{
+    font-size: 64px;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.head-details .button-bottom-text{
+    font-size: 18px;
+    font-weight: 300;
+    color: #fff;
+    margin-top: 19px;
+    text-decoration: underline;
+}
+
+.details {
+  margin-top: 12px;
+}
+
+.details p {
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 8px;
+  margin-top: 40px;
+}
+
+
+.details ul li {
+  font-size: 18px;
+  margin: 16px 0px;
+  font-weight: 400;
+  color: #fff;
+  list-style: none;
+  
+}
+
+.price-wrapper button {
+    display: flex;
+    padding: 26px 38px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+
+    width: 100%;
+    border-radius: 27px;
+    background-color: rgb(32 27 27);
+    color: white;
+    font-size: 23px;
+    font-weight: 800;
+    border: 1px solid rgb(152 142 142);
+    cursor: pointer;
+}
+
+.price-card:nth-child(even) {
+  background-color: #4a3aff;
+  color: #fff;
+
+  & p,
+  .bold {
+    color: #fff;
+  }
+  & .price-wrapper button {
+    background-color: #fff;
+    color: #4a3aff;
+  }
+}
+
+@media screen and (width <= 1440px) {
+  
+}
+
+@media screen and (width <= 768px) {
+    .price {
+    flex-wrap: wrap;
+}
+.package {
+    flex-wrap: wrap;
+}
+  
+}
+
+@media screen and (width <= 426px){
+
+   
+
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+    <div class="container">
+        
+  
+        <div class="price">
+          <div class="price-card1">
+            <div class="price-wrapper">
+                
+              
+              <div class="heading">
+                
+                <h1>Starter</h1>
+              </div>
+              <div class="text">
+                <p>Best for personal brands looking to
+                    off loadediting their own content.</p>
+              </div>
+  
+              <div class="head-details">
+                <p><span class="bold">$999/m</span> </p>
+                
+                <button>Get started</button>
+
+                <h5><span class="button-bottom-text"><center>Book a Call</center></span> </h5>
+                
+              </div>
+              <div class="details">
+                <p>What's included:</p>
+                <ul>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Upto 10 short videos per month*
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Up to 250,000 tracked visits</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; 2 long videos per month</li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Personalized video branding
+                  </li>
+  
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Average 1-2 days turn around time
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated account manager</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Repurposing long-form content
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated Video Editor
+                  </li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; DedicatedProjectManager
+
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated account manager</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Royalty-Free Music
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Video Resizing for Different Platforms
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Color Correction
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="price-card2">
+            <div class="price-wrapper">
+                
+              
+              <div class="heading">
+                
+                <h1>Growth</h1>
+              </div>
+              <div class="text">
+                <p> Best for personal and growing brands who
+                want todouble their content output.</p>
+              </div>
+  
+              <div class="head-details">
+                <p><span class="bold">$1,797/m</span> </p>
+                
+                <button>Get started</button>
+
+                <h5><span class="button-bottom-text"><center>Book a Call</center></span> </h5>
+                
+              </div>
+              <div class="details">
+                <p>What's included:</p>
+                <ul>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Upto 10 short videos per month*
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Up to 250,000 tracked visits</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; 2 long videos per month</li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Personalized video branding
+                  </li>
+  
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Average 1-2 days turn around time
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated account manager</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Repurposing long-form content
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated Video Editor
+                  </li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; DedicatedProjectManager
+
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated account manager</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Royalty-Free Music
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Video Resizing for Different Platforms
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Color Correction
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="price-card3">
+            <div class="price-wrapper">
+                
+              
+              <div class="heading">
+                
+                <h1>Starter</h1>
+              </div>
+              <div class="text">
+                <p>Best for personal brands looking to
+                    off loadediting their own content.</p>
+              </div>
+  
+              <div class="head-details">
+                <p><span class="bold">$999/m</span> </p>
+                
+                <button>Get started</button>
+
+                <h5><span class="button-bottom-text"><center>Book a Call</center></span> </h5>
+                
+              </div>
+              <div class="details">
+                <p>What's included:</p>
+                <ul>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Upto 10 short videos per month*
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Up to 250,000 tracked visits</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; 2 long videos per month</li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Personalized video branding
+                  </li>
+  
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Average 1-2 days turn around time
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated account manager</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Repurposing long-form content
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated Video Editor
+                  </li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; DedicatedProjectManager
+
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Dedicated account manager</li>
+                  <li><i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Royalty-Free Music
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Video Resizing for Different Platforms
+                  </li>
+                  <li> <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp; Color Correction
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="package-text">
+            <h1>Use our world-class video editors to grow faster.</h1>
+            <p> <i> No job posts. No managing employees. No headaches.</i></p>
+        </div>
+        <div class="package">
+            
+            <div class="package-card1">
+              <div class="package-wrapper">
+                <div class="package-details">
+                  <p>One-off Video($99) </p>
+                  
+                  <button>Book Call</button>                
+                </div>
+                
+              </div>
+            </div>
+            <div class="package-card2">
+                <div class="items-details">
+                    <center>
+                        <h1><span>Want a Custom package ?</span> </h1>
+                        <p><span >Bespoke pricing to your need</span> </p>
+                  
+                        <button>Book Call</button>
+                    </center>
+                  
+                </div>
+                
+             
+            </div>
+           
+        </div>
+      </div>
+
+</body>
+</html>

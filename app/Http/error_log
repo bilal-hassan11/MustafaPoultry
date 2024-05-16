@@ -1,0 +1,8 @@
+[03-Aug-2023 11:28:21 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Http\Kernel" not found in /home3/poultryt/public_html/FeedSystem22/app/Http/Kernel.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/app/Http/Kernel.php on line 7
+[03-Aug-2023 12:27:33 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Http\Kernel" not found in /home3/poultryt/public_html/FeedSystem22/app/Http/Kernel.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/app/Http/Kernel.php on line 7

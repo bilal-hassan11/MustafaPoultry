@@ -1,0 +1,192 @@
+[03-Aug-2023 11:53:00 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_160356_sales_book.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_160356_sales_book.php on line 7
+[03-Aug-2023 11:55:05 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_000000_create_users_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_000000_create_users_table.php on line 7
+[03-Aug-2023 11:55:12 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_100000_create_password_resets_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_100000_create_password_resets_table.php on line 7
+[03-Aug-2023 11:55:19 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2019_08_19_000000_create_failed_jobs_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2019_08_19_000000_create_failed_jobs_table.php on line 7
+[03-Aug-2023 11:55:27 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_081707_create_admins_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_081707_create_admins_table.php on line 7
+[03-Aug-2023 11:55:34 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_162435_create_permissions_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_162435_create_permissions_table.php on line 7
+[03-Aug-2023 11:55:43 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_192714_create_disciplines_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_192714_create_disciplines_table.php on line 7
+[03-Aug-2023 11:55:53 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_200515_create_subjects_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_200515_create_subjects_table.php on line 7
+[03-Aug-2023 11:56:04 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_204228_create_topics_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_204228_create_topics_table.php on line 7
+[03-Aug-2023 11:56:14 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_201659_create_account_types_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_201659_create_account_types_table.php on line 7
+[03-Aug-2023 11:56:26 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_210756_create_accounts_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_210756_create_accounts_table.php on line 7
+[03-Aug-2023 11:56:37 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_011900_create_categories_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_011900_create_categories_table.php on line 7
+[03-Aug-2023 11:56:48 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_193523_create_items_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_193523_create_items_table.php on line 7
+[03-Aug-2023 11:57:11 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161538_purchase_book.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161538_purchase_book.php on line 7
+[03-Aug-2023 11:57:22 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161609_cash_book.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161609_cash_book.php on line 7
+[03-Aug-2023 11:57:35 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_191057_outward.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_191057_outward.php on line 7
+[03-Aug-2023 11:57:48 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_192917_inward.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_192917_inward.php on line 7
+[03-Aug-2023 11:58:00 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170540_create_formulations_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170540_create_formulations_table.php on line 7
+[03-Aug-2023 11:58:12 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170614_create_formulation_details_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170614_create_formulation_details_table.php on line 7
+[03-Aug-2023 11:58:24 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_20_081648_account_ledger.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_20_081648_account_ledger.php on line 7
+[03-Aug-2023 11:58:36 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_25_003941_create_consumptions_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_25_003941_create_consumptions_table.php on line 7
+[03-Aug-2023 11:58:50 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_27_203124_inward_detail.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_27_203124_inward_detail.php on line 7
+[03-Aug-2023 11:59:03 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_01_27_191529_cashinhand_detail.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_01_27_191529_cashinhand_detail.php on line 7
+[03-Aug-2023 11:59:20 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_03_25_204721_dc.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_03_25_204721_dc.php on line 7
+[03-Aug-2023 12:26:07 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_160356_sales_book.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_160356_sales_book.php on line 7
+[03-Aug-2023 12:57:12 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_000000_create_users_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_000000_create_users_table.php on line 7
+[03-Aug-2023 12:57:33 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_25_003941_create_consumptions_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_25_003941_create_consumptions_table.php on line 7
+[03-Aug-2023 12:57:47 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2019_08_19_000000_create_failed_jobs_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2019_08_19_000000_create_failed_jobs_table.php on line 7
+[03-Aug-2023 12:58:01 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_081707_create_admins_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_081707_create_admins_table.php on line 7
+[03-Aug-2023 12:58:14 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_162435_create_permissions_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_07_14_162435_create_permissions_table.php on line 7
+[03-Aug-2023 12:58:22 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_192714_create_disciplines_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_192714_create_disciplines_table.php on line 7
+[03-Aug-2023 12:58:30 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_200515_create_subjects_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_200515_create_subjects_table.php on line 7
+[03-Aug-2023 12:58:38 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_100000_create_password_resets_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2014_10_12_100000_create_password_resets_table.php on line 7
+[03-Aug-2023 12:58:46 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_201659_create_account_types_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_201659_create_account_types_table.php on line 7
+[03-Aug-2023 12:58:54 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_210756_create_accounts_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_14_210756_create_accounts_table.php on line 7
+[03-Aug-2023 12:59:03 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_011900_create_categories_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_011900_create_categories_table.php on line 7
+[03-Aug-2023 12:59:11 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_193523_create_items_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_15_193523_create_items_table.php on line 7
+[03-Aug-2023 12:59:19 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161538_purchase_book.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161538_purchase_book.php on line 7
+[03-Aug-2023 12:59:27 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161609_cash_book.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_16_161609_cash_book.php on line 7
+[03-Aug-2023 12:59:34 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_191057_outward.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_191057_outward.php on line 7
+[03-Aug-2023 12:59:42 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_192917_inward.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_17_192917_inward.php on line 7
+[03-Aug-2023 12:59:51 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170540_create_formulations_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170540_create_formulations_table.php on line 7
+[03-Aug-2023 13:00:00 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170614_create_formulation_details_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_11_170614_create_formulation_details_table.php on line 7
+[03-Aug-2023 13:00:11 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_20_081648_account_ledger.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_20_081648_account_ledger.php on line 7
+[03-Aug-2023 13:00:23 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_27_203124_inward_detail.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_12_27_203124_inward_detail.php on line 7
+[03-Aug-2023 13:00:34 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_01_27_191529_cashinhand_detail.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_01_27_191529_cashinhand_detail.php on line 7
+[03-Aug-2023 13:00:48 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_03_25_204721_dc.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2023_03_25_204721_dc.php on line 7
+[03-Aug-2023 13:01:09 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_204228_create_topics_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/migrations/2022_11_12_204228_create_topics_table.php on line 7

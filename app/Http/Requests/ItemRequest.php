@@ -26,7 +26,7 @@ class ItemRequest extends FormRequest
         return [
             'category_id'   => ['required', 'max:500'],
             'name'          => ['required', 'max:255'],
-            'price'         => ['required', 'integer', 'min:0'],
+            'price'         => ['required'],
             'type'          => ['required', 'in:purchase,sale'],
             'stock_status'  => ['required', 'in:0,1'],
             'item_status'   => ['required', 'in:0,1'],

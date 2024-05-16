@@ -10,96 +10,128 @@
                 <div class="col-12">
                     <div class="page-title-box">
                         
-                        <h4 class="page-title">Sale Book Report</h4>
+                        <h4 class="page-title">Sales Ledger </h4><br />
                     </div>
                 </div>
             </div>
                 <form action="" id="form">
                     <div class="row">
-                        <div class="col-md-3">
-                            <label for="">Items</label>
-                            <select class="form-control select2" name="item_id" id="item_id">
-                                <option value="">Select item</option>
-                                @foreach($items AS $item)
-                                    <option value="{{ $item->hashid }}">{{ $item->name }}</option>
+                        <div class="col-md-4">
+                            <label for="">Account</label>
+                            <select class="form-control 
+                            select2" name="account_id" id="account_id" required>
+                                <option value="">Select Account</option>
+                                @foreach($acounts AS $ac)
+                                    <option value="{{ $ac->hashid }}">{{ $ac->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label for="">Accounts</label>
-                            <select class="form-control select2" name="account_id" id="account_id">
-                                <option value="">Select account</option>
-                                @foreach($accounts AS $account)
-                                    <option value="{{ $account->hashid }}">{{ $account->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="">From Date</label>
-                            <input type="date" class="form-control" name="from_date" id="from_date">
+                            <input type="date" class="form-control" name="from_date" id="from_date" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="">To Date</label>
-                            <input type="date" class="form-control" name="to_date" id="to_date">
+                            <input type="date" class="form-control" name="to_date" id="to_date" required>
                         </div>
                     </div>
                     <input type="submit" class="btn btn-primary float-right mt-2">
-                     <button class="btn btn-danger mt-2" id="pdf">PDF</button> 
-                     <button class="btn btn-warning mt-2" id="print">Print</button>
+                    <button class="btn btn-danger mt-2" id="pdf">PDF</button>
+                    <button class="btn btn-warning mt-2" id="print">Print</button>
                 </form>
             </div>
         </div>
     </div>
+    @if(isset($from_date))
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="header-title">sale Book Report</h4>
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box ">
+                        <center>
+                        <h2 style="color:green;  justify_content:center;"><span> <i class="glyphicon glyphicon-gift"></i> </span>{{@$account_name[0]['name']}}</h2>
+                    <h4>From {{date('d-M-Y', strtotime($from_date))}} to {{date('d-M-Y', strtotime($to_date))}}</h4>
+                        </center>
+                    
+                       
+                    </div>
                 </div>
-                <table class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100" id="example">
-                    <thead>
-                        <tr class="text-dark">
-                            <thead>
-                                <tr>
-                                  <th>Id.No</th>
-                                  <th>Date</th>
-                                  <th> Account Name </th>
-                                  <th> Item Name </th>
-                                  <th> No Of Bags </th>
-                                  <th> Bags Rate </th>
-                                  <th> Net Value </th>
-                                  <th> Remarks </th>
-                                  <!-- <th> Action </th> -->
-                                </tr>
-                            </thead>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($sales AS $sale)
-                        <tr class="text-dark">
-                          <td>{{ $loop->iteration }}</td>
-                          <td>{{ date('d-M-Y', strtotime($sale->date)) }}</td>
-                          <td>{{ @$sale->account->name }}</td>
-                          <td>{{ @$sale->item->name }}</td>
-                          <td>{{ @$sale->no_of_bags }}</td>
-                          <td>{{ $sale->bag_rate }}</td>
-                          <td>{{ $sale->net_ammount }}</td>
-                          <td>{{ $sale->remarks }}</td>
-                          <!-- <td width="120">
-                            <a href="{{route('admin.sales.edit', $sale->hashid)}}" class="btn btn-warning btn-xs waves-effect waves-light">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.sales.delete', $sale->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            </td> -->
-                        </tr>
-                       @endforeach
-                    </tbody>
-                </table>
+            </div>
+                
             </div>
         </div>
     </div>
+    @endif
+    <div class="col-12">
+        <div class="box">
+        <div class="box-header with-border">
+            <h4 class="box-title">ALL Sales Report</h4>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="table-responsive">
+                <table id="example" class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100">
+                <thead>
+                    <tr class="text-dark">
+                        <th>Date</th>
+                        <th colspan="1"> Description </th>
+                        <th> Dr </th>
+                        <th> Cr </th>
+                        <th> Balance </th>
+                        <th> cr/dr </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $tot_balance = 0; $tot_deb=0;
+                        $tot_credit=0;
+                    @endphp
+                    @if($sales != "")
+                        @foreach(@$sales AS $purchase)
+                            <tr class="text-dark">
+                            <td>{{ date('d-M-Y', strtotime($purchase->created_at)) }}</td>
+                            <td >{{ @$purchase->description }}</td>
+                            <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(@$purchase->debit) }}</span></td>
+                            <td><span class="waves-effect waves-light btn btn-success-light">{{  number_format(@$purchase->credit) }}</span></td>
+                            @if($purchase->debit == 0)
+                                <?php $tot_balance += $purchase->credit; $tot_credit += $purchase->credit;?>
+                                <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format($tot_balance) }}</span></td>
+                            @endif
+                            @if( @$purchase->credit == 0)
+                            <?php $tot_balance -= $purchase->debit; $tot_deb +=$purchase->debit;?>
+                                <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format($tot_balance) }}</span></td>
+                            @endif
+                            
+                            @if($tot_balance > 0)
+                                <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
+                            @endif
+                            @if( @$tot_balance < 0)
+                                <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
+                            @endif
+                            <td></td>
+                            
+                            </tr>
+                        @endforeach
+                    @endif    
+                </tbody>
+                <tfoot>
+                    <td colspan="2"></td>
+                    <td ><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_deb) }}</span></td>
+                    <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_credit) }}</span></td>
+                    <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_balance) }}</span></td>
+
+                </tfoot>
+            </table>
+            </div>              
+        </div>
+        <!-- /.box-body -->
+        </div>
+        <!-- /.box -->          
+    </div>
+   
+
 </div>
 @endsection
 

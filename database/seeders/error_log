@@ -1,0 +1,8 @@
+[03-Aug-2023 12:02:23 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Seeder" not found in /home3/poultryt/public_html/FeedSystem22/database/seeders/DatabaseSeeder.php:8
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/seeders/DatabaseSeeder.php on line 8
+[03-Aug-2023 13:00:59 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Seeder" not found in /home3/poultryt/public_html/FeedSystem22/database/seeders/DatabaseSeeder.php:8
+Stack trace:
+#0 {main}
+  thrown in /home3/poultryt/public_html/FeedSystem22/database/seeders/DatabaseSeeder.php on line 8
