@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('expire_medicine', function (Blueprint $table) {
+        Schema::create('expiry_stock', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('inv_no');
-            $table->integer('item_id');
-            $table->integer('account_id');
-            $table->string('quantity');
-            $table->integer('rate')->default(0);
-            $table->integer('net_ammount')->default(0);
-            $table->text('remarks')->nullable();
+            $table->unsignedBigInteger('medicine_invoice_id')->nullable();
+            $table->unsignedBigInteger('item_id');
+            $table->decimal('rate',10,2)->default(0.00);
+            $table->decimal('quantity',10,2)->default(0);
+            $table->date('expiry_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expire_medicine');
+        Schema::dropIfExists('expiry_stock');
     }
 };
