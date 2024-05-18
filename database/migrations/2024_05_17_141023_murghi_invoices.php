@@ -16,20 +16,20 @@ return new class extends Migration
         Schema::create('murghi_invoices', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('inv_no');
-            $table->string('ref_no')->nullable();
-            $table->integer('account_id');
-            $table->integer('item_id');
-            $table->string('unit');
-            $table->integer('rate')->default(0);
-            $table->integer('quantity')->default(0)->comment('Here Quantity is Weight');
+            $table->unsignedBigInteger('invoice_no');
+            $table->unsignedBigInteger('account_id');
+            $table->unsignedBigInteger('item_id');
+            $table->decimal('purchase_price',10,2)->default(0.00);
+            $table->decimal('sale_price',10,2)->default(0.00);
+            $table->decimal('quantity',10,2)->default(0.00); //Quanitty is weight
+            $table->decimal('amount',10,2)->default(0.00);
             $table->decimal('weight_detection', 10, 2);
             $table->decimal('final_weight', 10, 2);
-            $table->integer('ammount')->default(0);
-            $table->integer('net_ammount')->default(0);
-            $table->enum('type', ['purchase','sale','purchase_return','sale_return','adjust_in','adjust_out'])->default('active');
-            $table->enum('status', ['active','not_active'])->default('active');
-            $table->enum('whatsapp_status', ['send','not_send'])->default('send');
+            $table->decimal('net_amount',10,2)->default(0.00);
+            $table->enum('type', ['Purchase','Sale','Purchase Return','Sale Return','Adjust In','Adjust Out'])->nullable();
+            $table->enum('stock_type',['In','Out'])->default('In');
+            $table->enum('is_draft', [1,0])->default(0);
+            $table->enum('whatsapp_status', ['Sent','Not Sent'])->default('Sent');
             $table->text('remarks')->nullable();
             $table->softDeletes();
             $table->timestamps();
