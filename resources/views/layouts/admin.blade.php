@@ -344,11 +344,7 @@
                               </li>
                            </ul>
                         </li>
-                        <li> <a class="side-menu__item" href="{{route('admin.paymentbooks.index')}}"><i class="side-menu__icon fe fe-grid"></i><span class="side-menu__label">Payment Book</span></a> </li>
-                        <li class="sub-category">
-                           <h3>Inventory</h3>
-                        </li>
-                        
+
                         <li class="slide">
                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">CashBook</span><i class="angle fa fa-angle-right"></i></a> 
                            <ul class="slide-menu">
@@ -356,8 +352,27 @@
                               <li><a href="{{route('admin.cash.index')}}" class="slide-item"> Add CashBook</a></li>
                            </ul>
                         </li>
-
+                        <li> <a class="side-menu__item" href="{{route('admin.paymentbooks.index')}}"><i class="side-menu__icon fe fe-grid"></i><span class="side-menu__label">Payment Book</span></a> </li>
                         
+                        <li class="sub-category">
+                           <h3>Inventory Items</h3>
+                        </li>
+                        <li class="slide">
+                           <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Category</span><i class="angle fa fa-angle-right"></i></a> 
+                           <ul class="slide-menu">
+                              <li class="side-menu-label1"><a href="javascript:void(0);">Category</a></li>
+                              <li><a href="{{route('admin.categories.index')}}" class="slide-item"> Add Category</a></li>
+                              
+                           </ul>
+                        </li>
+                        <li class="slide">
+                           <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Company</span><i class="angle fa fa-angle-right"></i></a> 
+                           <ul class="slide-menu">
+                              <li class="side-menu-label1"><a href="javascript:void(0);">Company</a></li>
+                              <li><a href="{{route('admin.companys.index')}}" class="slide-item"> Add Company</a></li>
+                              
+                           </ul>
+                        </li>
                         <li class="slide">
                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Items</span><i class="angle fa fa-angle-right"></i></a> 
                            <ul class="slide-menu">
@@ -367,10 +382,6 @@
                              
                               
                            </ul>
-                        </li>
-
-                        <li class="sub-category">
-                           <h3>Modules &amp; Pages</h3>
                         </li>
                         <li class="slide">
                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-qq" aria-hidden="true"></i> &nbsp&nbsp&nbsp <span class="side-menu__label">Chicks</span><i class="angle fa fa-angle-right"></i></a> 
@@ -413,8 +424,8 @@
                               
                               <li><a href="{{route('admin.purchase_murghis.index')}}" class="slide-item"> Purchase Murghi</a></li>
                               <li><a href="{{route('admin.sale_murghis.index')}}" class="slide-item"> Sale Murghi</a></li>
-                              <li><a href="{{route('admin.reports.all_report', ['id' => 'purchase_murghi'])}}" class="slide-item"> Purchase Murghi Report</a></li>
-                              <li><a href="{{route('admin.reports.all_report', ['id' => 'sale_murghi'])}}" class="slide-item"> Sale Murghi Report</a></li>
+                              <!-- <li><a href="{{route('admin.reports.all_report', ['id' => 'purchase_murghi'])}}" class="slide-item"> Purchase Murghi Report</a></li>
+                              <li><a href="{{route('admin.reports.all_report', ['id' => 'sale_murghi'])}}" class="slide-item"> Sale Murghi Report</a></li> -->
                               
                            </ul>
                         </li>
@@ -448,7 +459,7 @@
                         </li>
                         
                         <li class="sub-category">
-                           <h3>Forms &amp; Icons</h3>
+                           <h3>Inventory Stocks</h3>
                         </li>
                         <li class="slide">
                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file-text"></i><span class="side-menu__label">Stock & Inventory</span><span class="badge bg-success side-badge">5</span><i class="angle fa fa-angle-right hor-rightangle"></i></a> 
@@ -460,10 +471,7 @@
                               <li><a href="{{route('admin.reports.medicine_item_wise_stock_report')}}" class="slide-item">Medicine Itemwise Stock Report </a></li>
                            </ul>
                         </li>
-                        <li class="slide">
-                           <a class="side-menu__item" href="{{route('admin.orders.order')}}"><i class="side-menu__icon fe fe-command"></i><span class="side-menu__label">Add Customer Order</span></a> 
-                           
-                        </li> 
+                       
                      </ul>
                      <div class="slide-right" id="slide-right">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">

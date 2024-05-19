@@ -1,81 +1,100 @@
+
 @extends('layouts.admin')
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box">
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Category</li>
-                </ol>
-            </div>
-            <h4 class="page-title">All Categoreis</h4>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="header-title">{{ (isset($is_update)) ? 'Update' : 'Add' }} Category</h4>
+   
+<div class="main-content app-content mt-5">
+  <div class="side-app">
+    <!-- CONTAINER --> 
+    <div class="main-container container-fluid">
+        <!-- PAGE-HEADER --> 
+        
+       
+        <!-- COL END --> <!-- ROW-3 END --> <!-- ROW-5 --> 
+        <div class="row">
+          <div class="col-12 col-sm-12">
+              <div class="card ">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Add Category Details</h3>
                 </div>
-                <form action="{{ route('admin.categories.store') }}" class="ajaxForm" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-10">
-                            <label for="">Category Name</label>
-                            <input type="text" class="form-control" placeholder="Enter category name" value="{{ @$edit_category->name }}" name="name" id="name" required>
-                        </div>
-                        <div class="col-md-2 mt-2">
-                            <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
-                            <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
-                        </div>
+                <div class="card-body">
+                
+                  <div class="card-block">
+                    <div class="item_row">
+                      
+                      <form action="{{ route('admin.categories.store') }}" class="ajaxForm" method="POST">
+                          @csrf
+                          <div class="row">
+                              <div class="col-md-10">
+                                  <label for="">Category Name</label>
+                                  <input type="text" class="form-control" placeholder="Enter category name" value="{{ @$edit_category->name }}" name="name" id="name" required>
+                              </div>
+                              <div class="col-md-2 mt-5">
+                                  <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
+                                  <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
+                              </div>
+                          </div>
+                      </form>
+                      <br /><br />
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>        
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="header-title">Staffs</h4>
-                    {{-- <a href="{{ route('admin.staffs.add') }}" class="btn btn-primary">Add Ac</a> --}}
+
+                  </div>
                 </div>
-                <p class="sub-header">Following is the list of all the categories.</p>
-                <table class="table dt_table table-bordered w-100 nowrap" id="laravel_datatable">
-                    <thead>
-                        <tr>
-                            <th width="20">S.No</th>
-                            <th>Category</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($categories AS $category)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $category->name }}</td>
-                                <td width="120">
-                                    <a href="{{route('admin.categories.edit', $category->hashid)}}" class="btn btn-warning btn-xs waves-effect waves-light">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.categories.delete', $category->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+              </div>
+          </div>
+          <!-- COL END --> 
         </div>
+        <!-- ROW-5 END -->
+        
+       
+        <div class="row">
+          <div class="col-12 col-sm-12">
+              <div class="card ">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">All Categories</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                      <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                          
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <table id="example54" class="table table-bordered text-nowrap mb-0 dataTable no-footer" role="grid" aria-describedby="data-table_info">
+                                  <thead>
+                                      <tr>
+                                          <th width="20">S.No</th>
+                                          <th>Category</th>
+                                          <th>Action</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @foreach($categories AS $category)
+                                          <tr>
+                                              <td>{{ $loop->iteration }}</td>
+                                              <td>{{ $category->name }}</td>
+                                              <td width="120">
+                                                  <a href="{{route('admin.categories.edit', $category->hashid)}}" >
+                                                  <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                                  </a>
+                                                  
+                                              </td>
+                                          </tr>
+                                      @endforeach
+                                  </tbody>    
+                                </table>
+                              </div>
+                            </div>
+                          
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+        
     </div>
+    <!-- CONTAINER END --> 
+  </div>
 </div>
+
 @endsection
 
-@section('page-scripts')
-@include('admin.partials.datatable')
-@endsection
+

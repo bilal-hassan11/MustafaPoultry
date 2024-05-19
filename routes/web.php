@@ -64,12 +64,9 @@ Route::get('/clear-cache', function() {
 });
 
 
-Route::get('/shade', [ShadeController::class, 'index'])->name('index');
-Route::get('/saving_outward', [OutwardController::class, 'save'])->name('save_outward');
 Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(function () {
     
     Route::get('/', [HomeController::class, 'index'])->name('home');
-
     //Artisan Commands
     Route::prefix('artisan/command')->controller(ArtisanController::class)->name('artisan.command.')->group(function () {
         Route::get('/config_cache', 'config_cache')->name('config_cache');
@@ -81,7 +78,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/migrate', 'migrate')->name('migrate');
     });
 
-    
     //Staffs routes
     Route::controller(StaffController::class)->prefix('staffs')->name('staffs.')->group(function(){
         Route::get('/', 'index')->name('all');
@@ -97,6 +93,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/save-profile', 'save_profile')->name('save_profile');
         Route::post('/change-password', 'change_password')->name('change_password');
     });
+
     //permission routes
     Route::controller(PermissionController::class)->prefix('permission')->name('permissions.')->group(function(){
         Route::get('/', 'index')->name('index');
@@ -137,15 +134,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
     
-    //Details 
-    Route::controller(DetailViewController::class)->prefix('detial')->name('details.')->group(function(){
-        Route::get('/', 'active_item')->name('active_item');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-    
-    //item routes
+    //Item routes
     Route::controller(ItemController::class)->prefix('items')->name('items.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('/add', 'add')->name('add');
@@ -154,13 +143,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
-    //consumption routes
-    Route::controller(ConsumptionController::class)->prefix('consumption')->name('consumptions.')->group(function(){
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
 
     //Item Addition in Shade routes
     Route::controller(ItemAddittionController::class)->prefix('addittion')->name('addittions.')->group(function(){
@@ -297,17 +279,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
 
     });
 
-    //formulation routes
-    Route::controller(FormulationController::class)->prefix('formulation')->name('formulations.')->group(function(){
-        Route::get('/', 'index')->name('index');
-        Route::get('/add', 'add')->name('add');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/check-product-qty/{id}', 'checkProductQuantity')->name('check_product_qty');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete-row/{id}', 'deleteRow')->name('delete_row');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-        Route::get('/view/{id}', 'view')->name('view');
-    });
     
     //common functions routes
     Route::controller(CommonController::class)->name('common.')->group(function(){
@@ -320,16 +291,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     
     });
 
-
-    //manufacture item
-    Route::controller(ManufactureItemController::class)->prefix('manufacture-item')->name('manufactures.')->group(function(){
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
-    //New Controllers 
     //Company 
     Route::controller(CompanyController::class)->prefix('company')->name('companys.')->group(function(){
         Route::get('/', 'index')->name('index');
@@ -340,16 +301,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/typestore', 'storetype')->name('store_type');
         Route::get('/typeedit/{id}', 'typeedit')->name('edit_type');
         Route::get('/typedelete/{id}', 'typedelete')->name('typedelete');
-    });
-
-
-    Route::controller(CustomerOrderController::class)->prefix('order')->name('orders.')->group(function(){
-        
-        Route::get('/order', 'order')->name('order');
-        Route::post('/orderstore', 'orderstore')->name('orderstore');
-        Route::get('/orderedit/{id}', 'orderedit')->name('orderedit');
-        Route::get('/orderdelete/{id}', 'orderdelete')->name('orderdelete');
-        
     });
 
 
@@ -466,46 +417,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
 
 });
 
-Route::controller(InwardController::class)->prefix('inward')->name('inwards.')->group(function(){
-    Route::get('/all_inward', 'index')->name('inward');
-    Route::get('/get_inward', 'get_account')->name('get_account');
-    Route::get('/get_items', 'get_items')->name('get_items');
-    Route::get('/consumption', 'consumption')->name('consumption');
-
-    
-});
-
-Route::post('/save_outward', [OutwardController::class, 'save_outward'])->name('save_outward');
-//Weighbridge Outward
-Route::controller(OutwardController::class)->prefix('outward')->name('outwards.')->group(function(){
-    Route::get('/all_outward', 'index')->name('outward');
-    Route::get('/save', 'save')->name('save');
-    Route::get('/edit', 'edit')->name('edit');  
-    Route::get('/edit_outward', 'edit_outward')->name('edit_outward');
-
-    Route::get('/all_items', 'all_items')->name('all_items');
-    Route::get('/all_accounts', 'all_accounts')->name('all_accounts');
-    Route::get('/acc_id', 'acc_id')->name('acc_id');
-    Route::get('/inward_report', 'inward_report')->name('inward_report');
-    Route::get('/outward_report', 'outward_report')->name('outward_report');
-    Route::get('/get_account', 'get_account')->name('get_account');
-    Route::get('/get_item', 'get_item')->name('get_item');
-
-    
-});
-
-//Weighbridge Inward
-Route::controller(InwardController::class)->prefix('inward')->name('inwards.')->group(function(){
-    Route::get('/all_inward', 'index')->name('inward');
-    Route::get('/save', 'save')->name('save');
-    Route::get('/edit', 'edit')->name('edit');  
-    Route::get('/edit_inward', 'edit_inward')->name('edit_inward');
-
-    Route::get('/all_items', 'all_items')->name('all_items');
-    Route::get('/all_accounts', 'all_accounts')->name('all_accounts');
-
-    
-});
 
 Route::prefix('cronjobs')->group(function () {
     Route::get('/{method}', [CronJobController::class, 'index']);
