@@ -36,6 +36,8 @@ class MedicineController extends Controller
         $data = array(
             'title'     => 'Purchase Medicine',
             'accounts'  => Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name'),
+            'products' => Item::where('category_id', '4')->latest()->get(),
+
             'category'          => Category::with(['companies', 'items'])->where('name', 'Medicine')->first(),
             'purchase_medicines'     => PurchaseMedicine::with(['company','account','item'])
                                             ->when(isset($req->account_id), function($query) use ($req){
@@ -56,13 +58,7 @@ class MedicineController extends Controller
         return view('admin.medicine.purchase_medicine')->with($data);
     }
 
-    public function sale_medicine_invoice(Request $req){
-        $data = array(
-            'title'     => 'Medicine Invoice',
-            
-        );
-        return view('admin.medicine.invoice')->with($data);
-    }
+  
 
     public function storePurchaseMedicine(Request $req){
         
@@ -228,30 +224,13 @@ class MedicineController extends Controller
 
     public function sale_medicine(Request $req){
         
-        //dd("Fsdf");
        
-        $gp_no = SaleMedicine::latest()->first();
-        
-        if($gp_no == null){
-           
-            $gp_no['invoice_no'] = "GH-00";
-        
-        }else{
-
-            $g = $gp_no['invoice_no'];
-        }
-
-        $ac = explode("-",$gp_no['invoice_no']);
-        $p = "GH-0";
-        $v = $ac[1]+ 1;
-        $n = $p.$v;
         
         $data = array(
             'title'     => 'Sale Medicine',
             'accounts'  => Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name'),
             'category'          => Category::with(['companies', 'items'])->where('name', 'Medicine')->first(),
-            'shades'          => Shade::latest()->get(),
-            'invoice_no'      =>$n,
+            'products' => Item::where('category_id', '4')->latest()->get(),
             'sale_medicines'     => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
@@ -263,6 +242,14 @@ class MedicineController extends Controller
             'purchase_items' => Item::where('type', 'purchase')->latest()->get(),
         );
         return view('admin.medicine.sale_medicine')->with($data);
+    }
+
+    public function sale_medicine_invoice(Request $req){
+        $data = array(
+            'title'     => 'Medicine Invoice',
+            
+        );
+        return view('admin.medicine.invoice')->with($data);
     }
 
     public function storeSaleMedicine(Request $req){

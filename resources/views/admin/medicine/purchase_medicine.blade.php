@@ -2,214 +2,153 @@
 @extends('layouts.admin')
 @section('content')
  
-
 <div class="main-content app-content mt-5">
   <div class="side-app">
     <!-- CONTAINER --> 
     <div class="main-container container-fluid">
         <!-- PAGE-HEADER --> 
-        
-       
-        <!-- COL END --> <!-- ROW-3 END --> <!-- ROW-5 --> 
         <div class="row">
           <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0">Add Purchase Medicine Details</h3>
-                </div>
-                <div class="card-body">
-                
-                <div class="card-block">
-            <div class="item_row">
-              
-            <form class="ajaxForm" role="form" action="{{ route('admin.medicines.purchase_store') }}" method="POST">
-              @csrf
-                <div class="row">
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label>Date</label>
-                      <input class="form-control" type="date" name="date" value="{{ (isset($is_update)) ? date('Y-m-d', strtotime($edit_medicine->date)) : date('Y-m-d') }}" required>
-                    </div>
+            <div class="card">
+              <form id="formData" method="POST" action="#">
+                  @csrf
+                  <div class="card-header">
+                      <h4> Add Purchase Medicine </h4>
                   </div>
-                  <div class="col-md-1 form-group">
-                      <label for="">Invoice No</label>
-                      <input type="text" class="form-control " name="Invoice_no" id="Invoice_no" value="{{ @$edit_medicine->invoice_no }}" required>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Company(All Medicine Companies) </label>
-                      <select class="form-control select2" name="company_id" id="company_id">
-                          <option value=""> Select Company</option>
-                        @foreach($category->companies AS $company)
-                          
-                          <option value="{{ $company->hashid }}" @if(@$edit_medicine->company_id == $company->id) selected @endif>{{ $company->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-md-2 mb-3">
+                              <label for="date" class="required">Invoice No</label>
+                              <input type="text" name="invoice_no" class="form-control" value="0" >
+                          </div>
+                          <div class="col-md-2 mb-3">
+                              <label for="date" class="required">Date</label>
+                              <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}">
+                          </div>
 
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Item (selectd Companies Item)</label>
-                      <select class="form-control select2" name="item_id" id="item_id22">
-                        <option value="">Select Item</option>
-                        @foreach($category->items AS $item)
-                          <option value="{{ $item->hashid }}" data-price="{{ $item->purchase_ammount }}" @if(@$edit_medicine->item_id == $item->id) selected @endif>{{ $item->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
+                          <div class="col-md-4 mb-3">
+                          </div>
+                          <div class="col-md-4 mb-3">
+                              <label for="date" class="required">Ref No</label>
+                              <input type="text" name="ref_no" class="form-control" value="0" >
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-2 mb-3">
+                              
+                          </div>
+                          <div class="col-md-2 mb-3">
+                              
+                          </div>
 
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Account </label>
-                      <select class="form-control select2" name="account_id" id="account_id22">
-                        <option value="">Select Account</option>
-                        @foreach($accounts AS $account)
-                          <option value="{{ $account->hashid }}" @if(@$edit_medicine->account_id == $account->id) selected @endif data-commission="{{ $account->commission }}" data-discount="{{ $account->discount }}">{{ $account->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
+                          <div class="col-md-4 mb-3">
+                          </div>
+                          <div class="col-md-4 mb-3">
+                            <label for=""> Account </label>
+                            <select class="form-control select2" name="account_id" id="account_id11">
+                              <option value="">Select Account</option>
+                              @foreach($accounts AS $account)
+                                <option value="{{ $account->hashid }}" @if(@$edit_medicine->account_id == $account->id) selected @endif data-commission="{{ $account->commission }}" data-discount="{{ $account->discount }}">{{ $account->name }}</option>
+                              @endforeach
+                            </select>
+                          </div>
+                      </div>
                   </div>
-                </div>
+                  <div class="card-body" style="width: 100%; overflow-x: auto">
+                      <table class="table table-bordered text-center add-stock-table" style="width: 100%">
+                          <thead>
+                              <tr>
+                                  <th style="width: 20%;">Item</th>
+                                  <th style="width: 10%;">Unit</th>
+                                  <th style="width: 10%;">Rate</th>
+                                  <th style="width: 10%;">Quantity</th>
+                                  <th style="width: 20%;">Expiry</th>
+                                  <th style="width: 10%;">Dis In (Rs)</th>
+                                  <th style="width: 10%;">Dis In (%)</th>
+                                  <th style="width: 20%;">Amount</th>
+                                  <th style="width: 20%;">Action</th>
+                              </tr>
+                          </thead>
+                          <tbody id="row">
+                          </tbody>
+                          <tfoot>
+                              <tr>
+                                  <td colspan="6"></td>
+                                  <td >
+                                    <label for="">Total Dis</label>
+                                    <input type="number" name="total_discount" class="form-control  text-right" value="0">
+                                  </td>
+                                  <td >
+                                    <label for=""> Grand Total</label>
+                                    <input type="number" name="grand_total" class="form-control  text-right" value="0">
+                                  </td>
 
-                </div>
-                <div class="row">
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Rate</label>
-                      <input class="form-control" name="rate" id="rate"  value="{{ @$edit_medicine->rate }}" required>
-                    </div>
+                                  <td>
+                                      <button type="button"
+                                          class="btn btn-info btn-sm add-row">Add Row</button>
+                                  </td>
+                              </tr>
+                          </tfoot>
+                      </table>
+                      <button type="button" class="btn btn-success mt-2" id="submit-form">Save</button>
                   </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Quantity</label>
-                      <input class="form-control" name="quantity" id="quantity" value="{{ @$edit_medicine->quantity }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Purchase Ammount</label>
-                      <input class="form-control" name="purchase_ammount" id="purchase_ammount" value="{{ @$edit_medicine->purchase_ammount }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Status </label>
-                        <select class="form-control select2" name="status" id="status">
-                          <option value="available" @if(@$edit_medicine->status == 'available') selected @endif>Available</option>
-                          <option value="not_available" @if(@$edit_medicine->status == 'not_available') selected @endif>Not Available</option>
-                        </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label>Commission</label>
-                      <input class="form-control" name="commission" id="commission"  value="{{ @$edit_medicine->commission }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label>Discount</label>
-                      <input class="form-control" name="discount" id="discount"  value="{{ @$edit_medicine->discount }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label>Other Charges</label>
-                      <input class="form-control" name="other_charges" id="other_charges" value="{{ @$edit_medicine->other_charges }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Net Ammount</label>
-                      <input class="form-control" name="net_ammount"  id="net_ammount" value="{{ @$edit_medicine->net_ammount }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label>Expiry Date</label>
-                      <input class="form-control" type="date" name="expiry_date"  id="expiry_date" value="{{ (isset($is_update)) ? date('Y-m-d', strtotime($edit_medicine->expiry_date)) : date('Y-m-d') }}" required>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 form-group">
-                      <label for="">Remarks</label>
-                      <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4">{{ @$edit_medicine->remarks }}</textarea>
-                    </div>
-                </div>
-                <input type="hidden" name="purchase_medicine_id" value="{{ @$edit_medicine->hashid }}">
-                <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
-
               </form>
-              <br /><br />
-            </div>
 
-          </div>
             </div>
-              </div>
           </div>
-          <!-- COL END --> 
         </div>
-        <!-- ROW-5 END -->
-        
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-12 col-sm-12">
               <div class="card ">
                 <div class="card-header">
                     <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
                 </div>
                 <div class="card-body">
-                <form action="" method="GET">
-          @csrf
-          <div class="row">
-            
-            <div class="col-md-3">
-              <label for="">Accounts</label>
-                <select class="form-control select2" name="account_id" id="account_id">
-                  <option value="">Select Account</option>
-                  @foreach($accounts AS $account)
-                    <option value="{{ $account->hashid }}" >{{ $account->name }}</option>
-                  @endforeach
-                </select>
-            </div>
-            <div class="col-md-2">
-              <label for="">Invoice No</label>
-              <input type="text" class="form-control" name="invoice_no" id="invoice_no">
-            </div>
-            <div class="col-md-2">
-              <label for="">Item</label>
-              <select class="form-control select2" name="item_id" id="item_id">
-                <option value="">Select Item</option>
-                @foreach($category->items AS $item)
-                  <option value="{{ $item->hashid }}" data-price="{{ $item->purchase_ammount }}" @if(@$edit_medicine->item_id == $item->id) selected @endif>{{ $item->name }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="">From</label>
-              <input type="date" class="form-control" name="from_date" id="from_date">
-            </div>
-            <div class="col-md-2">
-              <label for="">To</label>
-              <input type="date" class="form-control" name="to_date" id="to_date">
-            </div>
-            <div class="col-md-1 mt-6">
-              <input type="submit" class="btn btn-primary" value="Search">
-            </div>
-          </div>
-        </form>
-                
-            </div>
+                  <form action="" method="GET">
+                    @csrf
+                    <div class="row">
+                      
+                      <div class="col-md-3">
+                        <label for="">Accounts</label>
+                          <select class="form-control select2" name="account_id" id="account_id">
+                            <option value="">Select Account</option>
+                            @foreach($accounts AS $account)
+                              <option value="{{ $account->hashid }}" >{{ $account->name }}</option>
+                            @endforeach
+                          </select>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="">Invoice No</label>
+                        <input type="text" class="form-control" name="invoice_no" id="invoice_no">
+                      </div>
+                      <div class="col-md-2">
+                        <label for="">Item</label>
+                        <select class="form-control select2" name="item_id" id="item_id">
+                          <option value="">Select Item</option>
+                          @foreach($category->items AS $item)
+                            <option value="{{ $item->hashid }}" data-price="{{ $item->purchase_ammount }}" @if(@$edit_medicine->item_id == $item->id) selected @endif>{{ $item->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="">From</label>
+                        <input type="date" class="form-control" name="from_date" id="from_date">
+                      </div>
+                      <div class="col-md-2">
+                        <label for="">To</label>
+                        <input type="date" class="form-control" name="to_date" id="to_date">
+                      </div>
+                      <div class="col-md-1 mt-6">
+                        <input type="submit" class="btn btn-primary" value="Search">
+                      </div>
+                    </div>
+                  </form>
+                </div>
               </div>
           </div>
-          <!-- COL END --> 
-        </div>
-        
-        <div class="row">
+          
+        </div> -->
+        <!-- <div class="row">
           <div class="col-12 col-sm-12">
               <div class="card ">
                 <div class="card-header">
@@ -252,9 +191,7 @@
                             <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
 
                             </a>
-                            <!--<button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.purchase_delete', ['id'=>$purcahse->hashid]) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">-->
-                            <!--<i class="fa-sharp fa-solid fa-trash"></i> &nbsp -->
-                            <!--</button>-->
+                           
                           </td>
                         </tr>
                     @endforeach
@@ -278,19 +215,80 @@
             </div>
               </div>
           </div>
-          <!-- COL END --> 
-        </div>
+          
+        </div> -->
     </div>
     <!-- CONTAINER END --> 
   </div>
-</div>
-
-
-    
+</div>    
 @endsection
 
 @section('page-scripts')
+<script type="text/javascript">
+    let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
+    console.log(productDetailsArray);
+    $(document).ready(function() {
 
+        addRow();
+
+        $(".add-row").click(addRow);
+
+        function addRow() {
+            let row = `
+            <tr class="rows">
+                <td class="product_col">
+                    @if ($products)
+                    <select class="form-control product product_val select2" name="product[]" id="products" required>
+                        <option value="">Select Items</option>
+                        @foreach ($products as $product)
+                        <option value="{{ $product->id }}">{{ $product->name ?? '' }}</option>
+                        @endforeach
+                    </select>
+                    @endif
+                </td>
+                
+                <td class="unit">
+                  <input type="text" name="unit[]" class="form-control unit text-right" value="1">
+                </td>
+                <td class="unit_qty">
+                  <input type="number" name="unit_qty[]" class="form-control unitRate text-right" value="1">
+                </td>
+                <td class="quantity_col">
+                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1"  >
+                </td>
+                <td class="expiry_date">
+                  <input type="date" name="expiry_date[]" class="form-control text-right" value="1">
+                </td>
+                <td class="dis_in_rs">
+                    <input type="number" name="dis_in_rs[]" class="form-control dis_in_rs text-right" value="0">
+                </td>
+                <td class="dis_in_percentage">
+                    <input type="number" name="dis_in_percentage[]" class="form-control dis_in_percentage text-right" min="0" value="0" >
+                </td>
+                <td class="amount_col">
+                    <input type="number" name="amount[]" class="form-control amount text-right" min="0" value="0"  >
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm delete-row" title="Delete">Remove</button>
+                </td>
+            </tr>
+        `;
+            $("table tbody").append(row);
+            
+            // Hide delete button for the first row
+            if ($("table tbody tr").length > 0) {
+                $("table tbody tr:first .delete-row").hide();
+            }
+        }
+
+        $(document).on("click", ".delete-row", function() {
+            $(this).closest("tr").remove();
+        });
+
+
+       
+    });
+</script>
 <script>
 
 
