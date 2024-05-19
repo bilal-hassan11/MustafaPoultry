@@ -14,6 +14,8 @@ class FeedInvoice extends Model
         'date',
         'invoice_no',
         'account_id',
+        'ref_no',
+        'description',
         'item_id',
         'unit',
         'purchase_price',

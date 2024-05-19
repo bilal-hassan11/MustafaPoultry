@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedBigInteger('invoice_no');
             $table->unsignedBigInteger('account_id');
+            $table->string('ref_no')->nullable();
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('item_id');
             $table->decimal('purchase_price',10,2)->default(0.00);
             $table->decimal('sale_price',10,2)->default(0.00);

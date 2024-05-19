@@ -31,7 +31,8 @@
     },
     "autoload": {
         "files": [
-            "app/Http/Helpers_dianuj.php"
+            "app/Http/Helpers_dianuj.php",
+            "app/Helpers/helpers.php"
         ],
         "psr-4": {
             "App\\": "app/",

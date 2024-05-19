@@ -14,6 +14,8 @@ class MurghiInvoice extends Model
         'date',
         'invoice_no',
         'account_id',
+        'ref_no',
+        'description',
         'item_id',
         'purchase_price',
         'sale_price',

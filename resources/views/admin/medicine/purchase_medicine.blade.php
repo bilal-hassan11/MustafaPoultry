@@ -1,244 +1,117 @@
-
 @extends('layouts.admin')
 @section('content')
- 
-<div class="main-content app-content mt-5">
-  <div class="side-app">
-    <!-- CONTAINER --> 
-    <div class="main-container container-fluid">
-        <!-- PAGE-HEADER --> 
-        <div class="row">
-          <div class="col-12 col-sm-12">
-            <div class="card">
-              <form id="formData" method="POST" action="#">
-                  @csrf
-                  <div class="card-header">
-                      <h4> Add Purchase Medicine </h4>
-                  </div>
-                  <div class="card-body">
-                      <div class="row">
-                          <div class="col-md-2 mb-3">
-                              <label for="date" class="required">Invoice No</label>
-                              <input type="text" name="invoice_no" class="form-control" value="0" >
-                          </div>
-                          <div class="col-md-2 mb-3">
-                              <label for="date" class="required">Date</label>
-                              <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}">
-                          </div>
-
-                          <div class="col-md-4 mb-3">
-                          </div>
-                          <div class="col-md-4 mb-3">
-                              <label for="date" class="required">Ref No</label>
-                              <input type="text" name="ref_no" class="form-control" value="0" >
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-md-2 mb-3">
-                              
-                          </div>
-                          <div class="col-md-2 mb-3">
-                              
-                          </div>
-
-                          <div class="col-md-4 mb-3">
-                          </div>
-                          <div class="col-md-4 mb-3">
-                            <label for=""> Account </label>
-                            <select class="form-control select2" name="account_id" id="account_id11">
-                              <option value="">Select Account</option>
-                              @foreach($accounts AS $account)
-                                <option value="{{ $account->hashid }}" @if(@$edit_medicine->account_id == $account->id) selected @endif data-commission="{{ $account->commission }}" data-discount="{{ $account->discount }}">{{ $account->name }}</option>
-                              @endforeach
-                            </select>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="card-body" style="width: 100%; overflow-x: auto">
-                      <table class="table table-bordered text-center add-stock-table" style="width: 100%">
-                          <thead>
-                              <tr>
-                                  <th style="width: 20%;">Item</th>
-                                  <th style="width: 10%;">Unit</th>
-                                  <th style="width: 10%;">Rate</th>
-                                  <th style="width: 10%;">Quantity</th>
-                                  <th style="width: 20%;">Expiry</th>
-                                  <th style="width: 10%;">Dis In (Rs)</th>
-                                  <th style="width: 10%;">Dis In (%)</th>
-                                  <th style="width: 20%;">Amount</th>
-                                  <th style="width: 20%;">Action</th>
-                              </tr>
-                          </thead>
-                          <tbody id="row">
-                          </tbody>
-                          <tfoot>
-                              <tr>
-                                  <td colspan="6"></td>
-                                  <td >
-                                    <label for="">Total Dis</label>
-                                    <input type="number" name="total_discount" class="form-control  text-right" value="0">
-                                  </td>
-                                  <td >
-                                    <label for=""> Grand Total</label>
-                                    <input type="number" name="grand_total" class="form-control  text-right" value="0">
-                                  </td>
-
-                                  <td>
-                                      <button type="button"
-                                          class="btn btn-info btn-sm add-row">Add Row</button>
-                                  </td>
-                              </tr>
-                          </tfoot>
-                      </table>
-                      <button type="button" class="btn btn-success mt-2" id="submit-form">Save</button>
-                  </div>
-              </form>
-
-            </div>
-          </div>
-        </div>
-        <!-- <div class="row">
-          <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
-                </div>
-                <div class="card-body">
-                  <form action="" method="GET">
-                    @csrf
-                    <div class="row">
-                      
-                      <div class="col-md-3">
-                        <label for="">Accounts</label>
-                          <select class="form-control select2" name="account_id" id="account_id">
-                            <option value="">Select Account</option>
-                            @foreach($accounts AS $account)
-                              <option value="{{ $account->hashid }}" >{{ $account->name }}</option>
-                            @endforeach
-                          </select>
-                      </div>
-                      <div class="col-md-2">
-                        <label for="">Invoice No</label>
-                        <input type="text" class="form-control" name="invoice_no" id="invoice_no">
-                      </div>
-                      <div class="col-md-2">
-                        <label for="">Item</label>
-                        <select class="form-control select2" name="item_id" id="item_id">
-                          <option value="">Select Item</option>
-                          @foreach($category->items AS $item)
-                            <option value="{{ $item->hashid }}" data-price="{{ $item->purchase_ammount }}" @if(@$edit_medicine->item_id == $item->id) selected @endif>{{ $item->name }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                      <div class="col-md-2">
-                        <label for="">From</label>
-                        <input type="date" class="form-control" name="from_date" id="from_date">
-                      </div>
-                      <div class="col-md-2">
-                        <label for="">To</label>
-                        <input type="date" class="form-control" name="to_date" id="to_date">
-                      </div>
-                      <div class="col-md-1 mt-6">
-                        <input type="submit" class="btn btn-primary" value="Search">
-                      </div>
+    <div class="main-content app-content mt-5">
+        <div class="side-app">
+            <div class="main-container container-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Purchase Medicine</h4>
                     </div>
-                  </form>
+                    <form id="formData">
+                        @csrf
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label for="invoice_no" class="required">Invoice No</label>
+                                    <input type="text" name="invoice_no" class="form-control text-right"
+                                        value="{{ $invoice_no }}" readonly>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="date" class="required">Date</label>
+                                    <input type="date" name="date" class="form-control text-right"
+                                        value="{{ date('Y-m-d') }}">
+                                </div>
+                                <div class="col-md-4 mb-3"></div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="ref_no" class="required">Reference No</label>
+                                    <input type="text" name="ref_no" class="form-control text-right"
+                                        placeholder="Reference No">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="account_id">Account</label>
+                                    <select class="form-control select2" name="account" id="account_id11">
+                                        <option value="">Select Account</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}">{{ $account->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label for="description" class="required">Description</label>
+                                    <input type="text" name="description" class="form-control text-right"
+                                        placeholder="Description">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body" style="width: 100%; overflow-x: auto">
+                            <table class="table responsive table-bordered text-center add-stock-table" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">Item</th>
+                                        <th style="width: auto;">Quantity</th>
+                                        <th style="width: auto;">Rate</th>
+                                        <th style="width: auto;">Expiry</th>
+                                        <th style="width: auto;">Dis In (Rs)</th>
+                                        <th style="width: auto;">Dis In (%)</th>
+                                        <th style="width: auto;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="row">
+                                </tbody>
+                                <tfoot>
+                                    <tr style="text-align: right;">
+                                        <td colspan="6">
+                                            <label>Subtotal</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="subtotal" class="form-control text-right"
+                                                value="0" style="text-align: right;" readonly>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-sm btn-info fa fa-plus add-row"
+                                                title="Add Row"></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" style="text-align: right;">
+                                            Discount
+                                        </td>
+                                        <td>
+                                            <input type="text" name="total_discount" class="form-control text-right"
+                                                value="0" style="text-align: right;" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr style="text-align: right;">
+                                        <td colspan="6">
+                                            <label>Net Amount</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="net_bill" class="form-control text-right"
+                                                value="0" style="text-align: right;" readonly>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <button type="submit" id="saveButton" class="btn btn-primary mt-2">Save</button>
+                        </div>
+                    </form>
                 </div>
-              </div>
-          </div>
-          
-        </div> -->
-        <!-- <div class="row">
-          <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0">All Purchase Medicine Detail</h3>
-                </div>
-                <div class="card-body">
-                <table id="example54" class="text-fade table table-bordered" style="width:100%">
-                <thead>
-                      <tr class="text-dark">
-                        <th>ID</th>
-                        <th>Date</th>
-                        <th>Invoice No</th>
-                        <th>Account Name</th>
-                        <th>Company Name</th>
-                        <th>Item</th>
-                        <th>Rate</th>
-                        <th>Quantity</th>
-                        <th>Net Ammount</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    <?php $tot_qty = 0; $tot_amt = 0; ?>
-                      @foreach($purchase_medicines AS $purcahse) 
-                        <tr class="text-dark">
-                          <td>{{ @$purcahse->id }}</td>
-                          <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
-                          <td>{{ @$purcahse->invoice_no }}</td>
-                          
-                          <td>[{{@$purcahse->account->id}}]{{ @$purcahse->account->name }}</td>
-                          <td>{{ @$purcahse->company->name }}</td>
-                          <td>{{ @$purcahse->item->name }}</td>
-                          <td>{{ @$purcahse->rate }}</td>
-                          <?php $tot_qty += @$purcahse->quantity;  ?>
-                          <?php $tot_amt +=  @$purcahse->net_ammount; ?>
-                          <td>{{ @$purcahse->quantity }}</td>
-                          <td>{{ @$purcahse->net_ammount }}</td>
-                          <td>
-                            <a href="{{ route('admin.medicines.purchase_edit',['id'=>$purcahse->hashid]) }}" >
-                            <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
-
-                            </a>
-                           
-                          </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                    <tfoot>
-                      <tr class="text-dark">
-                        <th>Total</th>
-                        <th>-</th>
-                        <th>-</th>
-                        <th>-</th>
-                        <th>-</th>
-                        <th>-</th>
-                        <th>-</th>
-                        <th>{{ @$tot_qty }}</th>
-                        <th>{{ @$tot_amt }}</th>
-                        <th>-</th>
-                      </tr>
-                    </tfoot>
-                </table>
-                
             </div>
-              </div>
-          </div>
-          
-        </div> -->
+        </div>
     </div>
-    <!-- CONTAINER END --> 
-  </div>
-</div>    
 @endsection
 
 @section('page-scripts')
-<script type="text/javascript">
-    let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
-    console.log(productDetailsArray);
-    $(document).ready(function() {
-
-        addRow();
-
-        $(".add-row").click(addRow);
-
-        function addRow() {
-            let row = `
+    <script type="text/javascript">
+        let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
+        $(document).ready(function() {
+            // Function to add a new row
+            function addRow() {
+                let row = `
             <tr class="rows">
                 <td class="product_col">
                     @if ($products)
-                    <select class="form-control product product_val select2" name="product[]" id="products" required>
+                    <select class="form-control product product_val select2" name="item_id[]" id="products" required>
                         <option value="">Select Items</option>
                         @foreach ($products as $product)
                         <option value="{{ $product->id }}">{{ $product->name ?? '' }}</option>
@@ -246,103 +119,114 @@
                     </select>
                     @endif
                 </td>
-                
-                <td class="unit">
-                  <input type="text" name="unit[]" class="form-control unit text-right" value="1">
-                </td>
-                <td class="unit_qty">
-                  <input type="number" name="unit_qty[]" class="form-control unitRate text-right" value="1">
-                </td>
                 <td class="quantity_col">
-                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1"  >
+                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" style="text-align: right;" required>
+                </td>
+                <td class="purchase_rate_col">
+                    <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1" style="text-align: right;" required>
                 </td>
                 <td class="expiry_date">
-                  <input type="date" name="expiry_date[]" class="form-control text-right" value="1">
+                    <input type="date" name="expiry_date[]" class="form-control text-right">
                 </td>
-                <td class="dis_in_rs">
-                    <input type="number" name="dis_in_rs[]" class="form-control dis_in_rs text-right" value="0">
+                <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" style="text-align: right;">
+                <td class="dis_in_rs_col">
+                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" style="text-align: right;">
                 </td>
-                <td class="dis_in_percentage">
-                    <input type="number" name="dis_in_percentage[]" class="form-control dis_in_percentage text-right" min="0" value="0" >
+                <td class="dis_in_percentage_col">
+                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" value="0" style="text-align: right;">
                 </td>
-                <td class="amount_col">
-                    <input type="number" name="amount[]" class="form-control amount text-right" min="0" value="0"  >
+                <td class="net_amount_col">
+                    <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" style="text-align: right;" readonly required>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger btn-sm delete-row" title="Delete">Remove</button>
+                    <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
                 </td>
             </tr>
         `;
-            $("table tbody").append(row);
-            
-            // Hide delete button for the first row
-            if ($("table tbody tr").length > 0) {
-                $("table tbody tr:first .delete-row").hide();
+                $("#row").append(row);
+                $("select.select2").select2();
             }
-        }
 
-        $(document).on("click", ".delete-row", function() {
-            $(this).closest("tr").remove();
+            // Initial row addition
+            addRow();
+            $(".add-row").click(addRow);
+
+            // Submit form with validation
+            $("#formData").submit(function(e) {
+                e.preventDefault();
+
+                if ($("#row").children().length === 0) {
+                    toastr.warning('Please add at least one item.');
+                    return;
+                }
+
+                let formData = $(this).serialize();
+                $("#saveButton").attr("disabled", true);
+
+                $.ajax({
+                    url: "{{ route('admin.medicine-invoices.store') }}",
+                    method: "POST",
+                    data: formData,
+                    success: function(response) {
+                        toastr.success('Invoice saved successfully!');
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
+                    },
+                    error: function(response) {
+                        let errors = response.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            toastr.error(value[0]);
+                        });
+
+                        $("#saveButton").attr("disabled", false);
+                    }
+                });
+            });
+
+            // Delete row
+            $("body").on("click", ".delete_row", function() {
+                $(this).parents("tr").remove();
+                calculateTotalAmount();
+            });
+
+            // Calculate amount, discount and net amount on input change
+            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .dis_in_percentage",
+                function() {
+                    let $row = $(this).closest("tr");
+                    let qty = parseFloat($row.find(".quantity").val()) || 0;
+                    let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
+                    let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
+
+                    let amount = qty * rate;
+                    let discountAmount = amount * disInPercentage / 100;
+                    let finalAmount = amount - discountAmount;
+
+                    $row.find(".amount").val(amount.toFixed(2));
+                    $row.find(".dis_in_rs").val(discountAmount.toFixed(2));
+                    $row.find(".net_amount").val(finalAmount.toFixed(2));
+                    calculateTotalAmount();
+                });
+
+            function calculateTotalAmount() {
+                let totalDiscount = 0;
+                let subtotal = 0;
+                let netbill = 0;
+
+                $(".amount").each(function() {
+                    subtotal += parseFloat($(this).val()) || 0;
+                });
+                $(".dis_in_rs").each(function() {
+                    totalDiscount += parseFloat($(this).val()) || 0;
+                });
+                $(".net_amount").each(function() {
+                    netbill += parseFloat($(this).val()) || 0;
+                });
+
+                $("input[name='subtotal']").val(subtotal.toFixed(2));
+                $("input[name='total_discount']").val(totalDiscount.toFixed(2));
+                $("input[name='net_bill']").val(netbill.toFixed(2));
+            }
         });
-
-
-       
-    });
-</script>
-<script>
-
-
-  $('#grand_parent_id').change(function(){
-    var id    = $(this).val();
-    var route = "{{ route('admin.cash.get_parent_accounts', ':id') }}";
-    route     = route.replace(':id', id);
-
-   if(id != ''){
-      getAjaxRequests(route, "", "GET", function(resp){
-        $('#parent_id').html(resp.html);
-      });
-    }
-  });
-
-  $('#item_id22').change(function(){
-    $('#rate').val($(this).find(':selected').data('price'));
-    
-  });
-  
-  //when there is change in account then put the commissiona and discount in fields
-  // $('#account_id').change(function(){
-  //   // $('#commission').val(($(this).find(':selected').data('commission')));
-  //   // $('#discount').val(($(this).find(':selected').data('discount')));
-    
-  // });
-  $('#commission, #discount, #other_charges, #quantity, #rate').bind('keyup change', function(){
-    var price      = $('#rate').val();
-    var quantity   = $('#quantity').val();
-    
-    var p_amt = Number(price) * Number(quantity);  
-    $("#purchase_ammount").val(p_amt);
-
-    var commission   = $('#commission').val();
-    var discount   = $('#discount').val();
-    var other_charges   = $('#other_charges').val();
-    
-    var sum = Number(commission) + Number(discount) + Number(other_charges);
-    var net = Number(p_amt) - Number(sum);
-    $("#net_ammount").val(net);
-
-    
-  });
-
-  // $('#quantity').change(function(){
-  //   var price      = $('#rate').val();
-  //   var quantity   = $('#quantity').val();
-    
-  //   var p_amt = Number(price) * Number(quantity);  
-  //   $("#purchase_ammount").val(p_amt);
-    
-  // });
-
-//when there is change in quantity calculate total amount
-
-</script>
+    </script>
 @endsection
