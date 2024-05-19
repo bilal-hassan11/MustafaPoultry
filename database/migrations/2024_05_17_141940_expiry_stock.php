@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('expiry_stock', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('ref_no')->nullable();
-            $table->integer('stock_id');
-            $table->integer('item_id');
-            $table->integer('quantity')->default(0);
-            $table->integer('rate')->default(0);
-            $table->date('expiry_date');
+            $table->unsignedBigInteger('medicine_invoice_id')->nullable();
+            $table->unsignedBigInteger('item_id');
+            $table->decimal('rate',10,2)->default(0.00);
+            $table->decimal('quantity',10,2)->default(0);
+            $table->date('expiry_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

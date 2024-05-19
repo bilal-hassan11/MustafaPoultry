@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('discount_in_rs')->default(0);
             $table->integer('discount_in_percentage')->default(0);    
             $table->integer('net_ammount')->default(0);
-            $table->date('expiry_date');
+            $table->date('expiry_date')->nullable();
             $table->tinyInteger('expiry_status')->default(1)->comment('1 means active 0 means deactive');
             $table->integer('other_charges')->default(0);
             $table->text('remarks')->nullable();
