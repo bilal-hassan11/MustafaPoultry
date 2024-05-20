@@ -1,379 +1,232 @@
-
 @extends('layouts.admin')
 @section('content')
-
-<style>
-
-.news {
-  box-shadow: inset 0 -15px 30px rgba(0,0,0,0.4), 0 5px 10px rgba(0,0,0,0.5);
-  width: 350px;
-  height: 39px;
-  margin: 20px auto;
-  overflow: hidden;
-  border-radius: 4px;
-  padding: 3px;
-  -webkit-user-select: none
-} 
-.full-width{
-    width: 100%;
-}
-.news span {
-  float: left;
-  color: #fff;
-  padding: 6px;
-  position: relative;
-  top: 1%;
-  border-radius: 4px;
-  box-shadow: inset 0 -15px 30px rgba(0,0,0,0.4);
-  font: 16px 'Source Sans Pro', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -webkit-user-select: none;
-  cursor: pointer
-}
-
-.news ul {
-  float: left;
-  padding-left: 20px;
-  animation: ticker 10s cubic-bezier(1, 0, .5, 0) infinite;
-  -webkit-user-select: none
-}
-
-.news ul li {line-height: 30px; list-style: none }
-
-.news ul li a {
-  color: #fff;
-  text-decoration: none;
-  font: 16px Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -webkit-user-select: none
-}
-
-@keyframes ticker {
-	0%   {margin-top: 0}
-	25%  {margin-top: -30px}
-	50%  {margin-top: -60px}
-	75%  {margin-top: -90px}
-	100% {margin-top: 0}
-}
-
-.news ul:hover { animation-play-state: paused }
-.news span:hover+ul { animation-play-state: paused }
-
-/* OTHER COLORS */
-.blue { background: #347fd0 }
-.blue span { background: #2c66be }
-.red { background: #3455d2 }
-.red span { background: #382bc2 }
-.green { background: #699B67 }
-.green span { background: #547d52 }
-.magenta { background: #b63ace }
-.magenta span { background: #842696 }
-.yellow {background : yellow}
-.yellow span {background : yellow}
-
-
-</style>    
-
-<div class="main-content app-content mt-5">
-  <div class="side-app">
-    <!-- CONTAINER --> 
-    <div class="main-container container-fluid">
-        <!-- PAGE-HEADER --> 
-        
-       
-        <!-- COL END --> <!-- ROW-3 END --> <!-- ROW-5 --> 
-        <div class="row">
-          <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0">Add Return Feed Details</h3>
+    <div class="main-content app-content mt-5">
+        <div class="side-app">
+            <div class="main-container container-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Return Feed</h4>
+                    </div>
+                    <form id="formData">
+                        @csrf
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label for="invoice_no" class="required">Invoice No</label>
+                                    <input type="text" name="invoice_no" class="form-control text-right"
+                                        value="{{ $invoice_no }}" readonly>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="date" class="required">Date</label>
+                                    <input type="date" name="date" class="form-control text-right"
+                                        value="{{ date('Y-m-d') }}">
+                                </div>
+                                <div class="col-md-4 mb-3"></div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="ref_no" class="required">Reference No</label>
+                                    <input type="text" name="ref_no" class="form-control text-right"
+                                        placeholder="Reference No">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="account_id">Account</label>
+                                    <select class="form-control select2" name="account" id="account_id11">
+                                        <option value="">Select Account</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}">{{ $account->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label for="description" class="required">Description</label>
+                                    <input type="text" name="description" class="form-control text-right"
+                                        placeholder="Description">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body" style="width: 100%; overflow-x: auto">
+                            <table class="table responsive table-bordered text-center add-stock-table" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">Item</th>
+                                        <th style="width: auto;">Quantity</th>
+                                        <th style="width: auto;">Rate</th>
+                                        <th style="width: auto;">Expiry</th>
+                                        <th style="width: auto;">Dis In (Rs)</th>
+                                        <th style="width: auto;">Dis In (%)</th>
+                                        <th style="width: auto;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="row">
+                                </tbody>
+                                <tfoot>
+                                    <tr style="text-align: right;">
+                                        <td colspan="6">
+                                            <label>Subtotal</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="subtotal" class="form-control text-right"
+                                                value="0" style="text-align: right;" readonly>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-sm btn-info fa fa-plus add-row"
+                                                title="Add Row"></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" style="text-align: right;">
+                                            Discount
+                                        </td>
+                                        <td>
+                                            <input type="text" name="total_discount" class="form-control text-right"
+                                                value="0" style="text-align: right;" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr style="text-align: right;">
+                                        <td colspan="6">
+                                            <label>Net Amount</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="net_bill" class="form-control text-right"
+                                                value="0" style="text-align: right;" readonly>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <button type="submit" id="saveButton" class="btn btn-primary mt-2">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="card-body">
-                
-                <div class="card-block">
-            <div class="item_row">
-              
-            <form class="ajaxForm" role="form" action="{{ route('admin.feeds.return_store') }}" method="POST" novalidate>
-                @csrf
-                  <div class="row">
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label>Date</label>
-                        <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="date" value="{{ (isset($is_updated)) ? date('Y-m-d', strtotime($edit_feed->date)) : date('Y-m-d') }}" required>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label>Company </label>
-                        <select class="form-control select2" name="company_id" id="company_id">
-                          <option value="">Select Company</option>
-                          @foreach($category->companies AS $company)
-                            <option value="{{ $company->hashid }}" @if(@$edit_feed->company_id == $company->id) selected @endif>{{ $company->name }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
-  
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label>Item (select Item)</label>
-                        <select class="form-control select2 purchase_item_id" name="item_id" id="item_id">
-                          <option value="">Select Item</option>
-                          @foreach($category->items AS $item)
-                            <option value="{{ $item->hashid }}" data-price="{{ $item->purchase_ammount }}" @if(@$edit_feed->item_id == $item->id) selected @endif>{{ $item->name }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
-  
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label>Account </label>
-                        <select class="form-control select2" name="account_id" id="account_id">
-                          <option value="">Select Account</option>
-                          @foreach($accounts AS $account)
-                            <option value="{{ $account->hashid }}" @if(@$edit_feed->account_id == $account->id) selected @endif>{{ $account->name }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <label>Item Rate</label>
-                        <input class="form-control" name="rate" id="rate"  value="{{ @$edit_feed->rate }}" required>
-                      </div>
-                    </div>
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <label>Purchase Rate</label>
-                        <input class="form-control" name="purchase_rate" id="purchase_rate"  value="{{ @$edit_feed->purchase_rate }}" required>
-                      </div>
-                    </div>
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <label>Quantity</label>
-                        <input class="form-control" name="quantity" id="quantity" value="{{ @$edit_feed->quantity }}" required>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label>Net Ammount</label>
-                        <input class="form-control" name="net_ammount"  id="net_ammount" value="{{ @$edit_feed->net_ammount }}" required>
-                      </div>
-                    </div>
-                    
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label>Status </label>
-                          <select class="form-control select2" name="status" id="status">
-                            <option value="available" @if(@$edit_feed->status == 'available') selected @endif>Available</option>
-                            <option value="not_available" @if(@$edit_feed->status == 'not_available') selected @endif>Not Available</option>
-                          </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                          <div class="col-md-12 form-group">
-                              <label for="">Remarks</label>
-                              <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4">{{ @$edit_sale->remarks }}</textarea>
-                          </div>
-                    </div>
-                    <input type="hidden" name="return_feed_id" value="{{ @$edit_feed->hashid }}">
-                    <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
-                </form>
-              <br /><br />
             </div>
-
-          </div>
-            </div>
-              </div>
-          </div>
-          <!-- COL END --> 
-        </div>
-        <!-- ROW-5 END -->
-        
-       
-        
-        <div class="row">
-          <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0">All Return Feed Detail</h3>
-                </div>
-                <div class="card-body">
-                <table id="example54" class="text-fade table table-bordered" style="width:100%">
-                <thead>
-                        <tr class="text-dark">
-                            <th>Date</th>
-                            <th>Account Name</th>
-                            <th>Company Name</th>
-                            <th>Item</th>
-                            <th>Rate</th>
-                            <th>Quantity</th>
-                            <th>Fare</th>
-                            <th>Net Ammount</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($purchase_feed AS $purcahse) 
-                          <tr>
-                            <td>{{ date('d-M-y', strtotime(@$purcahse->date)) }}</td>
-                        
-                            <td>{{ @$purcahse->account->name }}</td>
-                            <td>{{ @$purcahse->company->name }}</td>
-                            <td>{{ @$purcahse->item->name }}</td>
-                            <td>{{ @$purcahse->purchase_rate }}</td>
-                            <td>{{ @$purcahse->quantity }}</td>
-                            <td>{{ @$purcahse->fare }}</td>
-                            
-                            <td>{{ @$purcahse->net_ammount }}</td>
-                            <td>
-                              <a href="{{ route('admin.feeds.return_edit',['id'=>@$purcahse->hashid]) }}" >
-                              <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
-                              </a>
-                              <!--<button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.purchase_delete', ['id'=>@$purcahse->hashid]) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">-->
-                              <!--<i class="fa-sharp fa-solid fa-plus"></i> &nbsp Post-->
-                              <!--</button>-->
-                            </td>
-                          </tr>
-                      @endforeach
-                    </tbody>
-                </table>
-                
-            </div>
-              </div>
-          </div>
-          <!-- COL END --> 
         </div>
     </div>
-    <!-- CONTAINER END --> 
-  </div>
-</div>
-
 @endsection
 
 @section('page-scripts')
+    <script type="text/javascript">
+        let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
+        $(document).ready(function() {
+            // Function to add a new row
+            function addRow() {
+                let row = `
+            <tr class="rows">
+                <td class="product_col">
+                    @if ($products)
+                    <select class="form-control product product_val select2" name="item_id[]" id="products" required>
+                        <option value="">Select Items</option>
+                        @foreach ($products as $product)
+                        <option value="{{ $product->id }}">{{ $product->name ?? '' }}</option>
+                        @endforeach
+                    </select>
+                    @endif
+                </td>
+                <td class="quantity_col">
+                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" style="text-align: right;" required>
+                </td>
+                <td class="purchase_rate_col">
+                    <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1" style="text-align: right;" required>
+                </td>
+                <td class="expiry_date">
+                    <input type="date" name="expiry_date[]" class="form-control text-right">
+                </td>
+                <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" style="text-align: right;">
+                <td class="dis_in_rs_col">
+                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" style="text-align: right;">
+                </td>
+                <td class="dis_in_percentage_col">
+                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" value="0" style="text-align: right;">
+                </td>
+                <td class="net_amount_col">
+                    <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" style="text-align: right;" readonly required>
+                </td>
+                <td>
+                    <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
+                </td>
+            </tr>
+        `;
+                $("#row").append(row);
+                $("select.select2").select2();
+            }
 
-<script>
+            // Initial row addition
+            addRow();
+            $(".add-row").click(addRow);
 
-    $('#account_id').change(function(){
-        var id = $(this).val();
-        var url = '{{ route("admin.feeds.account_balance", ":id") }}';
-        url = url.replace(':id', id);
-        $.ajax({
-                url: url,
-                type: 'GET',
-                success: function(resp){
-                 var get_act_nat = resp.account.account_nature ;
-                 var get_act_bal = resp.account.opening_balance ;
-                 
-                  Swal.fire(
-                    'Account Current Status',
-                    'Account Nature '+get_act_bal +' ( '+ get_act_nat+' ) ',
-                    'info'
-                )
-                },
-                error: function(){
-                    console.log("no response");
+            // Submit form with validation
+            $("#formData").submit(function(e) {
+                e.preventDefault();
+
+                if ($("#row").children().length === 0) {
+                    toastr.warning('Please add at least one item.');
+                    return;
                 }
-            });
-      });
 
-  $('#account_id').change(function(){
-    var id = $(this).val();
-    var url = '{{ route("admin.feeds.account_details", ":id") }}';
-    url = url.replace(':id', id);
-    $.ajax({
-            url: url,
-            
-            type: 'GET',
-            success: function(resp){
-              var get_act_purchase_feed = resp.account.purchase_feed_discount ;
-              
-              var item_rate = $('#rate').val();
-              //alert(item_rate);
-              var net_rate = item_rate - get_act_purchase_feed  ;
-              
-              $('#purchase_rate').val(net_rate);
-              
-              
-            
-            },
-            error: function(){
-                console.log("no response");
+                let formData = $(this).serialize();
+                $("#saveButton").attr("disabled", true);
+
+                $.ajax({
+                    url: "{{ route('admin.medicine-invoices.store') }}",
+                    method: "POST",
+                    data: formData,
+                    success: function(response) {
+                        toastr.success('Invoice saved successfully!');
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
+                    },
+                    error: function(response) {
+                        let errors = response.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            toastr.error(value[0]);
+                        });
+
+                        $("#saveButton").attr("disabled", false);
+                    }
+                });
+            });
+
+            // Delete row
+            $("body").on("click", ".delete_row", function() {
+                $(this).parents("tr").remove();
+                calculateTotalAmount();
+            });
+
+            // Calculate amount, discount and net amount on input change
+            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .dis_in_percentage",
+                function() {
+                    let $row = $(this).closest("tr");
+                    let qty = parseFloat($row.find(".quantity").val()) || 0;
+                    let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
+                    let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
+
+                    let amount = qty * rate;
+                    let discountAmount = amount * disInPercentage / 100;
+                    let finalAmount = amount - discountAmount;
+
+                    $row.find(".amount").val(amount.toFixed(2));
+                    $row.find(".dis_in_rs").val(discountAmount.toFixed(2));
+                    $row.find(".net_amount").val(finalAmount.toFixed(2));
+                    calculateTotalAmount();
+                });
+
+            function calculateTotalAmount() {
+                let totalDiscount = 0;
+                let subtotal = 0;
+                let netbill = 0;
+
+                $(".amount").each(function() {
+                    subtotal += parseFloat($(this).val()) || 0;
+                });
+                $(".dis_in_rs").each(function() {
+                    totalDiscount += parseFloat($(this).val()) || 0;
+                });
+                $(".net_amount").each(function() {
+                    netbill += parseFloat($(this).val()) || 0;
+                });
+
+                $("input[name='subtotal']").val(subtotal.toFixed(2));
+                $("input[name='total_discount']").val(totalDiscount.toFixed(2));
+                $("input[name='net_bill']").val(netbill.toFixed(2));
             }
         });
-  });
-    
-    //check product quantity
-    $(document).on('change', '.purchase_item_id', function(){
-        
-        var sale_price = $(this).find(':selected').data('price');
-        
-
-                Swal.fire(
-                    'Item Rate',
-                    'Item Rate '+sale_price,
-                    'info'
-                )
-        
-
-    });
-    
-  $('#grand_parent_id').change(function(){
-    var id    = $(this).val();
-    var route = "{{ route('admin.cash.get_parent_accounts', ':id') }}";
-    route     = route.replace(':id', id);
-
-   if(id != ''){
-      getAjaxRequests(route, "", "GET", function(resp){
-        $('#parent_id').html(resp.html);
-      });
-    }
-  });
-
-  // $('#commission, #discount, #other_charges, #quantity, #rate').bind('keyup change', function(){
-  //   var price      = $('#rate').val();
-  //   var quantity   = $('#quantity').val();
-    
-  //   var p_amt = Number(price) * Number(quantity);  
-  //   $("#purchase_ammount").val(p_amt);
-
-  //   var commission   = $('#commission').val();
-  //   var discount   = $('#discount').val();
-  //   var other_charges   = $('#other_charges').val();
-    
-  //   var sum = Number(commission) + Number(discount) + Number(other_charges);
-  //   var net = Number(p_amt) - Number(sum);
-  //   $("#net_ammount").val(net);
-
-    
-  // });
-
-  $('#quantity').keyup(function(){
-    var quantity = $('#quantity').val();
-    var purchase_rate = $('#purchase_rate').val();
-    var net_val = Number(purchase_rate) * Number(quantity) ;
-    $('#net_ammount').val(purchase_rate * quantity);
-    
-    
-  });
-
-  $('#item_id').change(function(){
-    $('#rate').val($(this).find(':selected').data('price'));
-    calculate_net_amount();
-  });
-  //calculate net amount
-  function calculate_net_amount(){
-    var price = $('#item_id').find(':selected').data('price')
-    var quantity = $('#quantity').val();
-
-    if(price != '' &&  quantity != ''){//if both values are set the put net amount in input field
-      $('#net_ammount').val(price*quantity);
-    }
-  }
-</script>
+    </script>
 @endsection

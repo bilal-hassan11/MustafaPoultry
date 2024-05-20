@@ -5,7 +5,7 @@
             <div class="main-container container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Purchase Feed</h4>
+                        <h4>Purchase Murghi</h4>
                     </div>
                     <form id="formData">
                         @csrf

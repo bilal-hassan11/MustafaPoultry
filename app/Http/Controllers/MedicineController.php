@@ -59,7 +59,6 @@ class MedicineController extends Controller
     }
 
   
-
     public function storePurchaseMedicine(Request $req){
         
         

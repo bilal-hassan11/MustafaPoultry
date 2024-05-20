@@ -48,6 +48,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Administrator\PaymentController;
 
 use App\Http\Controllers\MedicineInvoiceController;
+use App\Http\Controllers\FeedInvoiceController;
+use App\Http\Controllers\ChickInvoiceController;
+use App\Http\Controllers\MurghiInvoiceController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -144,7 +148,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
-
 
     //Item Addition in Shade routes
     Route::controller(ItemAddittionController::class)->prefix('addittion')->name('addittions.')->group(function(){
@@ -280,8 +283,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
 
 
     });
-
-    
+   
     //common functions routes
     Route::controller(CommonController::class)->name('common.')->group(function(){
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_account');
@@ -304,7 +306,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/typeedit/{id}', 'typeedit')->name('edit_type');
         Route::get('/typedelete/{id}', 'typedelete')->name('typedelete');
     });
-
 
     //Chick 
     Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function(){
@@ -402,8 +403,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
-     //Flock 
-     Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function(){
+    //Flock 
+    Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -424,6 +425,28 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
     });
+
+    Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/sale', 'createSale')->name('sale');
+        Route::post('/store', 'store')->name('store');
+    });
+
+    Route::controller(ChickInvoiceController::class)->prefix('chick-invoices')->name('chick-invoices.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/sale', 'createSale')->name('sale');
+        Route::post('/store', 'store')->name('store');
+    });
+
+    Route::controller(MurghiInvoiceController::class)->prefix('murghi-invoices')->name('murghi-invoices.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/sale', 'createSale')->name('sale');
+        Route::post('/store', 'store')->name('store');
+    });
+
 });
 
 
