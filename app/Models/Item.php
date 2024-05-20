@@ -31,4 +31,14 @@ class Item extends Model
         return $this->hasMany(ReturnFeed::class);
     }
 
+    public function medicineInvoices()
+    {
+        return $this->hasMany(MedicineInvoice::class);
+    }
+
+    public function latestMedicineInvoice()
+    {
+        return $this->hasOne(MedicineInvoice::class)->latest();
+    }
+
 }

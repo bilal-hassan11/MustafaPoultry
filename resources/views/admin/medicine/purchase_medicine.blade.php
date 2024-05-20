@@ -44,12 +44,12 @@
                             </div>
                         </div>
                         <div class="card-body" style="width: 100%; overflow-x: auto">
-                            <table class="table responsive table-bordered text-center add-stock-table" style="width: 100%">
+                            <table class="table table-bordered text-center" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th style="width: 30%;">Item</th>
-                                        <th style="width: auto;">Quantity</th>
-                                        <th style="width: auto;">Rate</th>
+                                        <th style="width: 10%;">Quantity</th>
+                                        <th style="width: 12%;">Rate</th>
                                         <th style="width: auto;">Expiry</th>
                                         <th style="width: auto;">Dis In (Rs)</th>
                                         <th style="width: auto;">Dis In (%)</th>
@@ -100,58 +100,83 @@
         </div>
     </div>
 @endsection
-
 @section('page-scripts')
     <script type="text/javascript">
         let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
         $(document).ready(function() {
-            // Function to add a new row
-            function addRow() {
-                let row = `
-            <tr class="rows">
-                <td class="product_col">
-                    @if ($products)
-                    <select class="form-control product product_val select2" name="item_id[]" id="products" required>
-                        <option value="">Select Items</option>
-                        @foreach ($products as $product)
-                        <option value="{{ $product->id }}">{{ $product->name ?? '' }}</option>
-                        @endforeach
-                    </select>
-                    @endif
-                </td>
-                <td class="quantity_col">
-                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" style="text-align: right;" required>
-                </td>
-                <td class="purchase_rate_col">
-                    <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1" style="text-align: right;" required>
-                </td>
-                <td class="expiry_date">
-                    <input type="date" name="expiry_date[]" class="form-control text-right">
-                </td>
-                <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" style="text-align: right;">
-                <td class="dis_in_rs_col">
-                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" style="text-align: right;">
-                </td>
-                <td class="dis_in_percentage_col">
-                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" value="0" style="text-align: right;">
-                </td>
-                <td class="net_amount_col">
-                    <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" style="text-align: right;" readonly required>
-                </td>
-                <td>
-                    <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
-                </td>
-            </tr>
-        `;
-                $("#row").append(row);
-                $("select.select2").select2();
-            }
 
-            // Initial row addition
+            $('select.product_val').select2({
+                width: '100%',
+            });
+
             addRow();
+
             $(".add-row").click(addRow);
 
-            // Submit form with validation
+            function addRow() {
+                let row = `
+                <tr class="rows">
+                    <td class="product_col">
+                        @if ($products)
+                        <select class="form-control product product_val" name="item_id[]" id="products" required>
+                            <option value="">Select Items</option>
+                            @foreach ($products as $product)
+                                @php
+                                    $latestInvoice = $product->latestMedicineInvoice;
+                                    $purchasePrice = $latestInvoice ? $latestInvoice->purchase_price : 0;
+                                @endphp
+                                <option value="{{ $product->id }}" data-price="{{ $purchasePrice }}">
+                                    {{ $product->name ?? '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @endif
+                    </td>
+                    <td class="quantity_col">
+                        <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                    </td>
+                    <td class="purchase_rate_col">
+                        <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;" required>
+                    </td>
+                    <td class="expiry_date">
+                        <input type="date" name="expiry_date[]" class="form-control text-right">
+                    </td>
+                    <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
+                    <td class="dis_in_rs_col">
+                        <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
+                    </td>
+                    <td class="dis_in_percentage_col">
+                        <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
+                    </td>
+                    <td class="net_amount_col">
+                        <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
+                    </td>
+                    <td>
+                        <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
+                    </td>
+                </tr>
+                `;
+                $("#row").append(row);
+                $('select.product_val').select2({
+                    width: '100%',
+                });
+
+            }
+
+            $(".product_val").last().change(function() {
+                updatePurchasePrice($(this));
+            });
+
+            $(".dis_in_rs").last().on('input', function() {
+                Calculation(true);
+            });
+
+            function updatePurchasePrice($selectElement) {
+                let purchasePrice = $selectElement.find('option:selected').data('price');
+                $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
+                Calculation();
+            }
+
             $("#formData").submit(function(e) {
                 e.preventDefault();
 
@@ -187,40 +212,42 @@
             // Delete row
             $("body").on("click", ".delete_row", function() {
                 $(this).parents("tr").remove();
-                calculateTotalAmount();
+                Calculation();
             });
 
-            // Calculate amount, discount and net amount on input change
             $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .dis_in_percentage",
                 function() {
-                    let $row = $(this).closest("tr");
-                    let qty = parseFloat($row.find(".quantity").val()) || 0;
-                    let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
-                    let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
-
-                    let amount = qty * rate;
-                    let discountAmount = amount * disInPercentage / 100;
-                    let finalAmount = amount - discountAmount;
-
-                    $row.find(".amount").val(amount.toFixed(2));
-                    $row.find(".dis_in_rs").val(discountAmount.toFixed(2));
-                    $row.find(".net_amount").val(finalAmount.toFixed(2));
-                    calculateTotalAmount();
+                    Calculation();
                 });
 
-            function calculateTotalAmount() {
-                let totalDiscount = 0;
+            function Calculation(isManualUpdate = false) {
                 let subtotal = 0;
+                let totalDiscount = 0;
                 let netbill = 0;
 
-                $(".amount").each(function() {
-                    subtotal += parseFloat($(this).val()) || 0;
-                });
-                $(".dis_in_rs").each(function() {
-                    totalDiscount += parseFloat($(this).val()) || 0;
-                });
-                $(".net_amount").each(function() {
-                    netbill += parseFloat($(this).val()) || 0;
+                $("tr.rows").each(function() {
+                    let $row = $(this);
+                    let qty = parseFloat($row.find(".quantity").val()) || 0;
+                    let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
+                    let amount = qty * rate;
+                    let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
+
+                    if (!isManualUpdate) {
+                        let discountAmount = amount * disInPercentage / 100;
+                        $row.find(".dis_in_rs").val(discountAmount.toFixed(2));
+                    } else {
+                        let discountAmount = parseFloat($row.find(".dis_in_rs").val()) || 0;
+                        let discountPercentage = (discountAmount / amount) * 100;
+                        $row.find(".dis_in_percentage").val(discountPercentage.toFixed(2));
+                    }
+
+                    let finalAmount = amount - parseFloat($row.find(".dis_in_rs").val()) || 0;
+                    $row.find(".amount").val(amount.toFixed(2));
+                    $row.find(".net_amount").val(finalAmount.toFixed(2));
+
+                    subtotal += amount;
+                    totalDiscount += parseFloat($row.find(".dis_in_rs").val()) || 0;
+                    netbill += finalAmount;
                 });
 
                 $("input[name='subtotal']").val(subtotal.toFixed(2));
