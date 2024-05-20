@@ -1198,7 +1198,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1222,7 +1222,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1246,7 +1246,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1269,7 +1269,7 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1281,7 +1281,7 @@ class ReportController extends Controller
                     
                 }
                 
-                //dd($data['purchases']);
+                
             }else{
                 $data = array(
                     'title' => 'Purchase Medicine Report',
@@ -1314,7 +1314,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1338,7 +1338,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1363,7 +1363,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
@@ -1387,7 +1387,7 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
