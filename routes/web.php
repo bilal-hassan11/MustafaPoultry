@@ -48,6 +48,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Administrator\PaymentController;
 
 use App\Http\Controllers\MedicineInvoiceController;
+use App\Http\Controllers\FeedInvoiceController;
+use App\Http\Controllers\ChickInvoiceController;
+use App\Http\Controllers\MurghiInvoiceController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -145,7 +149,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
-
     //Item Addition in Shade routes
     Route::controller(ItemAddittionController::class)->prefix('addittion')->name('addittions.')->group(function(){
         Route::get('/', 'index')->name('index');
@@ -193,6 +196,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     Route::controller(ReportController::class)->prefix('report')->name('reports.')->group(function(){
 
         Route::get('/Reports/{id}', 'all_report')->name('all_report');
+        
         Route::get('/AllReports', 'all_reports_request')->name('all_reports_request');
         Route::get('/AllReportsPdf', 'all_reports_pdf')->name('all_reports_pdf');
         
@@ -248,40 +252,13 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         
         Route::get('/purchase-book', 'purchaseBookReport')->name('purchase_book');
         Route::get('/sale-book', 'saleBookReport')->name('sale_book');
-        Route::get('/inward', 'inwardReport')->name('inward');
-        Route::get('/inward-pdf', 'inwardReportPdf')->name('inward-pdf');
-        Route::get('/inward-print', 'inwardReportPrint')->name('inward-print');
-
-        //Route::post('/print', function() { return view('print'); });
-
-        Route::get('/outward', 'outwardReport')->name('outward');
-        Route::get('/outward-pdf', 'outwardReportPdf')->name('outward_pdf');
-        Route::get('/outward-print', 'outwardReportPrint')->name('outward_print');
-
         Route::get('/General_Medicine_Stock_Report', 'general_medicine_item_report')->name('general_medicine_item_report');
-        
-        //Ledger Section 
-        Route::get('/Amanat-Ledger', 'amanat_accounts_report')->name('amanat_accounts_report');
-        Route::get('/Arti-Ledger', 'arti_accounts_report')->name('arti_accounts_report');
-        Route::get('/Bank_Accounts-Ledger', 'bank_accounts_report')->name('bank_accounts_report');
-        Route::get('/chicks_Companies_Accounts-Ledger', 'chick_companies_accounts_report')->name('chick_companies_accounts_report');
-        Route::get('/Lotteries_Accounts-Ledger', 'lotteries')->name('lotteries');
-        Route::get('/Medicine_Accounts-Ledger', 'medicine_account_report')->name('medicine_account_report');
-        Route::get('/Zakat_And_Dobat_Accounts-Ledger', 'zakat_and_dobat_account_report')->name('zakat_and_dobat_account_report');
-        Route::get('/Tamirati_House_And_Farm_Accounts-Ledger', 'tamirati_house_and_farm_account_report')->name('tamirati_house_and_farm_account_report');
-        Route::get('/Zameen_Running_Accounts-Ledger', 'zameen_running_account_report')->name('zameen_running_account_report');
-        Route::get('/Farmer_Running_Accounts-Ledger', 'farmer_running_account_report')->name('farmer_running_account_report');
-        Route::get('/Farmer_Bachat_Accounts-Ledger', 'farmer_bachat_account_report')->name('farmer_bachat_account_report');
-        Route::get('/Farm_Purchase_Accounts-Ledger', 'farm_purchase_account_report')->name('farm_purchase_account_report');
-        Route::get('/Feed_Companies_Accounts-Ledger', 'feed_companies_account_report')->name('feed_companies_account_report');
-        Route::get('/Khan_Controll_Tamirati_Accounts-Ledger', 'khan_controll_tamirati_account_report')->name('khan_controll_tamirati_account_report');
         
         
 
 
     });
-
-    
+   
     //common functions routes
     Route::controller(CommonController::class)->name('common.')->group(function(){
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_account');
@@ -304,7 +281,6 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/typeedit/{id}', 'typeedit')->name('edit_type');
         Route::get('/typedelete/{id}', 'typedelete')->name('typedelete');
     });
-
 
     //Chick 
     Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function(){
@@ -402,8 +378,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
-     //Flock 
-     Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function(){
+    //Flock 
+    Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -424,6 +400,28 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
     });
+
+    Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/sale', 'createSale')->name('sale');
+        Route::post('/store', 'store')->name('store');
+    });
+
+    Route::controller(ChickInvoiceController::class)->prefix('chick-invoices')->name('chick-invoices.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/sale', 'createSale')->name('sale');
+        Route::post('/store', 'store')->name('store');
+    });
+
+    Route::controller(MurghiInvoiceController::class)->prefix('murghi-invoices')->name('murghi-invoices.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/sale', 'createSale')->name('sale');
+        Route::post('/store', 'store')->name('store');
+    });
+
 });
 
 

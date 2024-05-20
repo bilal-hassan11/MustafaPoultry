@@ -10,6 +10,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminTableSeeder::class,
+            MedicineInvoicesTableSeeder::class,
+            FeedInvoicesTableSeeder::class,
+            ChickInvoicesTableSeeder::class,
+            MurghiInvoicesTableSeeder::class,
+            CashBookSeeder::class, 
         ]);
     }
 }

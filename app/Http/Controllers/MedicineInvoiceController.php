@@ -22,12 +22,25 @@ class MedicineInvoiceController extends Controller
 
     public function createPurchase(){
         
+        $title = "Purchase Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice,'Purchase','invoice_no');
         $accounts  = Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name');
         $products = Item::where('category_id', '4')->latest()->get() ;
         
-        return view('admin.medicine.purchase_medicine', compact(['invoice_no','accounts','products']));
+        return view('admin.medicine.purchase_medicine', compact(['title','invoice_no','accounts','products']));
     }
+
+    public function createSale(){
+        
+        $title = "Sale Medicine";
+        $invoice_no = generateUniqueID(new MedicineInvoice,'Sale','invoice_no');
+        $accounts  = Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name');
+        $products = Item::where('category_id', '4')->latest()->get() ;
+        
+        return view('admin.medicine.sale_medicine', compact(['title','invoice_no','accounts','products']));
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -86,8 +99,6 @@ class MedicineInvoiceController extends Controller
             return response()->json(['error' => 'An error occurred while saving the invoice.'], 500);
         }
     }
-    
-    
     
     
     /**

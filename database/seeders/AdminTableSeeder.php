@@ -11,10 +11,10 @@ class AdminTableSeeder extends Seeder
     {
         $users = [
             [
-                'id'             => 1,
-                'name'           => 'Admin',
-                'username'           => 'admin',
-                'email'          => 'admin@admin.com',
+                'id'             => 1412,
+                'first_name'           => 'Admin',
+                'username'           => 'admin1412',
+                'email'          => 'admin1421@admin.com',
                 'password'       => bcrypt('password'),
                 'user_type'       => 1,
                 'remember_token' => '',

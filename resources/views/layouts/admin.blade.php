@@ -661,14 +661,14 @@
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
-                                        <li><a href="{{ route('admin.chicks.purchase_chick') }}" class="slide-item">
+                                        <li><a href="{{ route('admin.chick-invoices.purchase') }}" class="slide-item">
                                                 Purchase Chick</a></li>
-                                        <li><a href="{{ route('admin.chicks.sale_chick') }}" class="slide-item"> Sale
+                                        <li><a href="{{ route('admin.chick-invoices.sale') }}" class="slide-item"> Sale
                                                 Chick</a></li>
-                                        <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
+                                        <!-- <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
                                                 class="slide-item"> Purchase Chick Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_chick']) }}"
-                                                class="slide-item"> Sale Chick Report</a></li>
+                                                class="slide-item"> Sale Chick Report</a></li> -->
 
                                     </ul>
                                 </li>
@@ -680,12 +680,11 @@
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
-                                        <li><a href="{{ route('admin.feeds.purchase_feed') }}" class="slide-item">
+                                        <li><a href="{{ route('admin.feed-invoices.purchase') }}" class="slide-item">
                                                 Purchase Feed</a></li>
-                                        <li><a href="{{ route('admin.feeds.sale_feed') }}" class="slide-item"> Sale
+                                        <li><a href="{{ route('admin.feed-invoices.sale') }}" class="slide-item"> Sale
                                                 Feed</a></li>
-                                        <li><a href="{{ route('admin.feeds.return_feed') }}" class="slide-item">
-                                                Return Feed</a></li>
+                                       
 
                                     </ul>
                                 </li>
@@ -699,7 +698,7 @@
 
                                         <li><a href="{{ route('admin.medicine-invoices.purchase') }}"
                                                 class="slide-item"> Purchase Medicine</a></li>
-                                        <li><a href="{{ route('admin.medicines.sale_medicine') }}"
+                                        <li><a href="{{ route('admin.medicine-invoices.sale') }}"
                                                 class="slide-item"> Sale Medicine</a></li>
                                         <li><a href="{{ route('admin.medicines.return_medicine') }}"
                                                 class="slide-item"> Return Medicine</a></li>
@@ -716,9 +715,9 @@
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
-                                        <li><a href="{{ route('admin.purchase_murghis.index') }}" class="slide-item">
+                                        <li><a href="{{ route('admin.murghi-invoices.purchase') }}" class="slide-item">
                                                 Purchase Murghi</a></li>
-                                        <li><a href="{{ route('admin.sale_murghis.index') }}" class="slide-item">
+                                        <li><a href="{{ route('admin.murghi-invoices.sale') }}" class="slide-item">
                                                 Sale Murghi</a></li>
                                         <!-- <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_murghi']) }}" class="slide-item"> Purchase Murghi Report</a></li>
                               <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}" class="slide-item"> Sale Murghi Report</a></li> -->

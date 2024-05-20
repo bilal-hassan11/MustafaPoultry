@@ -13,276 +13,66 @@
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
                     <div class="card custom-card overflow-hidden"> <div class="card-body"> 
                         <div class="row"> <div class="col"> <h6 class="fw-normal fs-14">Total Sales</h6> <h3 class="mb-2 number-font fs-24">34,516</h3> <p class="text-muted mb-0"> <span class="text-primary"> <i class="ri-arrow-up-s-line bg-primary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 3%</span> last month </p></div> 
-                                <div class="col col-auto mt-2"> <div class="counter-icon bg-primary-gradient box-shadow-primary rounded-circle ms-auto mb-0"> <i class="fe fe-trending-up mb-5 "></i> 
+                            <div class="col col-auto mt-2"> <div class="counter-icon bg-primary-gradient box-shadow-primary rounded-circle ms-auto mb-0"> <i class="fe fe-trending-up mb-5 "></i> 
                             </div> 
                         </div> 
                             </div> 
                             </div> 
                             </div>
                             </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    <div class="card custom-card overflow-hidden"> 
+                        <div class="card-body"> 
+                            <div class="row"> 
+                                <div class="col"> <h6 class="fw-normal fs-14">Total Leads</h6> <h3 class="mb-2 number-font fs-24">56,992</h3> <p class="text-muted mb-0"> <span class="text-secondary"> <i class="ri-arrow-up-s-line bg-secondary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 3%</span> last month </p></div> 
+                                    <div class="col col-auto mt-2"> 
+                                        <div class="counter-icon bg-danger-gradient box-shadow-danger rounded-circle  ms-auto mb-0"> <i class="ri-rocket-line mb-5  "></i>
+                                        </div> 
+                                        </div> 
+                                    </div>
+                                 </div> 
+                                </div> 
+                            </div> 
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                 <div class="card custom-card overflow-hidden"> 
+                                    <div class="card-body"> 
+                                        <div class="row"> 
+                                            <div class="col"> 
+                                                <h6 class="fw-normal fs-14">Total Profit</h6> 
+                                                <h3 class="mb-2 number-font fs-24">$42,567</h3> 
+                                                <p class="text-muted mb-0"> <span class="text-success"> <i class="ri-arrow-down-s-line bg-primary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 0.5%</span> last month </p>
+                                            </div> 
+                                            <div class="col col-auto mt-2"> 
+                                                <div class="counter-icon bg-secondary-gradient box-shadow-secondary rounded-circle ms-auto mb-0"> 
+                                                    <i class="fe fe-dollar-sign  mb-5 "></i> 
+                                                </div> 
+                                            </div> 
+                                        </div> 
+                                    </div> 
+                                </div> 
+                            </div> 
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
                                 <div class="card custom-card overflow-hidden"> 
                                     <div class="card-body"> 
                                         <div class="row"> 
-                                        <div class="col"> <h6 class="fw-normal fs-14">Total Leads</h6> <h3 class="mb-2 number-font fs-24">56,992</h3> <p class="text-muted mb-0"> <span class="text-secondary"> <i class="ri-arrow-up-s-line bg-secondary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 3%</span> last month </p></div> 
-                                        <div class="col col-auto mt-2"> 
-                                            <div class="counter-icon bg-danger-gradient box-shadow-danger rounded-circle  ms-auto mb-0"> <i class="ri-rocket-line mb-5  "></i> </div> </div> </div> </div> </div> </div> <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> <div class="card custom-card overflow-hidden"> <div class="card-body"> <div class="row"> <div class="col"> <h6 class="fw-normal fs-14">Total Profit</h6> <h3 class="mb-2 number-font fs-24">$42,567</h3> <p class="text-muted mb-0"> <span class="text-success"> <i class="ri-arrow-down-s-line bg-primary text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 0.5%</span> last month </p></div> <div class="col col-auto mt-2"> <div class="counter-icon bg-secondary-gradient box-shadow-secondary rounded-circle ms-auto mb-0"> <i class="fe fe-dollar-sign  mb-5 "></i> </div> </div> </div> </div> </div> </div> <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> <div class="card custom-card overflow-hidden"> <div class="card-body"> <div class="row"> <div class="col"> <h6 class="fw-normal fs-14">Total Cost</h6> <h3 class="mb-2 number-font fs-24">$34,789</h3> <p class="text-muted mb-0"> <span class="text-danger"> <i class="ri-arrow-down-s-line bg-danger text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 0.2%</span> last month </p></div> <div class="col col-auto mt-2"> <div class="counter-icon bg-success-gradient box-shadow-success rounded-circle  ms-auto mb-0"> <i class="fe fe-briefcase mb-5 "></i> </div> </div> </div> </div> </div> </div> </div> </div> </div>
+                                            <div class="col"> 
+                                                <h6 class="fw-normal fs-14">Total Cost</h6> 
+                                                <h3 class="mb-2 number-font fs-24">$34,789</h3>
+                                                 <p class="text-muted mb-0"> <span class="text-danger"> <i class="ri-arrow-down-s-line bg-danger text-white rounded-circle fs-13 p-0 fw-semibold align-bottom"></i> 0.2%</span> last month </p>
+                                                </div> 
+                                                <div class="col col-auto mt-2"> 
+                                                    <div class="counter-icon bg-success-gradient box-shadow-success rounded-circle  ms-auto mb-0"> 
+                                                        <i class="fe fe-briefcase mb-5 "></i> 
+                                                    </div> 
+                                                </div> 
+                                            </div> 
+                                        </div> 
+                                    </div> 
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div>
             <br /><br />
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-info">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h4 class="mb-0 text-secondary"> Feed Bags Sale (ٹوٹل فیڈ بوریا سیل)</h4><br />
-                                    <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_sale_feed_begs }} Bags</h4><br />
-                                    <p class="mb-0  font-13 text-success">+00 This Month </p>
-                                </div>
-                                <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-danger">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-info"> Feed Sale Ammount (فیڈ سیل کی کل رقم)</h4> <br />
-                                <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_feed_ammount}}</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-success">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h4 class="mb-0 text-success">Feed Bags Purchase (فیڈ بیگز کی کل خریداری)</h4><br />
-                                    <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_purchase_feed_begs }} Bags</h4><br />
-                                    <p class="mb-0  font-13 text-success">+00 This Month </p>
-                                </div>
-                                <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-warning">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-warning">Feed Purchase Ammount (فیڈ کی خریداری کی کل رقم)</h4> <br />
-                                <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_feed_ammount}}</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            
-            </div>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-info">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-secondary"> Medicine Qty Purchase(دوائیوں کے تھیلوں کی کل خریداری)</h4><br />
-                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_purchase_medicine_qty }} Qty</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-danger">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h4 class="mb-0 text-info">Medicine Purchase Ammount (ادویات کی خریداری کی کل رقم)</h4> <br />
-                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_medicine_ammount}}</h4><br />
-                            <p class="mb-0  font-13 text-success">+00 This Month </p>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-success">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-success">Medicine Quantity Sale (دوائیوں کے تھیلوں کی کل فروخت)</h4><br />
-                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_sale_medicine_qty }} Qty</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h4 class="mb-0 text-warning"> Sale Medicine Ammount (ادویات کی فروخت کی کل رقم)</h4> <br />
-                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_medicine_ammount}}</h4><br />
-                            <p class="mb-0  font-13 text-success">+00 This Month </p>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            
-            </div>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-info">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-secondary"> Chicks Qty Purchase (چوزوں کی کل مقدار خریداری)</h4><br />
-                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_purchase_chick_qty }} Qty</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-danger">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h4 class="mb-0 text-info"> Chicks Purchase Amount (چوزوں کی خریداری کی کل رقم)</h4> <br />
-                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_chick_ammount}}</h4><br />
-                            <p class="mb-0  font-13 text-success">+00 This Month </p>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-success">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-success"> Chicks Quantity Sale (چوزوں کی کل مقدار فروخت)</h4><br />
-                                <h4 class="my-1 text-info"><i class="glyphicon glyphicon-briefcase"></i>&nbsp&nbsp{{ @$tot_sale_chick_qty }} Qty</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h4 class="mb-0 text-warning"> Sale Chicks Ammount (چوزوں کی فروخت کی کل رقم)</h4> <br />
-                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_chick_ammount}}</h4><br />
-                            <p class="mb-0  font-13 text-success">+00 This Month </p>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            
-            </div>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-info">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-secondary"> Murghi Qty Purchase (مرغی کی خریداری کی کل مقدار)</h4><br />
-                                <h4 class="my-1 text-info"><i class="mdi mdi-basket-fill fs-80 text-danger me-3"></i>&nbsp&nbsp{{ @$tot_purchase_murghi_qty }} Qty</h4><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-danger">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h4 class="mb-0 text-info"> Murghi Purchase Amount (مرغی کی خریداری کی کل رقم)</h4> <br />
-                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_purchase_murghi_ammount}}</h4><br />
-                            <p class="mb-0  font-13 text-success">+00 This Month </p>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-success">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h4 class="mb-0 text-success"> Murghi Quantity Sale (کل مرغی کی مقدار میں فروخت)</h4><br />
-                                <h3 class="my-1 text-info"><i class="mdi mdi-basket-fill fs-80 text-danger me-3"></i>&nbsp&nbsp{{ @$tot_sale_murghi_qty }} Qty</h3><br />
-                                <p class="mb-0  font-13 text-success">+00 This Month </p>
-                            </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i class='bx bxs-cart'></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h4 class="mb-0 text-warning"> Sale Murghi Ammount ( مرغی کی فروخت کی کل رقم)</h4> <br />
-                            <h4 class="my-1 text-danger"><i class="fa fa-usd" aria-hidden="true"></i>&nbsp&nbsp{{@$tot_sale_murghi_ammount}}</h4><br />
-                            <p class="mb-0  font-13 text-success">+00 This Month </p>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto"><i class='bx bxs-wallet'></i>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            
-            </div>
-            
-            <br /><br />
-
         </div>
         <div class="row">
     
@@ -602,6 +392,7 @@
                 </div>
             </div>
         </div>
+        
         <!-- <div id="hightChart">
 
                 </div>
