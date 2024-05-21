@@ -393,13 +393,15 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
-
+    
     Route::controller(MedicineInvoiceController::class)->prefix('medicine-invoices')->name('medicine-invoices.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/purchase/{invoice_no}/show', 'show')->name('show');
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
     });
+    
 
     Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function(){
         Route::get('/', 'index')->name('index');

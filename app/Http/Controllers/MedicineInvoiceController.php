@@ -95,8 +95,8 @@ class MedicineInvoiceController extends Controller
                      'sale_price' => 0,
                      'quantity' => $validatedData['quantity'][$index],
                      'amount' => $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index],
-                     'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? null,
-                     'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? null,
+                     'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
+                     'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
                      'net_amount' => $netAmount,
                      'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                      'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
@@ -120,36 +120,38 @@ class MedicineInvoiceController extends Controller
                          'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                      ]);
                  }
-             }
      
-             AccountLedger::create([
-                 'purchase_medicine_id' => $invoiceNumber,
-                 'date' => $validatedData['date'],
-                 'account_id' => $validatedData['account'],
-                 'description' => 'Purchased medicine on credit',
-                 'debit' => 0,
-                 'credit' => $totalNetAmount,
-             ]);
+                 AccountLedger::create([
+                     'purchase_medicine_id' => $invoiceNumber,
+                     'date' => $validatedData['date'],
+                     'account_id' => $validatedData['account'],
+                     'description' => 'Invoice #: '. $invoiceNumber .', '.'Item: '. $expiryStock->item->name .', Qty: '. $validatedData['quantity'][$index]. ', Rate: '.$validatedData['purchase_price'][$index],
+                     'debit' => 0,
+                     'credit' => $netAmount,
+                 ]);
+             }
      
              DB::commit();
      
              return response()->json(['success' => true], 201);
          } catch (\Exception $e) {
              DB::rollBack();
-             info($e);
              return response()->json(['error' => 'An error occurred while saving the invoice.'], 500);
          }
      }
+     
      
      
     
     /**
      * Display the specified resource.
      */
-    public function show(MedicineInvoice $medicineInvoice)
+    public function show($invoice_no)
     {
-        return response()->json($medicineInvoice);
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)->where('type', 'Purchase')->with('account', 'item')->get();
+        return view('admin.medicine.show_medicine', compact('medicineInvoice'));
     }
+
 
     /**
      * Remove the specified resource from storage.
