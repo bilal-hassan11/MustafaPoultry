@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\AccountController;
@@ -6,7 +7,7 @@ use App\Http\Controllers\Administrator\AccountTypeController;
 use App\Http\Controllers\Administrator\CategoryController;
 use App\Http\Controllers\SaleMurghiController;
 
-use App\Http\Controllers\DetailViewController;  
+use App\Http\Controllers\DetailViewController;
 use App\Http\Controllers\CompanyController;
 
 use App\Http\Controllers\Administrator\OrderController;
@@ -62,16 +63,17 @@ use App\Http\Controllers\MurghiInvoiceController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes(['verify' => false, 'register' => true]);
 
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
 
 
 Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(function () {
-    
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
     //Artisan Commands
     Route::prefix('artisan/command')->controller(ArtisanController::class)->name('artisan.command.')->group(function () {
@@ -85,7 +87,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Staffs routes
-    Route::controller(StaffController::class)->prefix('staffs')->name('staffs.')->group(function(){
+    Route::controller(StaffController::class)->prefix('staffs')->name('staffs.')->group(function () {
         Route::get('/', 'index')->name('all');
         Route::get('/add', 'add')->name('add');
         Route::get('/edit/{staff_id}', 'edit')->name('edit');
@@ -101,14 +103,14 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //permission routes
-    Route::controller(PermissionController::class)->prefix('permission')->name('permissions.')->group(function(){
+    Route::controller(PermissionController::class)->prefix('permission')->name('permissions.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/save', 'save')->name('save');
-        Route::get('/delete/{permission_id}', 'delete')->name('delete'); 
+        Route::get('/delete/{permission_id}', 'delete')->name('delete');
     });
 
     //account type routes
-    Route::controller(AccountTypeController::class)->prefix('account-type')->name('account_types.')->group(function(){
+    Route::controller(AccountTypeController::class)->prefix('account-type')->name('account_types.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -116,7 +118,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //account routes
-    Route::controller(AccountController::class)->prefix('accounts')->name('accounts.')->group(function(){
+    Route::controller(AccountController::class)->prefix('accounts')->name('accounts.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/add/{grand_parent_id}/{parent_id}', 'add')->name('add');
         Route::post('/store', 'store')->name('store');
@@ -125,7 +127,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Payment
-    Route::controller(PaymentController::class)->prefix('paymentbook')->name('paymentbooks.')->group(function(){
+    Route::controller(PaymentController::class)->prefix('paymentbook')->name('paymentbooks.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -133,15 +135,15 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //category routes
-    Route::controller(CategoryController::class)->prefix('category')->name('categories.')->group(function(){
+    Route::controller(CategoryController::class)->prefix('category')->name('categories.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
-    
+
     //Item routes
-    Route::controller(ItemController::class)->prefix('items')->name('items.')->group(function(){
+    Route::controller(ItemController::class)->prefix('items')->name('items.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/add', 'add')->name('add');
         Route::post('/store', 'store')->name('store');
@@ -150,7 +152,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Item Addition in Shade routes
-    Route::controller(ItemAddittionController::class)->prefix('addittion')->name('addittions.')->group(function(){
+    Route::controller(ItemAddittionController::class)->prefix('addittion')->name('addittions.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -158,7 +160,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Cash Book routes
-    Route::controller(CashController::class)->prefix('cash')->name('cash.')->group(function(){
+    Route::controller(CashController::class)->prefix('cash')->name('cash.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -167,7 +169,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Sales BooK routes
-    Route::controller(SaleMurghiController::class)->prefix('sale_murghi')->name('sale_murghis.')->group(function(){
+    Route::controller(SaleMurghiController::class)->prefix('sale_murghi')->name('sale_murghis.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -181,7 +183,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Purchase Murghi routes
-    Route::controller(PurchaseMurghiController::class)->prefix('purchase_murghi')->name('purchase_murghis.')->group(function(){
+    Route::controller(PurchaseMurghiController::class)->prefix('purchase_murghi')->name('purchase_murghis.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -193,20 +195,20 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //report routes
-    Route::controller(ReportController::class)->prefix('report')->name('reports.')->group(function(){
+    Route::controller(ReportController::class)->prefix('report')->name('reports.')->group(function () {
 
         Route::get('/Reports/{id}', 'all_report')->name('all_report');
-        
+
         Route::get('/AllReports', 'all_reports_request')->name('all_reports_request');
         Route::get('/AllReportsPdf', 'all_reports_pdf')->name('all_reports_pdf');
-        
+
         Route::get('/item_stock_report', 'item_stock_report')->name('item_stock_report');
         Route::get('/Feed-Stock-Report', 'feed_item_wise_stock_report')->name('feed_item_wise_stock_report');
         Route::get('/Chick-Stock-Report', 'chick_item_wise_stock_report')->name('chick_item_wise_stock_report');
         Route::get('/Murghi-Stock-Report', 'murghi_item_wise_stock_report')->name('murghi_item_wise_stock_report');
         Route::get('/Medicine-Stock-Report', 'medicine_item_wise_stock_report')->name('medicine_item_wise_stock_report');
-        
-        
+
+
         Route::get('/CashFlow', 'cashflowReport')->name('cashflowreport');
         Route::get('/CashFlowPdf', 'cashflowReportPdf')->name('cashflowreportpdf');
 
@@ -214,11 +216,11 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/DayBookPdf', 'DayBookPdf')->name('DayBookPdf');
 
         Route::get('/All_Accounts_Report', 'all_accounts_report_request')->name('all_accounts_report_request');
-        
+
         Route::get('/Arti-Ledger', 'arti_accounts_report')->name('arti_accounts_report');
 
         Route::get('/Feed_P', 'detailpp')->name('feedsreport');
-        
+
         Route::get('/Feed_Purchase', 'feedPurchaseReport')->name('feed_purchase_report');
         Route::get('/Feed_Sale', 'feedSaleReport')->name('feed_sale_report');
 
@@ -230,8 +232,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/Medicine_Sale_Pdf', 'MedicineSaleReportPdf')->name('medicine_sale_pdf');
 
         Route::get('/Medicine_Return', 'MedicineReturnReport')->name('medicine_return_report');
-        
-         Route::get('/Medicine_Item_Report', 'medicine_item_report')->name('medicine_item_report');
+
+        Route::get('/Medicine_Item_Report', 'medicine_item_report')->name('medicine_item_report');
         Route::get('/Medicine_Expire', 'MedicineExpireReport')->name('medicine_expire_report');
 
         Route::get('/DayBook', 'DayBookReport')->name('daybook_report');
@@ -247,31 +249,26 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/purchase-pdf', 'PurchaseReportPdf')->name('purchase_pdf');
         Route::get('/sale-pdf', 'SaleReportPdf')->name('sale_pdf');
         Route::get('/sale-print', 'SaleReportPrint')->name('sale_print');
-        
+
         Route::get('/Medicine_Accounts', 'medicine_account_report')->name('medicine_account_report');
-        
+
         Route::get('/purchase-book', 'purchaseBookReport')->name('purchase_book');
         Route::get('/sale-book', 'saleBookReport')->name('sale_book');
         Route::get('/General_Medicine_Stock_Report', 'general_medicine_item_report')->name('general_medicine_item_report');
-        
-        
-
-
     });
-   
+
     //common functions routes
-    Route::controller(CommonController::class)->name('common.')->group(function(){
+    Route::controller(CommonController::class)->name('common.')->group(function () {
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_account');
         Route::get('/companies/{id}', 'get_companies')->name('companies');
         Route::get('/items/{id}', 'get_items')->name('items');
         Route::get('/get_items', 'get_all_items')->name('get_items');
-        
+
         Route::get('/flocks/{id}', 'get_flocks')->name('flocks');
-    
     });
 
     //Company 
-    Route::controller(CompanyController::class)->prefix('company')->name('companys.')->group(function(){
+    Route::controller(CompanyController::class)->prefix('company')->name('companys.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -283,7 +280,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Chick 
-    Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function(){
+    Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase_chick', 'purchase_chick')->name('purchase_chick');
         Route::post('/store-purchase-chick', 'storePurchaseChick')->name('purchase_store');
@@ -299,7 +296,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Medicine 
-    Route::controller(MedicineController::class)->prefix('medicine')->name('medicines.')->group(function(){
+    Route::controller(MedicineController::class)->prefix('medicine')->name('medicines.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase_medicine', 'purchase_medicine')->name('purchase_medicine');
         Route::post('/store-purchase-medicine', 'storePurchaseMedicine')->name('purchase_store');
@@ -325,7 +322,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/edit-return-medicine/{id}', 'editReturnMedicine')->name('return_edit');
         Route::get('/delete-return-medicine/{id}', 'deleteReturnMedicine')->name('return_delete');
         Route::get('/return-invoice/{id}', 'saleInvoice')->name('expire_invoice');
-        
+
         //Missing Medicine
         Route::get('/missing_medicine', 'missing_medicine')->name('missing_medicine');
         Route::post('/store-missing-medicine', 'storemissingMedicine')->name('missing_store');
@@ -340,11 +337,10 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
-
     });
 
     //Feed 
-    Route::controller(FeedController::class)->prefix('feed')->name('feeds.')->group(function(){
+    Route::controller(FeedController::class)->prefix('feed')->name('feeds.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase_feed', 'purchase_feed')->name('purchase_feed');
         Route::post('/store-purchase-feed', 'storePurchaseFeed')->name('purchase_store');
@@ -371,7 +367,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Flock 
-    Route::controller(FlockController::class)->prefix('flock')->name('flocks.')->group(function(){
+    Route::controller(FlockController::class)->prefix('flock')->name('flocks.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -379,7 +375,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Flock 
-    Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function(){
+    Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -387,43 +383,43 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //Shade 
-    Route::controller(ShadeController::class)->prefix('shade')->name('shades.')->group(function(){
+    Route::controller(ShadeController::class)->prefix('shade')->name('shades.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
-    
-    Route::controller(MedicineInvoiceController::class)->prefix('medicine-invoices')->name('medicine-invoices.')->group(function(){
+
+    Route::controller(MedicineInvoiceController::class)->prefix('medicine-invoices')->name('medicine-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/purchase/{invoice_no}/show', 'show')->name('show');
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
+        Route::post('/return', 'singleReturn')->name('single-return');
     });
-    
 
-    Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function(){
+
+    Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
     });
 
-    Route::controller(ChickInvoiceController::class)->prefix('chick-invoices')->name('chick-invoices.')->group(function(){
+    Route::controller(ChickInvoiceController::class)->prefix('chick-invoices')->name('chick-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
     });
 
-    Route::controller(MurghiInvoiceController::class)->prefix('murghi-invoices')->name('murghi-invoices.')->group(function(){
+    Route::controller(MurghiInvoiceController::class)->prefix('murghi-invoices')->name('murghi-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
     });
-
 });
 
 

@@ -13,23 +13,20 @@
                             <div class="row">
                                 <div class="col-md-2 mb-3">
                                     <label for="invoice_no" class="required">Invoice No</label>
-                                    <input type="text" name="invoice_no" class="form-control text-right"
-                                        value="{{ $invoice_no }}" readonly>
+                                    <input type="text" name="invoice_no" class="form-control" value="{{ $invoice_no }}"
+                                        readonly>
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label for="date" class="required">Date</label>
-                                    <input type="date" name="date" class="form-control text-right"
-                                        value="{{ date('Y-m-d') }}">
+                                    <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
-                                <div class="col-md-4 mb-3"></div>
                                 <div class="col-md-4 mb-3">
                                     <label for="ref_no" class="required">Reference No</label>
-                                    <input type="text" name="ref_no" class="form-control text-right"
-                                        placeholder="Reference No">
+                                    <input type="text" name="ref_no" class="form-control" placeholder="Reference No">
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="account_id">Account</label>
-                                    <select class="form-control select2" name="account" id="account_id11">
+                                    <label for="account">Account</label>
+                                    <select class="form-control select2" name="account" id="account_id">
                                         <option value="">Select Account</option>
                                         @foreach ($accounts as $account)
                                             <option value="{{ $account->id }}">{{ $account->name }}</option>
@@ -38,8 +35,7 @@
                                 </div>
                                 <div class="col-md-8 mb-3">
                                     <label for="description" class="required">Description</label>
-                                    <input type="text" name="description" class="form-control text-right"
-                                        placeholder="Description">
+                                    <input type="text" name="description" class="form-control" placeholder="Description">
                                 </div>
                             </div>
                         </div>
@@ -193,10 +189,15 @@
                     method: "POST",
                     data: formData,
                     success: function(response) {
-                        toastr.success('Invoice saved successfully!');
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 2000);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Invoice saved successfully!',
+                        }).then(() => {
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 500);
+                        });
                     },
                     error: function(response) {
                         let errors = response.responseJSON.errors;
