@@ -24,7 +24,7 @@ class MedicineInvoiceController extends Controller
 
         $title = "Purchase Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
-        $accounts  = Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name');
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
         $products = Item::where('category_id', 4)
             ->with(['latestMedicineInvoice' => function ($query) {
                 $query->select('item_id', 'purchase_price');
@@ -40,8 +40,13 @@ class MedicineInvoiceController extends Controller
 
         $title = "Sale Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Sale', 'invoice_no');
-        $accounts  = Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name');
-        $products = Item::where('category_id', '4')->latest()->get();
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+
+        $products = ExpiryStock::with(['latestMedicineInvoice' => function ($query) {
+            $query->select('item_id', 'sale_price');
+        }])
+        ->latest()
+        ->get();
 
         return view('admin.medicine.sale_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
     }
@@ -156,7 +161,7 @@ class MedicineInvoiceController extends Controller
             ->first();
 
         if ($expiryStock->quantity < $validatedData['quantity']) {
-            return response()->json(['error' => 'Insufficient stock for the return.'], 422);
+            return response()->json(['error' => 'Insufficient stock for the return. ('.$expiryStock->quantity.')' ], 422);
         }
 
         $invoiceNumber = generateUniqueID(new MedicineInvoice, 'Purchase Return', 'invoice_no');

@@ -34,4 +34,9 @@ class ExpiryStock extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function latestMedicineInvoice()
+    {
+        return $this->hasOne(MedicineInvoice::class,'item_id')->latest();
+    }
 }
