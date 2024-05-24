@@ -11,6 +11,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-2 mb-3">
+                                <input type="hidden" name="type" class="form-control text-right" value="Sale">
                                 <label for="invoice_no" class="required">Invoice No</label>
                                 <input type="text" name="invoice_no" class="form-control" value="{{ $invoice_no }}"
                                     readonly>
@@ -122,8 +123,9 @@
                                     $latestInvoice = $product->latestMedicineInvoice;
                                     $salePrice = $latestInvoice ? $latestInvoice->sale_price : 0;
                                     $qty = $product->quantity;
+                                    $purchasePrice = $qty != 0 ? $product->rate / $qty : 0;
                                 @endphp    
-                                <option value="{{ $product->item_id }}" data-price="{{ $salePrice }}" data-qty="{{ $qty }}">
+                                <option value="{{ $product->item_id }}" data-price="{{ $salePrice }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}">
                                     {{ $product->item->name . ' - ' . $product->expiry_date ?? '' }}
                                 </option>
                             @endforeach
@@ -133,8 +135,9 @@
                     <td class="quantity_col">
                         <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
                     </td>
-                    <td class="purchase_rate_col">
-                        <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;" required>
+                    <input type="hidden" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;">
+                                   <td class="sale_rate_col">
+                        <input type="number" name="sale_price[]" class="form-control saleRate text-right" value="1"  step="any" style="text-align: right;" required>
                     </td>
                     <td class="expiry_date">
                         <input type="text" name="expiry_date[]" class="form-control text-right" readonly>
@@ -172,9 +175,12 @@
 
             function updatePriceQty($selectElement) {
                 let salePrice = $selectElement.find('option:selected').data('price');
-                $selectElement.closest('tr').find('.purchaseRate').val(salePrice);
+                let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
+                $selectElement.closest('tr').find('.saleRate').val(salePrice);
+                $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
                 let qty = $selectElement.find('option:selected').data('qty');
                 $selectElement.closest('tr').find('.quantity').attr('max', qty);
+                $selectElement.closest('tr').find('.saleRate').attr('min', purchasePrice);
                 Calculation();
             }
 
@@ -190,7 +196,7 @@
                 $("#saveButton").attr("disabled", true);
 
                 $.ajax({
-                    url: "{{ route('admin.medicine-invoices.store') }}",
+                    url: "{{ route('admin.medicine-invoices.store-sale') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {
@@ -221,7 +227,7 @@
                 Calculation();
             });
 
-            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .dis_in_percentage",
+            $("body").on("input keyup blur", ".product_val, .quantity, .saleRate, .dis_in_percentage",
                 function() {
                     Calculation();
                 });
@@ -234,7 +240,7 @@
                 $("tr.rows").each(function() {
                     let $row = $(this);
                     let qty = parseFloat($row.find(".quantity").val()) || 0;
-                    let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
+                    let rate = parseFloat($row.find(".saleRate").val()) || 0;
                     let amount = qty * rate;
                     let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
 

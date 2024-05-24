@@ -11,6 +11,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-2 mb-3">
+                                <input type="hidden" name="type" class="form-control text-right" value="Purchase">
                                 <label for="invoice_no" class="required">Invoice No</label>
                                 <input type="text" name="invoice_no" class="form-control" value="{{ $invoice_no }}"
                                     readonly>
