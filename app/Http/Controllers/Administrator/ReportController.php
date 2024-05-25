@@ -26,6 +26,12 @@ use App\Models\CashBook;
 use App\Models\AccountType;
 use App\Models\Inward;
 use App\Models\Outward;
+use Mpdf\Mpdf;
+use App\Models\FeedInvoice;
+use App\Models\ChickInvoice;
+use App\Models\MedicineInvoice;
+use App\Models\MurghiInvoice;
+
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -998,7 +1004,7 @@ class ReportController extends Controller
     }
     
     public function all_report($id){
-        //dd($id);
+        
         if($id == "purchase_medicine"){
             
             $data = array(
@@ -1009,7 +1015,8 @@ class ReportController extends Controller
                 'item_name' => false,
                 'account_name' => false,
                 'id'  => "purchasemedicine",
-                'all_reports_values' => "",
+                'all_reports_values' => MedicineInvoice::with('item','account')->where('type','Purchase')
+                                        ->latest()->get(),
                 
             
             );
@@ -1027,31 +1034,91 @@ class ReportController extends Controller
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "salemedicine",
-                    'all_reports_values' => "",
+                    'all_reports_values' => MedicineInvoice::with('item','account')->where('type','Sale')
+                                            ->latest()->get(),
                     
                 
                 );
             
         }
 
-        //Return Medicine
-        if($id == "return_medicine"){
+        //Purchase Return Medicine
+        if($id == "purchase_return"){
             
             $data = array(
-                'title' => 'Return Medicine Report',
+                'title' => 'Purchase Return Medicine Report',
                 'acounts' => Account::latest()->get(),
                 'items' => Item::where('category_id',4)->latest()->get(),
                 'accounts'  => Account::latest()->get(),
                 'item_name' => false,
                 'account_name' => false,
-                'id'  => "returnmedicine",
-                'all_reports_values' => "",
+                'id'  => "purchasereturnmedicine",
+                'all_reports_values' => MedicineInvoice::with('item','account')->where('type','Purchase Return')
+                                        ->latest()->get(),
                 
             
             );
             
         }
-        
+
+        //Sale Return Medicine
+        if($id == "sale_return"){
+            
+            $data = array(
+                'title' => 'Sale Return Medicine Report',
+                'acounts' => Account::latest()->get(),
+                'items' => Item::where('category_id',4)->latest()->get(),
+                'accounts'  => Account::latest()->get(),
+                'item_name' => false,
+                'account_name' => false,
+                'id'  => "salereturnmedicine",
+                'all_reports_values' => MedicineInvoice::with('item','account')->where('type','Sale Return')
+                                        ->latest()->get(),
+                
+            
+            );
+            
+        }
+
+
+        //Adjust In Medicine
+        if($id == "medicine_adjust_in"){
+            
+            $data = array(
+                'title' => 'Adjust In Medicine Report',
+                'acounts' => Account::latest()->get(),
+                'items' => Item::where('category_id',4)->latest()->get(),
+                'accounts'  => Account::latest()->get(),
+                'item_name' => false,
+                'account_name' => false,
+                'id'  => "adjustinmedicine",
+                'all_reports_values' => MedicineInvoice::with('item','account')->where('type','Adjust In')
+                                        ->latest()->get(),
+                
+            
+            );
+            
+        }
+
+        //Adjust Out Medicine
+        if($id == "medicine_adjust_out"){
+            
+            $data = array(
+                'title' => 'Adjust Out Medicine Report',
+                'acounts' => Account::latest()->get(),
+                'items' => Item::where('category_id',4)->latest()->get(),
+                'accounts'  => Account::latest()->get(),
+                'item_name' => false,
+                'account_name' => false,
+                'id'  => "adjustoutmedicine",
+                'all_reports_values' => MedicineInvoice::with('item','account')->where('type','Adjust Out')
+                                        ->latest()->get(),
+                
+            
+            );
+            
+        }
+
         //Purchase Feed 
         if($id == "purchase_feed"){
             
@@ -1063,14 +1130,15 @@ class ReportController extends Controller
                 'item_name' => false,
                 'account_name' => false,
                 'id'  => "purchasefeed",
-                'all_reports_values' => "",
+                'all_reports_values' => FeedInvoice::with('item','account')->where('type','Purchase')
+                                            ->latest()->get(),
                 
             
             );
             
         }
         
-        //Sale Medicine
+        //Sale Feed
         if($id == "sale_feed"){
             
             $data = array(
@@ -1081,32 +1149,53 @@ class ReportController extends Controller
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "salefeed",
-                    'all_reports_values' => "",
+                    'all_reports_values' => FeedInvoice::with('item','account')->where('type','Sale')
+                                            ->latest()->get(),
                     
                 
                 );
             
         }
 
-        //Return Medicine
-        if($id == "return_feed"){
+        //Purchase Return Feed 
+        if($id == "purchase_return_feed"){
             
             $data = array(
-                'title' => 'Return Feed Report',
+                'title' => 'Purchase Return Feed Report',
                 'acounts' => Account::latest()->get(),
                 'items' => Item::where('category_id',3)->latest()->get(),
                 'accounts'  => Account::latest()->get(),
                 'item_name' => false,
                 'account_name' => false,
-                'id'  => "returnfeed",
-                'all_reports_values' => "",
+                'id'  => "purchasereturnfeed",
+                'all_reports_values' => FeedInvoice::with('item','account')->where('type','Purchase Return')
+                                            ->latest()->get(),
                 
             
             );
             
         }
+        
+        //Sale Return Feed
+        if($id == "sale_return_feed"){
+            
+            $data = array(
+                    'title' => 'Sale Return Feed Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::where('category_id',3)->latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "salereturnfeed",
+                    'all_reports_values' => FeedInvoice::with('item','account')->where('type','Sale Return')
+                                            ->latest()->get(),
+                    
+                
+                );
+            
+        }
 
-        //Sale Medicine
+        //Sale Chick
         if($id == "sale_chick"){
             
             $data = array(
@@ -1117,14 +1206,15 @@ class ReportController extends Controller
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "salechick",
-                    'all_reports_values' => "",
+                    'all_reports_values' => ChickInvoice::with('item','account')->where('type','Purchase')
+                                            ->latest()->get(),
                     
                 
                 );
             
         }
 
-        //Return Medicine
+        //Purchase Chick
         if($id == "purchase_chick"){
             
             $data = array(
@@ -1135,7 +1225,8 @@ class ReportController extends Controller
                 'item_name' => false,
                 'account_name' => false,
                 'id'  => "purchasechick",
-                'all_reports_values' => "",
+                'all_reports_values' => ChickInvoice::with('item','account')->where('type','Sale')
+                                        ->latest()->get(),
                 
             
             );
@@ -1153,7 +1244,8 @@ class ReportController extends Controller
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "salemurghi",
-                    'all_reports_values' => "",
+                    'all_reports_values' => MurghiInvoice::with('item','account')->where('type','Purchase')
+                                            ->latest()->get(),
                     
                 
                 );
@@ -1171,7 +1263,8 @@ class ReportController extends Controller
                 'item_name' => false,
                 'account_name' => false,
                 'id'  => "purchasemurghi",
-                'all_reports_values' => "",
+                'all_reports_values' => MurghiInvoice::with('item','account')->where('type','Sale')
+                                        ->latest()->get(),
                 
             
             );
@@ -1183,6 +1276,7 @@ class ReportController extends Controller
 
     public function all_reports_request(Request $req){
         
+        //Purchase Medicine
         if($req->id == "purchasemedicine"){
             
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
@@ -1205,7 +1299,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
                 
@@ -1229,7 +1323,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1253,7 +1347,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1276,7 +1370,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1321,7 +1415,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1345,7 +1439,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1370,7 +1464,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1394,7 +1488,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1416,15 +1510,14 @@ class ReportController extends Controller
             }
         }
 
-        //Return Medicine
-        if($req->id == "returnmedicine"){
+        //Purchase Return Medicine
+        if($req->id == "purchasereturnmedicine"){
             
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
-            
+                
                 if(isset($req->account_id) && !isset($req->item_id)){
-                    
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Purchase Return Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => "",
@@ -1432,23 +1525,23 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
+                
                 }
 
                 if(isset($req->account_id) && isset($req->item_id)){
-                    
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Purchase Return Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
@@ -1456,15 +1549,131 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                   
+                    $data = array(  
+                        'title' => 'Purchase Return Medicine Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    $data = array(  
+                        'title' => 'Purchase Return Medicine Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                
+            }else{
+                $data = array(
+                    'title' => 'Purchase Return Medicine Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "purchasereturnmedicine",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+        
+        //Sale Return Medicine
+        if($req->id == "salereturnmedicine"){
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+            
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1473,7 +1682,7 @@ class ReportController extends Controller
                     
                    
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Sale Return Medicine Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
@@ -1481,15 +1690,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1497,7 +1706,7 @@ class ReportController extends Controller
                 if(!isset($req->account_id) && !isset($req->item_id) ){
                     
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Sale Return Medicine Report',
                         'account_name' => false,
                         'acounts' => Account::latest()->get(),
                         'items' =>   Item::latest()->get(),
@@ -1505,15 +1714,15 @@ class ReportController extends Controller
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1521,13 +1730,247 @@ class ReportController extends Controller
                 //dd($data['purchases']);
             }else{
                 $data = array(
-                    'title' => 'Return Medicine Report',
+                    'title' => 'Sale Return Medicine Report',
                     'acounts' => Account::latest()->get(),
                     'items' => Item::latest()->get(),
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
-                    'id'  => "returnmedicine",
+                    'id'  => "salereturnmedicine",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+       
+        //Adjust In Medicine
+         if($req->id == "adjustinmedicine"){
+            
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+                
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(), 
+                    );
+                    
+                
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                   
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                
+            }else{
+                $data = array(
+                    'title' => 'Adjust In Medicine Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "adjustinmedicine",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+        
+        //Adjust Out Medicine
+        if($req->id == "adjustoutmedicine"){
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+            
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                    
+                   
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                //dd($data['purchases']);
+            }else{
+                $data = array(
+                    'title' => 'Adjust Out Medicine Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "adjustoutmedicine",
                     'all_reports_values' => "",
                     
                 
@@ -1551,14 +1994,14 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1575,14 +2018,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1598,14 +2041,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 
@@ -1622,14 +2065,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1671,14 +2114,14 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1696,14 +2139,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salefeed",
-                        'all_reports_values'  => SaleFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1720,14 +2163,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salefeed",
-                        'all_reports_values'  => SaleFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1744,7 +2187,7 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salefeed",
-                        'all_reports_values'  => SaleFeed::with(['company','account','item'])->when(isset($req->account_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->with(['company','account','item'])->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->invoice_no), function($query) use ($req){
                                                         $query->where('invoice_no',$req->invoice_no);
@@ -1755,7 +2198,7 @@ class ReportController extends Controller
                                                     ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1778,14 +2221,14 @@ class ReportController extends Controller
             }
         }
 
-        //Return Medicine
-        if($req->id == "returnfeed"){
+        //Purchase Return Feed
+        if($req->id == "purchasereturnfeed"){
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
             
                 if(isset($req->account_id) && !isset($req->item_id)){
                     
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => "",
@@ -1793,15 +2236,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1809,7 +2252,7 @@ class ReportController extends Controller
                 if(isset($req->account_id) && isset($req->item_id)){
                     
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
@@ -1817,15 +2260,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1834,7 +2277,7 @@ class ReportController extends Controller
                     
                    
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
@@ -1842,15 +2285,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1858,7 +2301,7 @@ class ReportController extends Controller
                 if(!isset($req->account_id) && !isset($req->item_id) ){
                     
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => false,
                         'acounts' => Account::latest()->get(),
                         'items' =>   Item::latest()->get(),
@@ -1866,15 +2309,15 @@ class ReportController extends Controller
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1882,13 +2325,131 @@ class ReportController extends Controller
                 //dd($data['purchases']);
             }else{
                 $data = array(
-                    'title' => 'Return Feed Report',
+                    'title' => 'Purchase Return Feed Report',
                     'acounts' => Account::latest()->get(),
                     'items' => Item::latest()->get(),
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
-                    'id'  => "returnfeed",
+                    'id'  => "purchasereturnfeed",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+
+        //Sale Return Feed
+        if($req->id == "salereturnfeed"){
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+            
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                    
+                   
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                //dd($data['purchases']);
+            }else{
+                $data = array(
+                    'title' => 'Sale Return Feed Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "salereturnfeed",
                     'all_reports_values' => "",
                     
                 
@@ -1912,14 +2473,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1936,14 +2497,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1961,14 +2522,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -1985,14 +2546,14 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2031,14 +2592,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasechick",
-                        'all_reports_values'  => PurchaseChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2055,14 +2616,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasechick",
-                        'all_reports_values'  => PurchaseChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2080,14 +2641,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasechick",
-                        'all_reports_values'  => PurchaseChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2104,14 +2665,14 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasechick",
-                        'all_reports_values'  => PurchaseChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
                 }
@@ -2149,14 +2710,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2173,14 +2734,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2198,14 +2759,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
                 }
@@ -2222,14 +2783,14 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2268,14 +2829,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2292,14 +2853,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2317,14 +2878,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
                 }
@@ -2341,14 +2902,14 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
                 }
@@ -2374,7 +2935,7 @@ class ReportController extends Controller
     }
 
     public function all_reports_pdf(Request $req){
-        
+       
         if($req->id == "purchasemedicine"){
             
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
@@ -2383,21 +2944,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 
@@ -2407,21 +2968,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                       
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2432,20 +2993,19 @@ class ReportController extends Controller
                         'title' => 'Purchase Medicine Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2454,21 +3014,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Medicine Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                       
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasemedicine",
-                        'all_reports_values'  => PurchaseMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2477,9 +3036,7 @@ class ReportController extends Controller
             }else{
                 $data = array(
                     'title' => 'Purchase Medicine Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
-                    'accounts'  => Account::latest()->get(),
+                   
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "purchasemedicine",
@@ -2499,21 +3056,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                       
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2523,21 +3080,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2549,20 +3106,19 @@ class ReportController extends Controller
                         'title' => 'Sale Medicine Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2572,21 +3128,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Medicine Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2595,9 +3150,7 @@ class ReportController extends Controller
             }else{
                 $data = array(
                     'title' => 'Sale Medicine Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
-                    'accounts'  => Account::latest()->get(),
+                   
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "salemedicine",
@@ -2608,15 +3161,14 @@ class ReportController extends Controller
             }
         }
 
-        //Return Medicine
-        if($req->id == "returnmedicine"){
+       //Purchase Return Medicine
+        if($req->id == "purchasereturnmedicine"){
             
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
-            
+                
                 if(isset($req->account_id) && !isset($req->item_id)){
-                    
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Purchase Return Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => "",
@@ -2624,23 +3176,23 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(), 
                     );
                     
+                
                 }
 
                 if(isset($req->account_id) && isset($req->item_id)){
-                    
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Purchase Return Medicine Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
@@ -2648,24 +3200,23 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
 
                 if(isset($req->item_id) && !isset($req->account_id)){
-                    
-                   
+                
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Purchase Return Medicine Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
@@ -2673,23 +3224,22 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
                 
                 if(!isset($req->account_id) && !isset($req->item_id) ){
-                    
                     $data = array(  
-                        'title' => 'Return Medicine Report',
+                        'title' => 'Purchase Return Medicine Report',
                         'account_name' => false,
                         'acounts' => Account::latest()->get(),
                         'items' =>   Item::latest()->get(),
@@ -2697,15 +3247,133 @@ class ReportController extends Controller
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
-                        'id'  => "returnmedicine",
-                        'all_reports_values'  => ReturnMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                
+            }else{
+                $data = array(
+                    'title' => 'Purchase Return Medicine Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "purchasereturnmedicine",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+        
+        //Sale Return Medicine
+        if($req->id == "salereturnmedicine"){
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+            
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                    
+                
+                    $data = array(  
+                        'title' => 'Sale Return Medicine Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Medicine Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "salereturnmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2713,13 +3381,247 @@ class ReportController extends Controller
                 //dd($data['purchases']);
             }else{
                 $data = array(
-                    'title' => 'Return Medicine Report',
+                    'title' => 'Sale Return Medicine Report',
                     'acounts' => Account::latest()->get(),
                     'items' => Item::latest()->get(),
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
-                    'id'  => "returnmedicine",
+                    'id'  => "salereturnmedicine",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+    
+        //Adjust In Medicine
+        if($req->id == "adjustinmedicine"){
+            
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+                
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(), 
+                    );
+                    
+                
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    $data = array(  
+                        'title' => 'Adjust In Medicine Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "adjustinmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust In')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                
+            }else{
+                $data = array(
+                    'title' => 'Adjust In Medicine Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "adjustinmedicine",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+        
+        //Adjust Out Medicine
+        if($req->id == "adjustoutmedicine"){
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+            
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                    
+                
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    
+                    $data = array(  
+                        'title' => 'Adjust Out Medicine Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "adjustoutmedicine",
+                        'all_reports_values'  => MedicineInvoice::where('type','Adjust Out')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                //dd($data['purchases']);
+            }else{
+                $data = array(
+                    'title' => 'Adjust Out Medicine Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "adjustoutmedicine",
                     'all_reports_values' => "",
                     
                 
@@ -2736,21 +3638,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Feed Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2761,20 +3662,19 @@ class ReportController extends Controller
                         'title' => 'Purchase Feed Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2797,7 +3697,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 
@@ -2807,35 +3707,29 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasefeed",
-                        'all_reports_values'  => PurchaseFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
 
-                
-                
-                
-                //dd($data['purchases']);
             }else{
                 $data = array(
                     'title' => 'Purchase Feed Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
-                    'accounts'  => Account::latest()->get(),
+                    
                     'item_name' => false,
                     'account_name' => false,
                     'id'  => "purchasefeed",
@@ -2846,7 +3740,7 @@ class ReportController extends Controller
             }
         }
         
-        //Sale Medicine
+        //Sale Feed
         if($req->id == "salefeed"){
             
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
@@ -2856,21 +3750,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Medicine Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salemedicine",
-                        'all_reports_values'  => SaleMedicine::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2882,20 +3775,19 @@ class ReportController extends Controller
                         'title' => 'Sale Feed Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salefeed",
-                        'all_reports_values'  => SaleFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2905,21 +3797,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salefeed",
-                        'all_reports_values'  => SaleFeed::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2929,14 +3821,14 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salefeed",
-                        'all_reports_values'  => SaleFeed::with(['company','account','item'])->when(isset($req->account_id), function($query) use ($req){
+                        'all_reports_values'  => FeedInvoice::where('type','Sale')->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->invoice_no), function($query) use ($req){
                                                         $query->where('invoice_no',$req->invoice_no);
@@ -2947,7 +3839,7 @@ class ReportController extends Controller
                                                     ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -2957,8 +3849,7 @@ class ReportController extends Controller
             }else{
                 $data = array(
                     'title' => 'Sale Feed Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
+                   
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
@@ -2969,15 +3860,15 @@ class ReportController extends Controller
                 );
             }
         }
-
-        //Return Medicine
-        if($req->id == "returnfeed"){
+         
+        //Purchase Return Feed
+        if($req->id == "purchasereturnfeed"){
             if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
             
                 if(isset($req->account_id) && !isset($req->item_id)){
                     
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => "",
@@ -2985,15 +3876,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3001,7 +3892,7 @@ class ReportController extends Controller
                 if(isset($req->account_id) && isset($req->item_id)){
                     
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
@@ -3009,15 +3900,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3026,7 +3917,7 @@ class ReportController extends Controller
                     
                    
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
                         'acounts' => Account::latest()->get(),
@@ -3034,15 +3925,15 @@ class ReportController extends Controller
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3050,7 +3941,7 @@ class ReportController extends Controller
                 if(!isset($req->account_id) && !isset($req->item_id) ){
                     
                     $data = array(  
-                        'title' => 'Return Feed Report',
+                        'title' => 'Purchase Return Feed Report',
                         'account_name' => false,
                         'acounts' => Account::latest()->get(),
                         'items' =>   Item::latest()->get(),
@@ -3058,15 +3949,15 @@ class ReportController extends Controller
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
-                        'id'  => "returnfeed",
-                        'all_reports_values'  => ReturnFeed::when(isset($req->item_id), function($query) use ($req){
+                        'id'  => "purchasereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Purchase Return')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3074,13 +3965,131 @@ class ReportController extends Controller
                 //dd($data['purchases']);
             }else{
                 $data = array(
-                    'title' => 'Return Feed Report',
+                    'title' => 'Purchase Return Feed Report',
                     'acounts' => Account::latest()->get(),
                     'items' => Item::latest()->get(),
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
-                    'id'  => "returnfeed",
+                    'id'  => "purchasereturnfeed",
+                    'all_reports_values' => "",
+                    
+                
+                );
+            }
+        }
+
+        //Sale Return Feed
+        if($req->id == "salereturnfeed"){
+            if(isset($req->account_id) || isset($req->item_id) || isset($req->to_date)){
+            
+                if(isset($req->account_id) && !isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => "",
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->account_id) && isset($req->item_id)){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+
+                if(isset($req->item_id) && !isset($req->account_id)){
+                    
+                   
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => "",
+                        'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'is_update' => true,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                if(!isset($req->account_id) && !isset($req->item_id) ){
+                    
+                    $data = array(  
+                        'title' => 'Sale Return Feed Report',
+                        'account_name' => false,
+                        'acounts' => Account::latest()->get(),
+                        'items' =>   Item::latest()->get(),
+                        'item_name' => false,
+                        'is_update' => true,
+                        'from_date' => $req->from_date ,
+                        'to_date' => $req->to_date ,
+                        'id'  => "salereturnfeed",
+                        'all_reports_values'  => FeedInvoice::where('type','Sale Return')->when(isset($req->item_id), function($query) use ($req){
+                                                        $query->where('item_id', hashids_decode($req->item_id));
+                                                    })->when(isset($req->account_id), function($query) use ($req){
+                                                        $query->where('account_id', hashids_decode($req->account_id));
+                                                    })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                                    })
+                                                    ->orderBy('date', 'asc')->get(),  
+                    );
+                    
+                }
+                
+                //dd($data['purchases']);
+            }else{
+                $data = array(
+                    'title' => 'Sale Return Feed Report',
+                    'acounts' => Account::latest()->get(),
+                    'items' => Item::latest()->get(),
+                    'accounts'  => Account::latest()->get(),
+                    'item_name' => false,
+                    'account_name' => false,
+                    'id'  => "salereturnfeed",
                     'all_reports_values' => "",
                     
                 
@@ -3097,21 +4106,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Chick Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                       
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3121,21 +4130,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Chick Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3147,20 +4156,19 @@ class ReportController extends Controller
                         'title' => 'Sale Chick Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3170,21 +4178,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Feed Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salechick",
-                        'all_reports_values'  => SaleChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3193,8 +4200,8 @@ class ReportController extends Controller
             }else{
                 $data = array(
                     'title' => 'Sale Chcik Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
+                    
+                    
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
@@ -3216,21 +4223,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Chick Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                       
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasechick",
-                        'all_reports_values'  => PurchaseChick::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => ChickInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3240,9 +4247,9 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Chick Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
@@ -3254,7 +4261,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3266,8 +4273,7 @@ class ReportController extends Controller
                         'title' => 'Purchase Chick Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
@@ -3279,7 +4285,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3289,8 +4295,7 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Chick Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
@@ -3303,7 +4308,7 @@ class ReportController extends Controller
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3312,8 +4317,7 @@ class ReportController extends Controller
             }else{
                 $data = array(
                     'title' => 'Purchase Chick Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
+                    
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
@@ -3334,21 +4338,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Murghi Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3358,21 +4362,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Murghi Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                        
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3384,20 +4388,19 @@ class ReportController extends Controller
                         'title' => 'Sale Murghi Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                       
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3407,21 +4410,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Sale Murghi Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                       
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "salemurghi",
-                        'all_reports_values'  => SaleMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Sale')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3430,8 +4432,7 @@ class ReportController extends Controller
             }else{
                 $data = array(
                     'title' => 'Sale Murghi Report',
-                    'acounts' => Account::latest()->get(),
-                    'items' => Item::latest()->get(),
+                    
                     'accounts'  => Account::latest()->get(),
                     'item_name' => false,
                     'account_name' => false,
@@ -3453,21 +4454,21 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Murghi Report',
                         'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
+                       
                         'item_name' => "",
-                        'items' =>   Item::latest()->get(),
+                        
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3484,14 +4485,14 @@ class ReportController extends Controller
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3503,20 +4504,20 @@ class ReportController extends Controller
                         'title' => 'Purchase Murghi Report',
                         'account_name' => "",
                         'item_name' => Item::where('id',hashids_decode($req->item_id))->latest()->get(),
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                  
+                
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'is_update' => true,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3526,21 +4527,20 @@ class ReportController extends Controller
                     $data = array(  
                         'title' => 'Purchase Murghi Report',
                         'account_name' => false,
-                        'acounts' => Account::latest()->get(),
-                        'items' =>   Item::latest()->get(),
+                        
                         'item_name' => false,
                         'is_update' => true,
                         'from_date' => $req->from_date ,
                         'to_date' => $req->to_date ,
                         'id'  => "purchasemurghi",
-                        'all_reports_values'  => PurchaseMurghi::when(isset($req->item_id), function($query) use ($req){
+                        'all_reports_values'  => MurghiInvoice::where('type','Purchase')->when(isset($req->item_id), function($query) use ($req){
                                                         $query->where('item_id', hashids_decode($req->item_id));
                                                     })->when(isset($req->account_id), function($query) use ($req){
                                                         $query->where('account_id', hashids_decode($req->account_id));
                                                     })->when(isset($req->from_date, $req->to_date), function($query) use ($req){
                                                         $query->whereBetween('date', [$req->from_date, $req->to_date]);
                                                     })
-                                                    ->latest()->get(), 
+                                                    ->orderBy('date', 'asc')->get(),  
                     );
                     
                 }
@@ -3561,9 +4561,10 @@ class ReportController extends Controller
                 );
             }
         }
+        
 
         $pdf = Pdf::loadView('admin.report.all_reports_pdf', $data);
-        return $pdf->download('account_report.pdf');
+        return $pdf->setPaper('a4')->stream();
     }
 
     public function DebtorReport(Request $req){

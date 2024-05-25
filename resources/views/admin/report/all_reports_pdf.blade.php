@@ -70,12 +70,12 @@ h5{
                         <td style="border: none;"><span><img src="{{ asset('new_assets') }}/images/main-logo.png" alt="" width="150" height=""></span></td>
                         
                         <td style="border: none;">
-                            <h3 class="text-center">Ghulam Hussain Poulttry |{{$title}}</h3>
-                            @if(isset($account_name[0]->name))
+                            <h3 class="text-center">Ghulam Hussain Poulttry |{{@$title}}</h3>
+                            @if(@$account_name != "")
                            <h5 class="text-center ac"><i class="bi bi-people-fill"></i>{{ $account_name[0]->name  }} </h5>
                            @endif
-                           <h5 class="text-center ac">{{$title}}</h5>
-                          <h5 class="text-center">From {{$from_date}} to {{$to_date}}</h5>
+                           <h5 class="text-center ac">{{@$title}}</h5>
+                          <h5 class="text-center">From {{ @$from_date }} to {{ @$to_date }}</h5>
         
                             
                         </td>
@@ -99,12 +99,12 @@ h5{
                             @if( @$all_reports_values != "")
                                 @foreach($all_reports_values AS $all)
                                 <tr class="text-dark">
-                                <td><span class="waves-effect waves-light btn btn-rounded btn-primary-light">{{ date('d-m-y', strtotime($all->date)) }}</span></td>
-                                <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ @$all->account->name }}</span></td>
-                                <td><span class="waves-effect waves-light btn btn-outline btn-danger">{{ @$all->item->name }}</span></td>
-                                <td>{{ $all->quantity }}</td>
-                                <td>{{ $all->rate }}</td>
-                                <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ $all->net_ammount }}</span></td>
+                                    <td><span class="waves-effect waves-light btn btn-rounded btn-primary-light">{{ date('d-m-y', strtotime(@$all->date)) }}</span></td>
+                                    <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ @$all->account->name }}</span></td>
+                                    <td><span class="waves-effect waves-light btn btn-outline btn-danger">{{ @$all->item->name }}</span></td>
+                                    <td>{{    number_format(@$all->net_amount / @$all->quantity ,2) }}</td>
+                                    <td>{{ @$all->quantity }}</td>
+                                    <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ $all->net_ammount }}</span></td>
                                 </tr>
                             @endforeach
                             @endif  
