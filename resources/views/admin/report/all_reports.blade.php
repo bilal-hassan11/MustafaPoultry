@@ -88,9 +88,11 @@
                             <th> Date  </th>
                             <th> Account Name </th>
                             <th> Item Name </th>
-                            <th> Quantity </th>
                             <th> Rate </th>
+                            <th> Quantity </th>
                             <th> Net Value </th>
+                            <th> Action </th>
+
                          </tr>
                     </thead>
                     <tbody>
@@ -100,9 +102,18 @@
                                   <td><span class="waves-effect waves-light btn btn-rounded btn-primary-light">{{ date('d-m-y', strtotime(@$all->date)) }}</span></td>
                                   <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ @$all->account->name }}</span></td>
                                   <td><span class="waves-effect waves-light btn btn-outline btn-danger">{{ @$all->item->name }}</span></td>
+                                  <td>{{    number_format(@$all->net_amount / @$all->quantity ,2) }}</td>
                                   <td>{{ @$all->quantity }}</td>
-                                  <td>{{ @$all->rate }}</td>
-                                  <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ @$all->net_ammount }}</span></td>
+                                  <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ @$all->net_amount }}</span></td>
+                                  <td>
+                                        <button class="btn btn-outline-info  rounded-pill btn-wave" type="button" >
+                                            <i class="ri-eye-line"></i>
+                                        </button>
+                                        <button class="btn btn-outline-info  rounded-pill btn-wave" type="button" >
+                                            <i class="ri-download-2-line"></i>
+                                        </button>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         @endif  
@@ -132,16 +143,9 @@
             type: 'GET',
             url: "{{ route('admin.reports.all_reports_pdf') }}",
             data: form_data,
-            xhrFields: {
-                responseType: 'blob'
-            },
+           
             success: function(response){
-                var blob = new Blob([response]);
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = "Reports.pdf";
-                link.click();
-                return false;
+                
             },
             error: function(blob){
                 console.log(blob);
