@@ -22,6 +22,13 @@ use App\Models\Outward;
 use App\Models\Formulation;
 use App\Models\Account;
 use App\Models\Staff;
+use App\Models\FeedInvoice;
+use App\Models\ChickInvoice;
+use App\Models\MurghiInvoice;
+use App\Models\MedicineInvoice;
+use App\Models\CashBook;
+use App\Models\Expense;
+
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Cache;
@@ -34,46 +41,54 @@ class HomeController extends AdminController
 {
     public function index()
     {   
-            //  $accounts = Account::where('account_nature','credit')->orderBy("id", "asc")->latest()->get();
-            
-        //dd("dfds");
-            
-        $current_month = date('Y-m-d');
+        $current_month = date('m');
         
-        $tot_sale_feed_begs = SaleFeed::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_sale_feed_ammount = SaleFeed::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        // Sale Feed
+        $tot_sale_feed_begs = FeedInvoice::where('type','Sale')->whereMonth('date', $current_month)->sum('quantity');
+        $tot_sale_feed_ammount = FeedInvoice::where('type','Sale')->whereMonth('date', $current_month)->sum('net_amount');
         
-        $tot_Return_feed_begs = ReturnFeed::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_Return_feed_ammount = ReturnFeed::where('date', $current_month)->latest()->get()->sum('net_ammount');
-        
-
-        $tot_purchase_feed_begs = PurchaseFeed::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_purchase_feed_ammount = PurchaseFeed::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        //Purchase Feed
+        $tot_purchase_feed_begs = FeedInvoice::where('type','Purchase')->whereMonth('date', $current_month)->sum('quantity');
+        $tot_purchase_feed_ammount = FeedInvoice::where('type','Purchase')->whereMonth('date', $current_month)->sum('net_amount');
+        //dd($tot_purchase_feed_ammount);
+         // Sale Return Feed
+         $tot_sale_return_feed_begs = FeedInvoice::where('type','Sale Return')->whereMonth('date', $current_month)->sum('quantity');
+         $tot_sale_return_feed_ammount = FeedInvoice::where('type','Sale Return')->whereMonth('date', $current_month)->sum('net_amount');
+         
+         //Purchase Return Feed
+         $tot_purchase_return_feed_begs = FeedInvoice::where('type','Purchase Return')->whereMonth('date', $current_month)->sum('quantity');
+         $tot_purchase_return_feed_ammount = FeedInvoice::where('type','Purchase Return')->whereMonth('date', $current_month)->sum('net_amount');
         
         //Medicine
-        $tot_sale_medicine_qty = SaleMedicine::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_sale_medicine_ammount = SaleMedicine::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        $tot_sale_medicine_qty = MedicineInvoice::where('type','Sale')->where('date', $current_month)->sum('quantity');
+        $tot_sale_medicine_ammount = MedicineInvoice::where('type','Sale')->where('date', $current_month)->sum('net_amount');
         
-        $tot_purchase_medicine_qty = PurchaseMedicine::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_purchase_medicine_ammount = PurchaseMedicine::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        $tot_purchase_medicine_qty = MedicineInvoice::where('type','Purchase')->where('date', $current_month)->sum('quantity');
+        $tot_purchase_medicine_ammount = MedicineInvoice::where('type','Purchase')->where('date', $current_month)->sum('net_amount');
 
 
         //Chicks 
-        $tot_sale_chick_qty = SaleChick::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_sale_chick_ammount = SaleChick::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        $tot_sale_chick_qty = ChickInvoice::where('type','Sale')->where('date', $current_month)->sum('quantity');
+        $tot_sale_chick_ammount = ChickInvoice::where('type','Sale')->where('date', $current_month)->sum('net_amount');
         
-        $tot_purchase_chick_qty = PurchaseChick::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_purchase_chick_ammount = PurchaseChick::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        $tot_purchase_chick_qty = ChickInvoice::where('type','Purchase')->where('date', $current_month)->sum('quantity');
+        $tot_purchase_chick_ammount = ChickInvoice::where('type','Purchase')->where('date', $current_month)->sum('net_amount');
 
 
         //Murghi 
-        $tot_sale_murghi_qty = SaleMurghi::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_sale_murghi_ammount = SaleMurghi::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        $tot_sale_murghi_qty = MurghiInvoice::where('type','Sale')->where('date', $current_month)->sum('quantity');
+        $tot_sale_murghi_ammount = MurghiInvoice::where('type','Sale')->where('date', $current_month)->sum('net_amount');
         
-        $tot_purchase_murghi_qty = PurchaseMurghi::where('date', $current_month)->latest()->get()->sum('quantity');
-        $tot_purchase_murghi_ammount = PurchaseMurghi::where('date', $current_month)->latest()->get()->sum('net_ammount');
+        $tot_purchase_murghi_qty = MurghiInvoice::where('type','Purchase')->where('date', $current_month)->sum('quantity');
+        $tot_purchase_murghi_ammount = MurghiInvoice::where('type','Purchase')->where('date', $current_month)->sum('net_amount');
 
+        //Expense
+        $tot_expense = Expense::where('date', $current_month)->sum('ammount');
 
+        //CashBook
+        $tot_credit = CashBook::where('date', $current_month)->sum('receipt_ammount');
+        $tot_debit = CashBook::where('date', $current_month)->sum('payment_ammount');
+        $tot_cash_in_hand = $tot_debit - $tot_credit ;
 
 
         $newDateTime = Carbon::now()->addMonth(2);
@@ -127,17 +142,22 @@ class HomeController extends AdminController
         $data = array(
             "title"     => "Dashboad",
             'sale'      => $sale_array,
-            // 'cr'        =>$accounts,
-            // 'dr'        =>$dr_accounts,
+            
             'sale_bags' => $sale_bag_array,
+
             'tot_sale_feed_begs' => $tot_sale_feed_begs,
             'tot_sale_feed_ammount' => $tot_sale_feed_ammount,
-            'tot_Return_feed_begs' => $tot_Return_feed_begs,
-            'tot_Return_feed_ammount' => $tot_Return_feed_ammount,
-            
+
             'tot_purchase_feed_begs' => $tot_purchase_feed_begs,
             'tot_purchase_feed_ammount' => $tot_purchase_feed_ammount,
             
+            'tot_sale_return_feed_begs' => $tot_sale_return_feed_begs,
+            'tot_sale_return_feed_ammount' => $tot_sale_return_feed_ammount,
+            
+            'tot_purchase_return_feed_begs' => $tot_purchase_return_feed_begs,
+            'tot_purchase_return_feed_ammount' => $tot_purchase_return_feed_ammount,
+            
+
             'tot_purchase_medicine_qty' => $tot_sale_medicine_qty,
             'tot_purchase_medicine_ammount' => $tot_sale_medicine_ammount,
             'tot_purchase_medicine_qty' => $tot_purchase_medicine_qty,
