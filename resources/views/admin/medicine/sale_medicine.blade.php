@@ -39,7 +39,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
                         </div>
                     </div>
                     <div class="card-body" style="width: 100%; overflow-x: auto">
@@ -101,89 +100,101 @@
 @section('page-scripts')
     <script type="text/javascript">
         let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
+
         $(document).ready(function() {
 
+            // Initial Select2 initialization
             $('select.product_val').select2({
                 width: '100%',
             });
 
-            addRow();
-
-            $(".add-row").click(addRow);
-
+            // Function to add a new row
             function addRow() {
                 let row = `
-                <tr class="rows">
-                    <td class="product_col">
-                        @if ($products)
-                        <select class="form-control product product_val" name="item_id[]" id="products" required>
-                            <option value="">Select Items</option>
-                            @foreach ($products as $product)
-                                @php
-                                    $latestInvoice = $product->latestMedicineInvoice;
-                                    $salePrice = $latestInvoice ? $latestInvoice->sale_price : 0;
-                                    $qty = $product->quantity;
-                                    $purchasePrice = $qty != 0 ? $product->rate / $qty : 0;
-                                @endphp    
-                                <option value="{{ $product->item_id }}" data-price="{{ $salePrice }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}">
-                                    {{ $product->item->name . ' - ' . $product->expiry_date ?? '' }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @endif
-                    </td>
-                    <td class="quantity_col">
-                        <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
-                    </td>
-                    <input type="hidden" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;">
-                                   <td class="sale_rate_col">
-                        <input type="number" name="sale_price[]" class="form-control saleRate text-right" value="1"  step="any" style="text-align: right;" required>
-                    </td>
-                    <td class="expiry_date">
-                        <input type="text" name="expiry_date[]" class="form-control text-right" readonly>
-                    </td>
-                    <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
-                    <td class="dis_in_rs_col">
-                        <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
-                    </td>
-                    <td class="dis_in_percentage_col">
-                        <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
-                    </td>
-                    <td class="net_amount_col">
-                        <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
-                    </td>
-                    <td>
-                        <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
-                    </td>
-                </tr>
-                `;
+            <tr class="rows">
+                <td class="product_col">
+                    @if ($products)
+                    <select class="form-control product product_val" name="item_id[]" id="products" required>
+                        <option value="">Select Items</option>
+                        @foreach ($products as $product)
+                            @php
+                                $latestInvoice = $product->latestMedicineInvoice;
+                                $salePrice = $latestInvoice ? $latestInvoice->sale_price : 0;
+                                $qty = $product->quantity;
+                                $expiry_date = $product->expiry_date;
+                                $purchasePrice = $qty != 0 ? $product->rate / $qty : 0;
+                            @endphp    
+                            <option value="{{ $product->item_id }}" data-price="{{ $salePrice }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}">
+                                {{ $product->item->name . ' - ' . $product->expiry_date ?? '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @endif
+                </td>
+                <td class="quantity_col">
+                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                </td>
+                <input type="hidden" name="purchase_price[]" class="form-control purchaseRate text-right" value="1" step="any" style="text-align: right;">
+                <td class="sale_rate_col">
+                    <input type="number" name="sale_price[]" class="form-control saleRate text-right" value="1" step="any" style="text-align: right;" required>
+                </td>
+                <td class="expiry_date">
+                    <input type="text" name="expiry_date[]" class="form-control expiry_date text-right" readonly>
+                </td>
+                <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
+                <td class="dis_in_rs_col">
+                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
+                </td>
+                <td class="dis_in_percentage_col">
+                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
+                </td>
+                <td class="net_amount_col">
+                    <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
+                </td>
+                <td>
+                    <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
+                </td>
+            </tr>
+            `;
                 $("#row").append(row);
+
+                // Initialize select2 for the new row
                 $('select.product_val').select2({
                     width: '100%',
                 });
 
+                // Attach event handlers to the newly added row
+                $(".product_val").last().change(function() {
+                    updatePriceQty($(this));
+                });
+
+                $(".dis_in_rs").last().on('input', function() {
+                    Calculation(true);
+                });
+
             }
 
-            $(".product_val").last().change(function() {
-                updatePriceQty($(this));
+            // Add initial row
+            addRow();
 
-            });
+            // Add new row on button click
+            $(".add-row").click(addRow);
 
-            $(".dis_in_rs").last().on('input', function() {
-                Calculation(true);
-            });
-
+            // Update price, quantity, and expiry date based on the selected product
             function updatePriceQty($selectElement) {
                 let salePrice = $selectElement.find('option:selected').data('price');
+                let qty = $selectElement.find('option:selected').data('qty');
+                let expirydate = $selectElement.find('option:selected').data('expiry_date');
                 let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
                 $selectElement.closest('tr').find('.saleRate').val(salePrice);
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
-                let qty = $selectElement.find('option:selected').data('qty');
+                $selectElement.closest('tr').find('.expiry_date').val(expirydate);
                 $selectElement.closest('tr').find('.quantity').attr('max', qty);
                 $selectElement.closest('tr').find('.saleRate').attr('min', purchasePrice);
                 Calculation();
             }
 
+            // Form submission
             $("#formData").submit(function(e) {
                 e.preventDefault();
 
@@ -227,11 +238,12 @@
                 Calculation();
             });
 
-            $("body").on("input keyup blur", ".product_val, .quantity, .saleRate, .dis_in_percentage",
-                function() {
-                    Calculation();
-                });
+            // Event handler for input changes
+            $("body").on("input keyup blur", ".quantity, .saleRate, .dis_in_percentage", function() {
+                Calculation();
+            });
 
+            // Calculation function
             function Calculation(isManualUpdate = false) {
                 let subtotal = 0;
                 let totalDiscount = 0;

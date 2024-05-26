@@ -159,15 +159,17 @@
                     width: '100%',
                 });
 
+                $(".product_val").last().change(function() {
+                    updatePurchasePrice($(this));
+                });
+
+                $(".dis_in_rs").last().on('input', function() {
+                    Calculation(true);
+                });
+
             }
 
-            $(".product_val").last().change(function() {
-                updatePurchasePrice($(this));
-            });
 
-            $(".dis_in_rs").last().on('input', function() {
-                Calculation(true);
-            });
 
             function updatePurchasePrice($selectElement) {
                 let purchasePrice = $selectElement.find('option:selected').data('price');
