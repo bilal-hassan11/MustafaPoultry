@@ -26,11 +26,11 @@ class MedicineInvoiceController extends Controller
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
         $accounts  = Account::with(['grand_parent', 'parent'])->latest()->get()->sortBy('name');
         $products = Item::where('category_id', 4)
-            ->with(['latestMedicineInvoice' => function ($query) {
-                $query->select('item_id', 'purchase_price');
-            }])
-            ->latest()
-            ->get();
+                    ->with(['latestMedicineInvoice' => function ($query) {
+                        $query->select('item_id', 'purchase_price');
+                    }])
+                    ->latest()
+                    ->get();
 
         return view('admin.medicine.purchase_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
     }
@@ -207,7 +207,6 @@ class MedicineInvoiceController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
 
     /**

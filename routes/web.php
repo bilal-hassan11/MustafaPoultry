@@ -263,6 +263,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/companies/{id}', 'get_companies')->name('companies');
         Route::get('/items/{id}', 'get_items')->name('items');
         Route::get('/get_items', 'get_all_items')->name('get_items');
+        
+        Route::get('/latest-sale/{category}','getLatestSale')->name('latest.sale');
 
         Route::get('/flocks/{id}', 'get_flocks')->name('flocks');
     });

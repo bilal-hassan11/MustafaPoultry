@@ -665,10 +665,7 @@
                                                 Purchase Chick</a></li>
                                         <li><a href="{{ route('admin.chick-invoices.sale') }}" class="slide-item {{ request()->is('web_admin/chick-invoices/sale') ? 'active open' : '' }}"> Sale
                                                 Chick</a></li>
-                                        <!-- <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
-                                                class="slide-item"> Purchase Chick Report</a></li>
-                                        <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_chick']) }}"
-                                                class="slide-item"> Sale Chick Report</a></li> -->
+                                        
 
                                     </ul>
                                 </li>
@@ -748,7 +745,14 @@
 
                                         <li><a href="{{ route('admin.reports.accounts_head_report') }}"
                                                 class="slide-item">Accounts Head Report</a></li>
-
+                                        <li><a href="{{ route('admin.reports.all_report', ['id' => 'Purchase_murghi']) }}"
+                                                class="slide-item"> Purchase Feed Report</a></li>
+                                        <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}"
+                                                class="slide-item"> Sale Feed Report</a></li>
+                                        <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
+                                                class="slide-item"> Purchase Chick Report</a></li>
+                                        <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_chick']) }}"
+                                                class="slide-item"> Sale Chick Report</a></li>        
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_feed']) }}"
                                                 class="slide-item"> Purchase Feed Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_feed']) }}"
