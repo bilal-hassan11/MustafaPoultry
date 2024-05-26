@@ -396,6 +396,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/purchase/{invoice_no}/show', 'show')->name('show');
         Route::get('/sale', 'createSale')->name('sale');
         Route::post('/store', 'store')->name('store');
+        Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });
 
