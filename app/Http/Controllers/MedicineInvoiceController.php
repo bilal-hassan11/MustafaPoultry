@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AccountLedger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\SendsWhatsAppMessages;
 
 class MedicineInvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    use SendsWhatsAppMessages;
     public function index()
     {
     }
@@ -278,9 +280,9 @@ class MedicineInvoiceController extends Controller
                     'credit' => 0,
                 ]);
             }
-
+            $file_url = 'https://www.clickdimensions.com/links/TestPDFfile.pdf';
+            $this->sendWhatsAppMessage('923003025291', 'Welcome to Laravel', $file_url);
             DB::commit();
-
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
             DB::rollBack();

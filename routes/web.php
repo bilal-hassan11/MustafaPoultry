@@ -52,6 +52,7 @@ use App\Http\Controllers\MedicineInvoiceController;
 use App\Http\Controllers\FeedInvoiceController;
 use App\Http\Controllers\ChickInvoiceController;
 use App\Http\Controllers\MurghiInvoiceController;
+use App\Http\Controllers\StockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +73,7 @@ Route::get('/clear-cache', function () {
 });
 
 
-Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(function () {
+Route::middleware('auth:admin')->name('admin.')->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
     //Artisan Commands
@@ -403,6 +404,11 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/return', 'singleReturn')->name('single-return');
     });
 
+    Route::controller(StockController::class)->prefix('stock')->name('stock.')->group(function () {
+        Route::get('/available-stock', [StockController::class, 'index'])->name('index');
+        Route::get('/stock/filter', [StockController::class, 'filter'])->name('filter');
+        Route::get('/items/by-category', [StockController::class, 'getItemsByCategory'])->name('items.byCategory');
+    });
 
     Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
