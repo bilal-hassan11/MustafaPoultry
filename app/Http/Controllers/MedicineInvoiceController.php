@@ -26,7 +26,7 @@ class MedicineInvoiceController extends Controller
     {
         $title = "Purchase Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
-        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get()
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
         $products = Item::where('category_id', 4)
             ->with(['latestMedicineInvoice' => function ($query) {
@@ -34,10 +34,14 @@ class MedicineInvoiceController extends Controller
             }])
             ->latest()
             ->get();
+        $purchase_medicine = MedicineInvoice::with('account', 'item')
+            ->where('type', 'Purchase')
+            ->latest()
+            ->get();
 
-        return view('admin.medicine.purchase_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
-
+        return view('admin.medicine.purchase_medicine', compact(['title', 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
     }
+
 
     public function createSale()
     {
@@ -81,11 +85,11 @@ class MedicineInvoiceController extends Controller
         ]);
 
         $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
-        
- 
-        
-         
-        
+
+
+
+
+
         DB::beginTransaction();
 
         try {

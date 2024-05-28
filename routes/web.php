@@ -408,6 +408,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/available-stock', [StockController::class, 'index'])->name('index');
         Route::get('/stock/filter', [StockController::class, 'filter'])->name('filter');
         Route::get('/items/by-category', [StockController::class, 'getItemsByCategory'])->name('items.byCategory');
+        Route::get('expiry-stock', [StockController::class, 'expiryStockReport'])->name('expiry_stock_report');
     });
 
     Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function () {
