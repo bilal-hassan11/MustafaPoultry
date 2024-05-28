@@ -20,19 +20,29 @@ class MedicineInvoiceController extends Controller
     {
     }
 
-    public function createPurchase()
+    public function createPurchase(Request $req)
     {
         $title = "Purchase Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
-        $products = Item::where('category_id', 4)
-                    ->with(['latestMedicineInvoice' => function ($query) {
-                        $query->select('item_id', 'purchase_price');
-                    }])
-                    ->latest()
-                    ->get();
+        $purchase_medicine = MedicineInvoice::with(['item', 'account'])->where('type','Purchase')
+                                    ->when(isset($req->account_id), function($query) use ($req){
+                                        $query->where('account_id', hashids_decode($req->account_id));
+                                    })
+                                    ->when(isset($req->invoice_no), function($query) use ($req){
+                                        $query->where('invoice_no', $req->invoice_no);
+                                    })
+                                    ->when(isset($req->item_id), function($query) use ($req){
+                                        $query->where('item_id', hashids_decode($req->item_id));
+                                    })
+                                    ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
+                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                    })->latest()->limit(50)->get();
 
-        return view('admin.medicine.purchase_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
+        $products = Item::where('category_id', 4)->with(['latestMedicineInvoice' => function ($query) {
+                        $query->select('item_id', 'purchase_price');}])->latest()->get();
+                                                     
+        return view('admin.medicine.purchase_medicine', compact(['title','purchase_medicine','invoice_no', 'accounts', 'products']));
     }
 
     public function createSale()
@@ -77,7 +87,11 @@ class MedicineInvoiceController extends Controller
         ]);
 
         $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
-
+        
+ 
+        
+         
+        
         DB::beginTransaction();
 
         try {
