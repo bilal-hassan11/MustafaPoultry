@@ -115,4 +115,27 @@ class StockController extends Controller
 
         return view('admin.stock.max_selling_report');
     }
+
+
+    public function lowSellingReport(Request $request)
+    {
+        $query = MedicineInvoice::with('item')
+            ->where('type', 'Sale')
+            ->groupBy('item_id')
+            ->selectRaw('item_id, sum(quantity) as total_quantity')
+            ->orderBy('total_quantity');
+
+        if ($request->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('item.name', function ($invoice) {
+                    return $invoice->item->name;
+                })
+                ->addColumn('total_quantity', function ($invoice) {
+                    return $invoice->total_quantity;
+                })
+                ->make(true);
+        }
+
+        return view('admin.stock.low_selling_report');
+    }
 }
