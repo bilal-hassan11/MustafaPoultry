@@ -22,11 +22,12 @@ class MedicineInvoiceController extends Controller
     {
     }
 
-    public function createPurchase()
+    public function createPurchase(Request $req)
     {
         $title = "Purchase Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
-        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get()
+
         $products = Item::where('category_id', 4)
             ->with(['latestMedicineInvoice' => function ($query) {
                 $query->select('item_id', 'purchase_price');
@@ -35,6 +36,7 @@ class MedicineInvoiceController extends Controller
             ->get();
 
         return view('admin.medicine.purchase_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
+
     }
 
     public function createSale()
@@ -79,7 +81,11 @@ class MedicineInvoiceController extends Controller
         ]);
 
         $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
-
+        
+ 
+        
+         
+        
         DB::beginTransaction();
 
         try {
