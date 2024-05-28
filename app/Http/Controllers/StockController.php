@@ -76,4 +76,19 @@ class StockController extends Controller
         $categories = Category::all();
         return view('admin.stock.expiry_stock_report', compact('categories'));
     }
+
+    public function lowStockReport(Request $request)
+    {
+        $query = ExpiryStock::with('item.category')->where('quantity', '<', 10);
+
+        if ($request->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('item.name', function (ExpiryStock $stock) {
+                    return $stock->item->name;
+                })
+                ->make(true);
+        }
+
+        return view('admin.stock.low_stock_report');
+    }
 }
