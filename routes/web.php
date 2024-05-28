@@ -52,6 +52,7 @@ use App\Http\Controllers\MedicineInvoiceController;
 use App\Http\Controllers\FeedInvoiceController;
 use App\Http\Controllers\ChickInvoiceController;
 use App\Http\Controllers\MurghiInvoiceController;
+use App\Http\Controllers\StockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +73,7 @@ Route::get('/clear-cache', function () {
 });
 
 
-Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(function () {
+Route::middleware('auth:admin')->name('admin.')->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
     //Artisan Commands
@@ -263,8 +264,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/companies/{id}', 'get_companies')->name('companies');
         Route::get('/items/{id}', 'get_items')->name('items');
         Route::get('/get_items', 'get_all_items')->name('get_items');
-        
-        Route::get('/latest-sale/{category}','getLatestSale')->name('latest.sale');
+
+        Route::get('/latest-sale/{category}', 'getLatestSale')->name('latest.sale');
 
         Route::get('/flocks/{id}', 'get_flocks')->name('flocks');
     });
@@ -394,14 +395,20 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
 
     Route::controller(MedicineInvoiceController::class)->prefix('medicine-invoices')->name('medicine-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/purchase', 'createPurchase')->name('purchase');
-        Route::get('/purchase/{invoice_no}/show', 'show')->name('show');
         Route::get('/sale', 'createSale')->name('sale');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/purchase/{invoice_no}', 'show')->name('show');
+        Route::get('/sale/{invoice_no}', 'show')->name('show');
         Route::post('/store', 'store')->name('store');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });
 
+    Route::controller(StockController::class)->prefix('stock')->name('stock.')->group(function () {
+        Route::get('/available-stock', [StockController::class, 'index'])->name('index');
+        Route::get('/stock/filter', [StockController::class, 'filter'])->name('filter');
+        Route::get('/items/by-category', [StockController::class, 'getItemsByCategory'])->name('items.byCategory');
+    });
 
     Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');

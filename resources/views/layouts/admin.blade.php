@@ -655,72 +655,91 @@
                                     </ul>
                                 </li>
                                 <li class="slide">
-                                    <a class="side-menu__item {{ request()->is('web_admin/chick-invoices/purchase') || request()->is('web_admin/chick-invoices/sale') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);"><i
-                                            class="fa fa-qq" aria-hidden="true"></i> &nbsp&nbsp&nbsp <span
+                                    <a class="side-menu__item {{ request()->is('web_admin/chick-invoices/purchase') || request()->is('web_admin/chick-invoices/sale') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-qq"
+                                            aria-hidden="true"></i> &nbsp&nbsp&nbsp <span
                                             class="side-menu__label">Chicks</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
-                                        <li><a href="{{ route('admin.chick-invoices.purchase') }}" class="slide-item  {{ request()->is('web_admin/chick-invoices/purchase') ? 'active open' : '' }}">
+                                        <li><a href="{{ route('admin.chick-invoices.purchase') }}"
+                                                class="slide-item  {{ request()->is('web_admin/chick-invoices/purchase') ? 'active open' : '' }}">
                                                 Purchase Chick</a></li>
-                                        <li><a href="{{ route('admin.chick-invoices.sale') }}" class="slide-item {{ request()->is('web_admin/chick-invoices/sale') ? 'active open' : '' }}"> Sale
+                                        <li><a href="{{ route('admin.chick-invoices.sale') }}"
+                                                class="slide-item {{ request()->is('web_admin/chick-invoices/sale') ? 'active open' : '' }}">
+                                                Sale
                                                 Chick</a></li>
-                                        
+
 
                                     </ul>
                                 </li>
                                 <!-- Feed -->
                                 <li class="slide">
-                                    <a class="side-menu__item {{ request()->is('web_admin/feed-invoices/purchase') || request()->is('web_admin/feed-invoices/sale') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);"><i
-                                            class="fa fa-square" aria-hidden="true"></i>&nbsp&nbsp&nbsp <span
+                                    <a class="side-menu__item {{ request()->is('web_admin/feed-invoices/purchase') || request()->is('web_admin/feed-invoices/sale') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-square"
+                                            aria-hidden="true"></i>&nbsp&nbsp&nbsp <span
                                             class="side-menu__label">Feeds</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
-                                        <li><a href="{{ route('admin.feed-invoices.purchase') }}" class="slide-item {{ request()->is('web_admin/feed-invoices/purchase') ? 'active open' : '' }}">
+                                        <li><a href="{{ route('admin.feed-invoices.purchase') }}"
+                                                class="slide-item {{ request()->is('web_admin/feed-invoices/purchase') ? 'active open' : '' }}">
                                                 Purchase Feed</a></li>
-                                        <li><a href="{{ route('admin.feed-invoices.sale') }}" class="slide-item {{ request()->is('web_admin/feed-invoices/sale') ? 'active open' : '' }}"> Sale
+                                        <li><a href="{{ route('admin.feed-invoices.sale') }}"
+                                                class="slide-item {{ request()->is('web_admin/feed-invoices/sale') ? 'active open' : '' }}">
+                                                Sale
                                                 Feed</a></li>
-                                       
+
 
                                     </ul>
                                 </li>
                                 <!-- Medicine -->
                                 <li class="slide">
-                                    <a class="side-menu__item {{ request()->is('web_admin/medicine-invoices/purchase') || request()->is('web_admin/medicine-invoices/sale') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);"><i
-                                            class="fa fa-medkit" aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
+                                    <a class="side-menu__item {{ request()->is('web_admin/medicine-invoices/purchase') || request()->is('web_admin/medicine-invoices/sale') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-medkit"
+                                            aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
                                             class="side-menu__label">Medicine</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
                                         <li><a href="{{ route('admin.medicine-invoices.purchase') }}"
-                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/purchase') ? 'active open' : '' }}"> Purchase Medicine</a></li>
+                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/purchase') ? 'active open' : '' }}">
+                                                Purchase Medicine</a></li>
                                         <li><a href="{{ route('admin.medicine-invoices.sale') }}"
-                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/sale') ? 'active open' : '' }}"> Sale Medicine</a></li>
+                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/sale') ? 'active open' : '' }}">
+                                                Sale Medicine</a></li>
                                         <li><a href="{{ route('admin.medicines.return_medicine') }}"
-                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/return') ? 'active open' : '' }}"> Return Medicine</a></li>
+                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/return') ? 'active open' : '' }}">
+                                                Return Medicine</a></li>
                                         <li><a href="{{ route('admin.medicines.sale_medicine') }}"
-                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/expire') ? 'active open' : '' }}"> Expire Medicine</a></li>
+                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/expire') ? 'active open' : '' }}">
+                                                Expire Medicine</a></li>
 
                                     </ul>
                                 </li>
                                 <!-- Murghi -->
                                 <li class="slide">
-                                    <a class="side-menu__item {{ request()->is('web_admin/murghi-invoices/purchase') || request()->is('web_admin/murghi-invoices/sale') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);"><i
-                                            class="fa fa-android" aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
+                                    <a class="side-menu__item {{ request()->is('web_admin/murghi-invoices/purchase') || request()->is('web_admin/murghi-invoices/sale') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-android"
+                                            aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
                                             class="side-menu__label">Murghi</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
-                                        <li><a href="{{ route('admin.murghi-invoices.purchase') }}" class="slide-item {{ request()->is('web_admin/murghi-invoices/prchase') ? 'active open' : '' }}">
+                                        <li><a href="{{ route('admin.murghi-invoices.purchase') }}"
+                                                class="slide-item {{ request()->is('web_admin/murghi-invoices/prchase') ? 'active open' : '' }}">
                                                 Purchase Murghi</a></li>
-                                        <li><a href="{{ route('admin.murghi-invoices.sale') }}" class="slide-item {{ request()->is('web_admin/murghi-invoices/sale  ') ? 'active open' : '' }}">
+                                        <li><a href="{{ route('admin.murghi-invoices.sale') }}"
+                                                class="slide-item {{ request()->is('web_admin/murghi-invoices/sale  ') ? 'active open' : '' }}">
                                                 Sale Murghi</a></li>
                                         <!-- <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_murghi']) }}" class="slide-item"> Purchase Murghi Report</a></li>
                               <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}" class="slide-item"> Sale Murghi Report</a></li> -->
 
                                     </ul>
                                 </li>
+                                <li> <a class="side-menu__item" href="{{ route('admin.stock.index') }}"><i
+                                            class="side-menu__icon fe fe-grid"></i><span
+                                            class="side-menu__label">Available Stock</span></a> </li>
 
                                 <li class="sub-category">
                                     <h3>Reports</h3>
@@ -728,8 +747,9 @@
 
                                 <!-- Feed -->
                                 <li class="slide">
-                                    <a class="side-menu__item {{  request()->is('web_admin/report/Reports/*') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);"><i
-                                            class="fa fa-square" aria-hidden="true"></i>&nbsp&nbsp&nbsp <span
+                                    <a class="side-menu__item {{ request()->is('web_admin/report/Reports/*') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-square"
+                                            aria-hidden="true"></i>&nbsp&nbsp&nbsp <span
                                             class="side-menu__label">Reports</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
@@ -752,7 +772,7 @@
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
                                                 class="slide-item"> Purchase Chick Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_chick']) }}"
-                                                class="slide-item"> Sale Chick Report</a></li>        
+                                                class="slide-item"> Sale Chick Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_feed']) }}"
                                                 class="slide-item"> Purchase Feed Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_feed']) }}"
@@ -760,7 +780,7 @@
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_return_feed']) }}"
                                                 class="slide-item">Sale Return Feed Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_return_feed']) }}"
-                                                class="slide-item"> Sale Return Feed Report</a></li>        
+                                                class="slide-item"> Sale Return Feed Report</a></li>
 
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_medicine']) }}"
                                                 class="slide-item"> Purchase Medicine Report</a></li>
@@ -776,7 +796,7 @@
 
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'medicine_adjust_out']) }}"
                                                 class="slide-item">Adjust Out Medicine Report</a></li>
-                                        
+
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'expire_medicine']) }}"
                                                 class="slide-item"> Expire Medicine Report</a></li>
 

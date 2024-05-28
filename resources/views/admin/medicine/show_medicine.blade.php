@@ -4,6 +4,9 @@
         <div class="side-app">
             <div class="main-container container-fluid">
                 <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h3>{{ $type }} Invoice</h3>
+                    </div>
                     <div class="card-header bg-primary text-white">
                         <div class="row">
                             <div class="col-md-8">
@@ -26,7 +29,7 @@
                                     <th>Sr.No</th>
                                     <th>Item</th>
                                     <th>Quantity</th>
-                                    <th>Purchase Price</th>
+                                    <th>{{ $type }} Price</th>
                                     <th>Expiry</th>
                                     <th>Discount (Rs)</th>
                                     <th>Discount (%)</th>
@@ -45,7 +48,9 @@
                                         <td style="text-align: center;">{{ $index + 1 }}</td>
                                         <td>{{ $item->item->name }}</td>
                                         <td style="text-align: right;">{{ $item->quantity }}</td>
-                                        <td style="text-align: right;">Rs {{ number_format($item->purchase_price, 2) }}</td>
+                                        <td style="text-align: right;">Rs
+                                            {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
+                                        </td>
                                         <td>{{ $item->expiry_date ?? '' }}</td>
                                         <td style="text-align: right;">Rs {{ number_format($item->discount_in_rs, 2) }}
                                         </td>
@@ -107,7 +112,7 @@
                     <form id="returnForm">
                         @csrf
                         <input type="hidden" id="medicine_invoice_id" name="medicine_invoice_id">
-                        <input type="hidden" id="type" name="type" value="Purchase Return">
+                        <input type="hidden" id="type" name="type" value="{{ $type }} Return">
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
                             <input type="number" class="form-control" id="quantity" name="quantity" required>
