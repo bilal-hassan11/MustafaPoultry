@@ -410,6 +410,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/items/by-category', [StockController::class, 'getItemsByCategory'])->name('items.byCategory');
         Route::get('expiry-stock', [StockController::class, 'expiryStockReport'])->name('expiry_stock_report');
         Route::get('/low-stock-report', [StockController::class, 'lowStockReport'])->name('low_stock_report');
+        Route::get('/max-selling-report', [StockController::class, 'maxSellingReport'])->name('max_selling_report');
     });
 
     Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function () {

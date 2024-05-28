@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\ExpiryStock;
 use App\Models\Item;
-use Illuminate\Support\Carbon;
+use App\Models\MedicineInvoice;
 use Yajra\DataTables\Facades\DataTables;
 
 class StockController extends Controller
@@ -90,5 +90,29 @@ class StockController extends Controller
         }
 
         return view('admin.stock.low_stock_report');
+    }
+
+
+
+    public function maxSellingReport(Request $request)
+    {
+        $query = MedicineInvoice::with('item')
+            ->where('type', 'Sale')
+            ->groupBy('item_id')
+            ->selectRaw('item_id, sum(quantity) as total_quantity')
+            ->orderByDesc('total_quantity');
+
+        if ($request->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('item.name', function ($invoice) {
+                    return $invoice->item->name;
+                })
+                ->addColumn('total_quantity', function ($invoice) {
+                    return $invoice->total_quantity;
+                })
+                ->make(true);
+        }
+
+        return view('admin.stock.max_selling_report');
     }
 }
