@@ -190,16 +190,14 @@
                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                             <td>{{ $purcahse->net_amount }}</td>
                                             <td>
-                                                <a
-                                                    href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"><button
-                                                        class="btn btn-outline-info  rounded-pill btn-wave"
-                                                        type="button">
-                                                        <i class="ri-eye-line"></i></a>
-                                                </button>
-                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
-                                                    type="button">
+                                                <a class="btn btn-ouline-info rouned-pill btn-wave"
+                                                    href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
+                                                    <i class="ri-eye-line"></i></a>
+                                                <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                    class="btn btn-outline-info rounded-pill btn-wave" type="button"
+                                                    target="_blank">
                                                     <i class="ri-download-2-line"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

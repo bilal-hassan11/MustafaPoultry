@@ -1,14 +1,15 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\Response;
 
 if (!function_exists('generateUniqueID')) {
-    function generateUniqueID(Model $model,$type, $idFieldName)
+    function generateUniqueID(Model $model, $type, $idFieldName)
     {
         $currentDate = now();
         $yearMonth = $currentDate->format('ym');
 
-        $latestRecord = $model->where('type',$type)->max($idFieldName);
+        $latestRecord = $model->where('type', $type)->max($idFieldName);
 
         $lastID = ($latestRecord !== null && substr($latestRecord, 0, 4) == $yearMonth)
             ? $latestRecord + 1
@@ -16,5 +17,17 @@ if (!function_exists('generateUniqueID')) {
 
         return $lastID;
     }
+}
 
+if (!function_exists('generatePDFResponse')) {
+    function generatePDFResponse($htmlContent, $mpdf)
+    {
+        $mpdf->WriteHTML($htmlContent);
+        $pdfContent = $mpdf->Output('', 'S');
+
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        return $response;
+    }
 }

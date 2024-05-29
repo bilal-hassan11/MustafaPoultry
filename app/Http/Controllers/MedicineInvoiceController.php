@@ -11,6 +11,7 @@ use App\Models\AccountLedger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\SendsWhatsAppMessages;
+use Mpdf\Mpdf;
 
 class MedicineInvoiceController extends Controller
 {
@@ -18,9 +19,6 @@ class MedicineInvoiceController extends Controller
      * Display a listing of the resource.
      */
     use SendsWhatsAppMessages;
-    public function index()
-    {
-    }
 
     public function createPurchase(Request $req)
     {
@@ -57,10 +55,8 @@ class MedicineInvoiceController extends Controller
             ->latest()
             ->get();
 
-
         return view('admin.medicine.sale_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
     }
-
 
 
     /**
@@ -385,6 +381,7 @@ class MedicineInvoiceController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show($invoice_no)
     {
         $url = request()->url();
@@ -414,18 +411,19 @@ class MedicineInvoiceController extends Controller
             return $item;
         });
 
-        return view('admin.medicine.show_medicine', compact('medicineInvoice', 'type'));
-    }
-
-
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MedicineInvoice $medicineInvoice)
-    {
-        $medicineInvoice->delete();
-        return response()->json(null, 204);
+        if (request()->has('generate_pdf')) {
+            $html = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'type'))->render();
+            $mpdf = new Mpdf([
+                'format' => 'A4-P', 'margin_top' => 10,
+                'margin_bottom' => 2,
+                'margin_left' => 2,
+                'margin_right' => 2,
+            ]);
+            $mpdf->SetAutoPageBreak(true, 15);
+            $mpdf->SetHTMLFooter('<div style="text-align: right;">Page {PAGENO} of {nbpg}</div>');
+            return generatePDFResponse($html, $mpdf);
+        } else {
+            return view('admin.medicine.show_medicine', compact('medicineInvoice', 'type'));
+        }
     }
 }

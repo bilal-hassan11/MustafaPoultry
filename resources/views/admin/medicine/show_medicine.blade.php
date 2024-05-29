@@ -71,7 +71,9 @@
 
                                     </tr>
                                     @php
-                                        $subtotal += $item->quantity * $item->purchase_price;
+                                        $subtotal +=
+                                            $item->quantity *
+                                            ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
                                         $totalDiscountRs += $item->discount_in_rs;
                                     @endphp
                                 @endforeach
