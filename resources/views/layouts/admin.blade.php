@@ -708,12 +708,7 @@
                                         <li><a href="{{ route('admin.medicine-invoices.sale') }}"
                                                 class="slide-item {{ request()->is('web_admin/medicine-invoices/sale') ? 'active open' : '' }}">
                                                 Sale Medicine</a></li>
-                                        <li><a href="{{ route('admin.medicines.return_medicine') }}"
-                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/return') ? 'active open' : '' }}">
-                                                Return Medicine</a></li>
-                                        <li><a href="{{ route('admin.medicines.sale_medicine') }}"
-                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/expire') ? 'active open' : '' }}">
-                                                Expire Medicine</a></li>
+
 
                                     </ul>
                                 </li>

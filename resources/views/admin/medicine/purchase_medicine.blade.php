@@ -96,129 +96,137 @@
                 </form>
             </div>
             <div class="row">
-          <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
+                <div class="col-12 col-sm-12">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('admin.medicine-invoices.purchase') }}" method="GET">
+                                @csrf
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <label for="">Accounts</label>
+                                        <select class="form-control select2" name="account_id" id="account_id">
+                                            <option value="">Select Account</option>
+                                            @foreach ($accounts as $account)
+                                                <option value="{{ $account->hashid }}">{{ $account->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Invoice No</label>
+                                        <input type="text" class="form-control" name="invoice_no" id="invoice_no">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Item</label>
+                                        <select class="form-control select2" name="item_id" id="item_id">
+                                            <option value="">Select Item</option>
+                                            @foreach ($products as $item)
+                                                <option value="{{ $item->hashid }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">From</label>
+                                        <input type="date" class="form-control" name="from_date" id="from_date">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">To</label>
+                                        <input type="date" class="form-control" name="to_date" id="to-date">
+                                    </div>
+                                    <div class="col-md-1 mt-6">
+                                        <input type="submit" class="btn btn-primary" value="Search">
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                <form action="{{ route('admin.medicine-invoices.purchase') }}" method="GET">
-                @csrf
-                <div class="row">
-                  
-                  <div class="col-md-3">
-                    <label for="">Accounts</label>
-                    <select class="form-control select2" name="account_id" id="account_id">
-                      <option value="">Select  Account</option>
-                      @foreach($accounts AS $account)
-                          <option value="{{ $account->hashid }}" >{{ $account->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                  <div class="col-md-2">
-                    <label for="">Invoice No</label>
-                    <input type="text" class="form-control" name="invoice_no" id="invoice_no">
-                  </div>
-                  <div class="col-md-2">
-                    <label for="">Item</label>
-                    <select class="form-control select2" name="item_id" id="item_id">
-                      <option value="">Select Item</option>
-                        @foreach($products AS $item)
-                            <option value="{{ $item->hashid }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                  </div>
-                  <div class="col-md-2">
-                    <label for="">From</label>
-                    <input type="date" class="form-control" name="from_date" id="from_date">
-                  </div>
-                  <div class="col-md-2">
-                    <label for="">To</label>
-                    <input type="date" class="form-control" name="to_date" id="to-date">
-                  </div>
-                  <div class="col-md-1 mt-6">
-                    <input type="submit" class="btn btn-primary" value="Search">
-                  </div>
-                </div>
-              </form>
-                
+                <!-- COL END -->
             </div>
-              </div>
-          </div>
-          <!-- COL END --> 
-        </div>
-        
-        <div class="row">
-          <div class="col-12 col-sm-12">
-              <div class="card ">
-                <div class="card-header">
-                    <h3 class="card-title mb-0">All Purchase Medicine  Detail</h3>
+
+            <div class="row">
+                <div class="col-12 col-sm-12">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0">All Purchase Medicine Detail</h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                <thead>
+                                    <tr class="text-dark">
+                                        <th>S.No</th>
+                                        <th>Date</th>
+                                        <th>Invoice No</th>
+                                        <th>Account Name</th>
+                                        <th>Item</th>
+                                        <th>Rate</th>
+                                        <th>Quantity</th>
+                                        <th>Net Ammount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $tot_q = 0;
+                                    $tot_amt = 0; ?>
+                                    @foreach ($purchase_medicine as $purcahse)
+                                        <tr class="text-dark">
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
+                                            <td>{{ $purcahse->invoice_no }}</td>
+                                            <td><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name }}</span>
+                                            </td>
+
+                                            <td><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name }}</span>
+                                            </td>
+                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
+                                            <?php $tot_q += $purcahse->quantity; ?>
+                                            <td>{{ $purcahse->quantity }}</td>
+                                            <?php $tot_amt += $purcahse->net_amount; ?>
+                                            <td>{{ $purcahse->net_amount }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"><button
+                                                        class="btn btn-outline-info  rounded-pill btn-wave"
+                                                        type="button">
+                                                        <i class="ri-eye-line"></i></a>
+                                                </button>
+                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
+                                                    type="button">
+                                                    <i class="ri-download-2-line"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr class="text-dark">
+                                        <th>Total</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>{{ $tot_q }}</th>
+                                        <th>{{ $tot_amt }}</th>
+                                        <th>-</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                <table id="example54" class="text-fade table table-bordered" style="width:100%">
-                    <thead>
-                        <tr class="text-dark">
-                            <th>S.No</th>
-                            <th>Date</th>
-                            <th>Invoice No</th>
-                            <th>Account Name</th>
-                            <th>Item</th>
-                            <th>Rate</th>
-                            <th>Quantity</th>
-                            <th>Net Ammount</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $tot_q = 0; $tot_amt = 0; ?>
-                      @foreach($purchase_medicine AS $purcahse) 
-                        <tr class="text-dark">
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
-                            <td>{{ $purcahse->invoice_no }}</td>
-                            <td><span class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name }}</span></td>
-                            
-                            <td><span class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name }}</span></td>
-                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity ,2) }}</td>
-                            <?php $tot_q += $purcahse->quantity ?>
-                            <td>{{ $purcahse->quantity }}</td>
-                            <?php $tot_amt += $purcahse->net_amount ?>
-                            <td>{{ $purcahse->net_amount }}</td>
-                            <td>
-                                <a href="{{ route('admin.medicine-invoices.show',['invoice_no'=>$purcahse->invoice_no]) }}" ><button class="btn btn-outline-info  rounded-pill btn-wave" type="button" >
-                                    <i class="ri-eye-line"></i></a>
-                                </button>
-                                <button class="btn btn-outline-info  rounded-pill btn-wave" type="button" >
-                                    <i class="ri-download-2-line"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr class="text-dark">
-                            <th >Total</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>{{ $tot_q }}</th>
-                            <th>{{ $tot_amt }}</th>
-                            <th>-</th>
-                        </tr>
-                    </tfoot>
-                </table>
-                
+                <!-- COL END -->
             </div>
-              </div>
-          </div>
-          <!-- COL END --> 
         </div>
-        </div>
-        
+
     </div>
-    
 @endsection
 @section('page-scripts')
     <script type="text/javascript">

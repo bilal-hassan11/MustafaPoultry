@@ -6,43 +6,16 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Administrator\AccountTypeController;
 use App\Http\Controllers\Administrator\CategoryController;
 use App\Http\Controllers\SaleMurghiController;
-
-use App\Http\Controllers\DetailViewController;
 use App\Http\Controllers\CompanyController;
-
-use App\Http\Controllers\Administrator\OrderController;
-use App\Http\Controllers\PurchaseMurghiController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\Administrator\HomeController;
 use App\Http\Controllers\Administrator\StaffController;
-use App\Http\Controllers\Administrator\DisciplineController;
-use App\Http\Controllers\Administrator\FormulationController;
 use App\Http\Controllers\Administrator\ItemController;
 use App\Http\Controllers\Administrator\PermissionController;
 use App\Http\Controllers\Administrator\ReportController;
-use App\Http\Controllers\Administrator\SubjectController;
-use App\Http\Controllers\Administrator\TopicController;
-use App\Http\Controllers\Administrator\ManufactureItemController;
-
 use App\Http\Controllers\ArtisanController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CronJobController;
-use App\Http\Controllers\InwardController;
-use App\Http\Controllers\ConsumptionController;
-use App\Http\Controllers\OutwardController;
-
-//New Controllers
-use App\Http\Controllers\ShadeController;
-use App\Http\Controllers\FlockController;
-use App\Http\Controllers\ItemAddittionController;
-use App\Http\Controllers\FlockMortalityController;
-
-use App\Http\Controllers\FeedController;
-use App\Http\Controllers\MedicineController;
-use App\Http\Controllers\ChickController;
-use App\Http\Controllers\CustomerOrderController;
-
-use App\Models\Account;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -152,14 +125,6 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
-    //Item Addition in Shade routes
-    Route::controller(ItemAddittionController::class)->prefix('addittion')->name('addittions.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
     //Cash Book routes
     Route::controller(CashController::class)->prefix('cash')->name('cash.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -167,32 +132,6 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_accounts');
-    });
-
-    //Sales BooK routes
-    Route::controller(SaleMurghiController::class)->prefix('sale_murghi')->name('sale_murghis.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-        Route::get('/account/{id}', 'accountDetails')->name('account_details');
-        Route::get('/migrateToSale/{id}', 'migrateToSale')->name('migrate_to_sale');
-        Route::get('/all-sales', 'allSales')->name('all_sales');
-        Route::get('/edit_sale/{id}', 'editSale')->name('edit_sale');
-        Route::post('/update-sale', 'updateSale')->name('update_sale');
-        Route::get('/delete_sale/{id}', 'deleteSale')->name('delete_sale');
-    });
-
-    //Purchase Murghi routes
-    Route::controller(PurchaseMurghiController::class)->prefix('purchase_murghi')->name('purchase_murghis.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-        Route::get('/migrateToPurchase/{id}', 'migrateToPurchase')->name('migrate_to_purchase');
-        Route::get('/all-purchase', 'allPurchase')->name('all_purchase');
-        Route::get('/edit-purchase/{id}', 'editPurchase')->name('edit_purchase');
-        Route::post('/update-purchase', 'updatePurchase')->name('update_purchase');
     });
 
     //report routes
@@ -282,123 +221,13 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/typedelete/{id}', 'typedelete')->name('typedelete');
     });
 
-    //Chick 
-    Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/purchase_chick', 'purchase_chick')->name('purchase_chick');
-        Route::post('/store-purchase-chick', 'storePurchaseChick')->name('purchase_store');
-        Route::get('/edit-purchase-chick/{id}', 'editPurchaseChick')->name('purchase_edit');
-        Route::get('/delete-purchase-chick/{id}', 'deletePurchaseChick')->name('purchase_delete');
-        Route::get('/sale_chick', 'sale_chick')->name('sale_chick');
-        Route::post('/store-sale-chick', 'storeSaleChick')->name('sale_store');
-        Route::get('/edit-sale-chick/{id}', 'editSaleChick')->name('sale_edit');
-        Route::get('/delete-sale-chick/{id}', 'deleteSaleChick')->name('sale_delete');
-        // Route::post('/store', 'store')->name('store');
-        // Route::get('/edit/{id}', 'edit')->name('edit');
-        // Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
-    //Medicine 
-    Route::controller(MedicineController::class)->prefix('medicine')->name('medicines.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/purchase_medicine', 'purchase_medicine')->name('purchase_medicine');
-        Route::post('/store-purchase-medicine', 'storePurchaseMedicine')->name('purchase_store');
-        Route::get('/edit-purchase-medicine/{id}', 'editPurchaseMedicine')->name('purchase_edit');
-        Route::get('/delete-purchase-medicine/{id}', 'deletePurchaseMedicine')->name('purchase_delete');
-
-        Route::get('/sale_medicine', 'sale_medicine')->name('sale_medicine');
-        Route::post('/store-sale-medicine', 'storeSaleMedicine')->name('sale_store');
-        Route::get('/edit-sale-medicine/{id}', 'editSaleMedicine')->name('sale_edit');
-        Route::get('/delete-sale-medicine/{id}', 'deleteSaleChick')->name('sale_delete');
-        Route::get('/invoice/{invoice_no}', 'saleInvoice')->name('invoice');
-
-        //Expire Medicine
-        Route::get('/expire_medicine', 'expire_medicine')->name('expire_medicine');
-        Route::post('/store-expire-medicine', 'storeExpireMedicine')->name('expire_store');
-        Route::get('/edit-expire-medicine/{id}', 'editExpireMedicine')->name('expire_edit');
-        Route::get('/delete-expire-medicine/{id}', 'deleteExpireMedicine')->name('expire_delete');
-        Route::get('/expire-invoice/{id}', 'saleInvoice')->name('return_invoice');
-
-        //Return Medicine
-        Route::get('/return_medicine', 'return_medicine')->name('return_medicine');
-        Route::post('/store-return-medicine', 'storeReturnMedicine')->name('return_store');
-        Route::get('/edit-return-medicine/{id}', 'editReturnMedicine')->name('return_edit');
-        Route::get('/delete-return-medicine/{id}', 'deleteReturnMedicine')->name('return_delete');
-        Route::get('/return-invoice/{id}', 'saleInvoice')->name('expire_invoice');
-
-        //Missing Medicine
-        Route::get('/missing_medicine', 'missing_medicine')->name('missing_medicine');
-        Route::post('/store-missing-medicine', 'storemissingMedicine')->name('missing_store');
-        Route::get('/edit-missing-medicine/{id}', 'editmissingMedicine')->name('missing_edit');
-        Route::get('/delete-missing-medicine/{id}', 'deletemissingMedicine')->name('missing_delete');
-        Route::get('/return-invoice/{id}', 'saleInvoice')->name('expire_invoice');
-
-
-        // Route::get('/invoice', 'sale_medicine_invoice')->name('sale_medicine_invoice');
-
-
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
-    //Feed 
-    Route::controller(FeedController::class)->prefix('feed')->name('feeds.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/purchase_feed', 'purchase_feed')->name('purchase_feed');
-        Route::post('/store-purchase-feed', 'storePurchaseFeed')->name('purchase_store');
-        Route::get('/edit-purchase-feed/{id}', 'editPurchaseFeed')->name('purchase_edit');
-        Route::get('/delete-purchase-feed/{id}', 'deletePurchaseFeed')->name('purchase_delete');
-
-        //Return
-        Route::get('/return_feed', 'return_feed')->name('return_feed');
-        Route::post('/store-return-feed', 'storeReturnFeed')->name('return_store');
-        Route::get('/edit-return-feed/{id}', 'editReturnFeed')->name('return_edit');
-        Route::get('/delete-return-feed/{id}', 'deleteReturnFeed')->name('return_delete');
-
-        Route::get('/account/{id}', 'accountDetails')->name('account_details');
-        Route::get('/account_balance/{id}', 'accountBalance')->name('account_balance');
-        Route::get('/sale_feed', 'sale_feed')->name('sale_feed');
-        Route::post('/store-sale-feed', 'storeSaleFeed')->name('sale_store');
-        Route::get('/edit-sale-feed/{id}', 'editSaleFeed')->name('sale_edit');
-        Route::get('/delete-sale-feed/{id}', 'deleteSaleFeed')->name('sale_delete');
-
-
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
-    //Flock 
-    Route::controller(FlockController::class)->prefix('flock')->name('flocks.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
-    //Flock 
-    Route::controller(FlockMortalityController::class)->prefix('flockmortality')->name('flockmortalitys.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
-
-    //Shade 
-    Route::controller(ShadeController::class)->prefix('shade')->name('shades.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-    });
 
     Route::controller(MedicineInvoiceController::class)->prefix('medicine-invoices')->name('medicine-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/sale', 'createSale')->name('sale');
         Route::get('/purchase', 'createPurchase')->name('purchase');
-        Route::get('/purchase/{invoice_no}', 'show')->name('show');
-        Route::get('/sale/{invoice_no}', 'show')->name('show');
+        Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
+        Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::post('/store', 'store')->name('store');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');

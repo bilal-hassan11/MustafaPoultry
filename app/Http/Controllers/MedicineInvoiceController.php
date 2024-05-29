@@ -86,10 +86,6 @@ class MedicineInvoiceController extends Controller
 
         $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
 
-
-
-
-
         DB::beginTransaction();
 
         try {
@@ -100,14 +96,14 @@ class MedicineInvoiceController extends Controller
                 $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
                 $totalNetAmount += $netAmount;
 
-                MedicineInvoice::create([
+                $medicineInvoice = MedicineInvoice::create([
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
                     'ref_no' => $validatedData['ref_no'],
                     'description' => $validatedData['description'],
                     'invoice_no' => $invoiceNumber,
                     'type' => $request->type,
-                    'stock_type' => ($request->type == 'Purchase' || 'Sale Return') ? 'In' : 'Out',
+                    'stock_type' => in_array($request->type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
                     'item_id' => $itemId,
                     'purchase_price' => $validatedData['purchase_price'][$index],
                     'sale_price' => 0,
@@ -141,7 +137,8 @@ class MedicineInvoiceController extends Controller
                 }
 
                 AccountLedger::create([
-                    'purchase_medicine_id' => $invoiceNumber,
+                    'medicine_invoice_id' => $medicineInvoice->id,
+                    'type'  => $request->type,
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
                     'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['purchase_price'][$index],
@@ -240,14 +237,14 @@ class MedicineInvoiceController extends Controller
                 $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
                 $totalNetAmount += $netAmount;
 
-                MedicineInvoice::create([
+                $medicineInvoice = MedicineInvoice::create([
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
                     'ref_no' => $validatedData['ref_no'],
                     'description' => $validatedData['description'],
                     'invoice_no' => $invoiceNumber,
                     'type' => $request->type,
-                    'stock_type' => ($request->type == 'Purchase' || $request->type == 'Sale Return') ? 'In' : 'Out',
+                    'stock_type' => in_array($request->type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
                     'item_id' => $itemId,
                     'purchase_price' => $validatedData['purchase_price'][$index],
                     'sale_price' => $validatedData['sale_price'][$index],
@@ -273,7 +270,7 @@ class MedicineInvoiceController extends Controller
                 } else {
                     ExpiryStock::create([
                         'date' => $validatedData['date'],
-                        'medicine_invoice_id' => $invoiceNumber,
+                        'medicine_invoice_id' => $medicineInvoice->id,
                         'item_id' => $itemId,
                         'rate' => $costAmount,
                         'quantity' => $validatedData['quantity'][$index],
@@ -282,7 +279,8 @@ class MedicineInvoiceController extends Controller
                 }
 
                 AccountLedger::create([
-                    'purchase_medicine_id' => $invoiceNumber,
+                    'medicine_invoice_id' => $medicineInvoice->id,
+                    'type' => $request->type,
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
                     'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['sale_price'][$index],
@@ -316,7 +314,7 @@ class MedicineInvoiceController extends Controller
             ->where('expiry_date', $originalInvoice->expiry_date)
             ->first();
 
-        if ($type == 'Purchase Return') {
+        if ($type == 'Purchase Return' ||  $type == 'Ajust Out') {
             $price  = $originalInvoice->purchase_price;
             if ($expiryStock->quantity < $validatedData['quantity']) {
                 return response()->json(['error' => 'Insufficient stock for the return. (' . $expiryStock->quantity . ')'], 422);
@@ -332,14 +330,14 @@ class MedicineInvoiceController extends Controller
             $netAmount = $amount - $originalInvoice->discount_in_rs;
 
 
-            MedicineInvoice::create([
+            $medicineInvoice = MedicineInvoice::create([
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
                 'ref_no' => $validatedData['medicine_invoice_id'],
                 'description' => $validatedData['description'],
                 'invoice_no' => $invoiceNumber,
                 'type' => $validatedData['type'],
-                'stock_type' => ($type == 'Purchase Return') ? 'Out' : 'In',
+                'stock_type' => in_array($type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
                 'item_id' => $originalInvoice->item_id,
                 'purchase_price' => $originalInvoice->purchase_price,
                 'sale_price' =>  $originalInvoice->sale_price,
@@ -365,7 +363,8 @@ class MedicineInvoiceController extends Controller
             $expiryStock->save();
 
             AccountLedger::create([
-                'purchase_medicine_id' => $invoiceNumber,
+                'medicine_invoice_id' => $medicineInvoice->id,
+                'type'  => $type,
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
                 'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,

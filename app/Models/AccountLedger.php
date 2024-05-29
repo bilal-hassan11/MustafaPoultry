@@ -4,61 +4,81 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\DianujHashidsTrait;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountLedger extends Model
 {
-    use HasFactory , DianujHashidsTrait;
+    use HasFactory, SoftDeletes;
+
+    // Table associated with the model
     protected $table = 'account_ledger';
 
-     // Specify the fields that are mass assignable
-     protected $fillable = [
-        'date',
+    // The attributes that are mass assignable
+    protected $fillable = [
         'account_id',
-        'sale_chick_id',
-        'purchase_chick_id',
-        'sale_medicine_id',
-        'return_medicine_id',
-        'expire_medicine_id',
-        'purchase_medicine_id',
-        'sale_feed_id',
-        'purchase_feed_id',
-        'purchase_murghi_id',
-        'sale_murghi_id',
-        'general_purchase_id',
-        'general_sale_id',
-        'expense_id',
-        'return_feed_id',
-        'return_chick_id',
+        'type',
+        'medicine_invoice_id',
+        'chick_invoice_id',
+        'murghi_invoice_id',
+        'feed_invoice_id',
+        'other_invoice_id',
         'cash_id',
         'payment_id',
-        'stock_adjustment_id',
+        'expense_id',
         'debit',
         'credit',
+        'narration',
         'description',
-        'deleted_at',
-        'created_at',
-        'updated_at',
     ];
 
-    // public function formulation_details(){
-    //     return $this->hasMany(FormulationDetail::class, 'formulation_id', 'id');
-    // }
+    // The attributes that should be mutated to dates
+    protected $dates = ['deleted_at'];
 
-    public function account(){
-        return $this->belongsTo(Account::class, 'account_id', 'id');
+    // Define any relationships if necessary
+    // Example: A ledger might belong to an account
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
     }
 
-    // public function sales(){
-    //     return $this->belongsTo(SaleBook::class, 'sale_id', 'id');
-    // }
+    // Example: If there are related invoices
+    public function medicineInvoice()
+    {
+        return $this->belongsTo(MedicineInvoice::class);
+    }
 
-    // public function purchases(){
-    //     return $this->belongsTo(PurchaseBook::class, 'purchase_id', 'id');
-    // }
+    public function chickInvoice()
+    {
+        return $this->belongsTo(ChickInvoice::class);
+    }
 
-    // public function item(){
-    //     return $this->belongsTo(Item::class, 'sale_item_id', 'id');
-    // }
+    public function murghiInvoice()
+    {
+        return $this->belongsTo(MurghiInvoice::class);
+    }
+
+    public function feedInvoice()
+    {
+        return $this->belongsTo(FeedInvoice::class);
+    }
+
+    public function otherInvoice()
+    {
+        return $this->belongsTo(OtherInvoice::class);
+    }
+
+    public function cash()
+    {
+        return $this->belongsTo(CashBook::class, 'cash_id');
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
+    public function expense()
+    {
+        return $this->belongsTo(Expense::class);
+    }
 }
