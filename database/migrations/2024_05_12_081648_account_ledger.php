@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('account_ledger', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->integer('account_id');
             $table->enum('type', ['Purchase', 'Sale', 'Purchase Return', 'Sale Return', 'Adjust In', 'Adjust Out'])->nullable();
             $table->unsignedBigInteger('medicine_invoice_id')->nullable();

@@ -80,339 +80,99 @@ h5{
                    </table>
                  </center>
 
-                    <table  class="table table-bordered border-secondary" style="border-size:2px;" border="1">
-                        <thead>
-                    <tr class="text-dark">
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th colspan="1"> Description </th>
-                        <th> Dr </th>
-                        <th> Cr </th>
-                        <th> Balance </th>
-                        <th> cr/dr </th>
+                 <thead>
+                        <tr class="text-dark">
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th colspan="1"> Description </th>
+                            <th> Dr </th>
+                            <th> Cr </th>
+                            <th> Balance </th>
+                            <th> cr/dr </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
                         
-                    </tr>
-                </thead>
-                <tbody>
-                
-                    @if(@$account_ledger != "")
-                       
-                            @if(@$account_parent == "Assets")
-                                @php
-                                    $tot_balance = 0; $tot_deb=0;
-                                    $tot_credit=0; $tot_bal = 0;
-                                @endphp
-                                <tr class="text-dark">
-                                    <td> {{ date('d-m-y', strtotime($from_date)) }}</td>
-                                    <td > - </td>
-                                    <td > Opening Balance </td>
-                                    @if(@$account_opening[0]->account_nature == "credit")
-                                        <?php $tot_balance -= $account_opening[0]->opening_balance;?>
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">0</span></td>
-                                        <td><span class="waves-effect waves-light btn btn-danger-light"> {{ $account_opening[0]->opening_balance }}</span></td>
-                                        
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">{{ $account_opening[0]->opening_balance }}</span></td>
+                        @if(@$account_ledger != "")
+                            @php
+                                $tot_balance = 0; $tot_deb=0;
+                                $tot_credit=0; $tot_bal = 0;
+                            @endphp
+                            <tr class="text-dark">
+                                <td> {{ date('d-M-Y', strtotime($from_date)) }}</td>
+                                <td > - </td>
+                                <td > Opening Balance </td>
+                                @if(@$account_opening[0]->account_nature == "credit")
+                                    <?php $tot_balance -= $account_opening[0]->opening_balance;?>
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">0</span></td>
+                                    <td><span class="waves-effect waves-light btn btn-danger-light"> {{ $account_opening[0]->opening_balance }}</span></td>
                                     
-                                    @endif
-                                    @if(@$account_opening[0]->account_nature == "debit")
-                                        <?php $tot_balance += $account_opening[0]->opening_balance ?>
-                                        <td><span class="waves-effect waves-light btn btn-success-light">{{ $account_opening[0]->opening_balance }}</span></td>
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">0</span></td>
-                                        
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">{{ $tot_balance }}</span></td>
-                                    @endif
-                                    
-                                    
-                                    
-                                    @if(@$account_opening[0]->account_nature == "debit")
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
-                                        <?php @$tot_bal += @$tot_balance; ?>
-                                        @endif
-                                        @if(@$account_opening[0]->account_nature == "credit")
-                                        <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
-                                            <?php @$tot_bal += @$tot_balance; ?>
-                                        @endif
-                                    
-                                    
-                                </tr>
-                                <?php $tot_balance = $account_opening[0]->opening_balance ; ?>
-                                @if(@$cash_in_hand == false)
-                                    @foreach($account_ledger AS $ac)
-                                        <?php @$tot_deb += $ac->debit; $tot_credit += $ac->credit;  ?>
-                                        <tr class="text-dark">
-                                            <td> {{ date('d-m-y', strtotime($ac->date)) }}</td>
-                                            @if(@$ac->sale_chick_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Chick </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_chick_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Chick</span></td>
-                                            @endif
-                                            @if(@$ac->sale_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->return_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Return Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->expire_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Expire Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->payment_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Fare Payment </span></td>
-                                            @endif
-                                            @if(@$ac->sale_feed_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Feed </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_feed_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Feed </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_murghi_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Murghi </span></td>
-                                            @endif
-                                            @if(@$ac->sale_murghi_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Murghi </span></td>
-                                            @endif
-                                            @if(@$ac->expense_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Expense </span></td>
-                                            @endif
-                                            @if(@$ac->return_feed_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Return Feed :</span></td>
-                                            @endif
-                                                
-                                            @if(@$ac->return_chick_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Return Chick :</span></td>
-                                            @endif
-                                            @if(@$ac->cash_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Cash </span></td>
-                                            @endif
-                                            <td ><?php echo wordwrap(@$ac->description,25,"<br>\n") ?></td>
-                                            <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(abs(@$ac->debit),2) }}</span></td>
-                                            <td><span class="waves-effect waves-light btn btn-success-light">{{  number_format(abs(@$ac->credit),2) }}</span></td>
-                                            
-                                            <?php $tot_balance += $ac->debit - $ac->credit ;?>
-                                            <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format(abs($tot_balance),2) }}</span></td>
-                                            
-                                            @if($tot_balance > 0)
-                                            <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
-                                            <?php @$tot_bal += @$tot_balance; ?>
-                                            @endif
-                                            @if( @$tot_balance <= 0)
-                                            <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
-                                                <?php @$tot_bal += @$tot_balance; ?>
-                                            @endif
-                                            
-                                            
-                                        </tr>
-                                    @endforeach
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">{{ $account_opening[0]->opening_balance }}</span></td>
+                                
                                 @endif
-                                @if(@$cash_in_hand == true)
-                                    @foreach($account_ledger AS $ac)
-                                        <?php @$tot_deb += $ac->credit; $tot_credit += $ac->debit;  ?>
-                                        <tr class="text-dark">
-                                            <td> {{ date('d-m-y', strtotime($ac->date)) }}</td>
-                                            @if(@$ac->sale_chick_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Chick </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_chick_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Chick</span></td>
-                                            @endif
-                                            @if(@$ac->sale_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->return_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Return Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->expire_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Expire Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_medicine_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Medicine </span></td>
-                                            @endif
-                                            @if(@$ac->payment_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Fare Payment </span></td>
-                                            @endif
-                                            @if(@$ac->sale_feed_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Feed </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_feed_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Feed </span></td>
-                                            @endif
-                                            @if(@$ac->purchase_murghi_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Murghi </span></td>
-                                            @endif
-                                            @if(@$ac->sale_murghi_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Murghi </span></td>
-                                            @endif
-                                            @if(@$ac->expense_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Expense </span></td>
-                                            @endif
-                                            @if(@$ac->return_feed_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Return Feed </span></td>
-                                            @endif
-                                                
-                                            @if(@$ac->return_chick_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Return Chick </span></td>
-                                            @endif
-                                            @if(@$ac->cash_id != 0 )
-                                                <td ><span class="waves-effect waves-light btn btn-danger-light">Cash </span></td>
-                                            @endif
-                                            <td ><?php echo wordwrap(@$ac->description,25,"<br>\n") ?></td>
-                                             <td><span class="waves-effect waves-light btn btn-success-light">{{  number_format(abs(@$ac->credit),2) }}</span></td>
-                                            <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(abs(@$ac->debit),2) }}</span></td>
-                                           
-                                            
-                                            <?php $tot_balance += $ac->credit - $ac->debit   ;?>
-                                            <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format(abs($tot_balance),2) }}</span></td>
-                                            
-                                            @if($tot_balance > 0)
-                                                <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
-                                            <?php @$tot_bal += @$tot_balance; ?>
-                                            @endif
-                                            @if( @$tot_balance <= 0)
-                                            <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
-                                            
-                                                <?php @$tot_bal += @$tot_balance; ?>
-                                            @endif
-                                            
-                                            
-                                        </tr>
-                                    @endforeach
+                                @if(@$account_opening[0]->account_nature == "debit")
+                                    <?php $tot_balance += $account_opening[0]->opening_balance ?>
+                                    <td><span class="waves-effect waves-light btn btn-success-light">{{ $account_opening[0]->opening_balance }}</span></td>
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">0</span></td>
+                                    
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">{{ $tot_balance }}</span></td>
                                 @endif
-                            @endif
-                            @if(@$account_parent == "Not Assets")
-                                @php
-                                    $tot_balance = 0; $tot_deb=0;
-                                    $tot_credit=0; $tot_bal = 0;
-                                @endphp
+                                @if(@$account_opening[0]->account_nature == "debit")
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
+                                    <?php @$tot_bal += @$tot_balance; ?>
+                                    @endif
+                                @if(@$account_opening[0]->account_nature == "credit")
+                                    <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
+                                    <?php @$tot_bal += @$tot_balance; ?>
+                                @endif
+                                
+                                
+                            </tr>
+
+                            <?php $tot_balance = $account_opening[0]->opening_balance ; ?>
+
+                            @foreach($account_ledger AS $ac)
+                            <?php @$tot_deb += $ac->debit; $tot_credit += $ac->credit;  ?>
                                 <tr class="text-dark">
-                                    <td> {{ date('d-m-y', strtotime($from_date)) }}</td>
-                                    <td > - </td>
-                                    <td > Opening Balance </td>
-                                    @if(@$account_opening[0]->account_nature == "credit")
-                                        <?php $tot_balance -= $account_opening[0]->opening_balance;?>
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">0</span></td>
-                                        <td><span class="waves-effect waves-light btn btn-danger-light"> {{ $account_opening[0]->opening_balance }}</span></td>
-                                        
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">{{ $account_opening[0]->opening_balance }}</span></td>
+                                    <td> {{ date('d-M-Y', strtotime($ac->date)) }}</td>
+                                    <td ><span class="waves-effect waves-light btn btn-danger-light"> {{ @$ac->type }}</td>
+                                    <td >{{ @$ac->description }}</td>
+                                    <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(abs(@$ac->debit),2) }}</span></td>
+                                    <td><span class="waves-effect waves-light btn btn-success-light">{{  number_format(abs(@$ac->credit),2) }}</span></td>
                                     
+                                    <?php $tot_balance += $ac->credit - $ac->debit ;?>
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format(abs($tot_balance),2) }}</span></td>
+                                    
+                                    @if($tot_balance > 0)
+                                    <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
+                                    <?php @$tot_bal += @$tot_balance; ?>
                                     @endif
-                                    @if(@$account_opening[0]->account_nature == "debit")
-                                        <?php $tot_balance += $account_opening[0]->opening_balance ?>
-                                        <td><span class="waves-effect waves-light btn btn-success-light">{{ $account_opening[0]->opening_balance }}</span></td>
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">0</span></td>
-                                        
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">{{ $tot_balance }}</span></td>
-                                    @endif
-                                    
-                                    
-                                    
-                                   @if(@$account_opening[0]->account_nature == "debit")
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
-                                        <?php @$tot_bal += @$tot_balance; ?>
-                                        @endif
-                                    @if(@$account_opening[0]->account_nature == "credit")
-                                        <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
+                                    @if( @$tot_balance <= 0)
+                                    <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
                                         <?php @$tot_bal += @$tot_balance; ?>
                                     @endif
-                                    
-                                    
                                 </tr>
+                            @endforeach
+                        @endif    
+                    </tbody>
+                    <tfoot>
+                        <td colspan="3"></td>
+                        @if(@$account_opening[0]->account_nature == "debit")
+                            <td ><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_deb + $account_opening[0]->opening_balance ) }}</span></td>
+                            <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_credit) }}</span></td>
+                            <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(  @$tot_balance) }}</span></td>
 
-                                <?php $tot_balance = $account_opening[0]->opening_balance ; ?>
+                        @endif
 
-                                @foreach($account_ledger AS $ac)
-                                <?php @$tot_deb += $ac->debit; $tot_credit += $ac->credit;  ?>
-                                    <tr class="text-dark">
-                                        <td> {{ date('d-m-y', strtotime($ac->date)) }}</td>
-                                        
-                                        @if(@$ac->sale_chick_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Chick </span></td>
-                                        @endif
-                                        @if(@$ac->purchase_chick_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Chick</span></td>
-                                        @endif
-                                        @if(@$ac->sale_medicine_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Medicine </span></td>
-                                        @endif
-                                        @if(@$ac->return_medicine_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Return Medicine </span></td>
-                                        @endif
-                                        @if(@$ac->expire_medicine_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Expire Medicine </span></td>
-                                        @endif
-                                        @if(@$ac->purchase_medicine_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Medicine </span></td>
-                                        @endif
-                                        @if(@$ac->payment_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Fare Payment </span></td>
-                                        @endif
-                                        @if(@$ac->sale_feed_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Feed </span></td>
-                                        @endif
-                                        @if(@$ac->purchase_feed_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Feed </span></td>
-                                        @endif
-                                        @if(@$ac->purchase_murghi_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Purchase Murghi </span></td>
-                                        @endif
-                                        @if(@$ac->sale_murghi_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Sale Murghi </span></td>
-                                        @endif
-                                        @if(@$ac->expense_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Expense </span></td>
-                                        @endif
-                                        @if(@$ac->return_feed_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Return Feed </span></td>
-                                        @endif
-                                        	
-                                        @if(@$ac->return_chick_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Return Chick </span></td>
-                                        @endif
-                                        @if(@$ac->cash_id != 0 )
-                                            <td ><span class="waves-effect waves-light btn btn-danger-light">Cash </span></td>
-                                        @endif
-                                        <td ><span class="waves-effect waves-light btn btn-info-light">{{ @$ac->description }}</span></td>
-                                        <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(abs(@$ac->debit),2) }}</span></td>
-                                        <td><span class="waves-effect waves-light btn btn-success-light">{{  number_format(abs(@$ac->credit),2) }}</span></td>
-                                        
-                                        <?php $tot_balance += $ac->credit - $ac->debit ;?>
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format(abs($tot_balance),2) }}</span></td>
-                                        
-                                        @if($tot_balance > 0)
-                                        <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
-                                        <?php @$tot_bal += @$tot_balance; ?>
-                                        @endif
-                                        @if( @$tot_balance <= 0)
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
-                                            <?php @$tot_bal += @$tot_balance; ?>
-                                        @endif
-                                        
-                                       
-                                    </tr>
-                                @endforeach
-                            @endif    
-                    
-                    @endif    
-                </tbody>
-                <tfoot>
-                    <td colspan="3"></td>
-                    @if(@$account_opening[0]->account_nature == "debit")
-                        <td ><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_deb + $account_opening[0]->opening_balance ) }}</span></td>
-                        <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_credit) }}</span></td>
-                        <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_deb + $account_opening[0]->opening_balance - @$tot_credit) }}</span></td>
+                        @if(@$account_opening[0]->account_nature == "credit")
+                            <td ><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_deb  ) }}</span></td>
+                            <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_credit + $account_opening[0]->opening_balance) }}</span></td>
+                            <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_balance) }}</span></td>
 
-                    @endif
-
-                    @if(@$account_opening[0]->account_nature == "credit")
-                        <td ><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_deb  ) }}</span></td>
-                        <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_credit + $account_opening[0]->opening_balance) }}</span></td>
-                        <td><span class="waves-effect waves-light btn btn-warning-light">{{ number_format(@$tot_credit + $account_opening[0]->opening_balance - @$tot_deb) }}</span></td>
-
-                    @endif
-                    <td></td>
-                </tfoot>
+                        @endif
+                        
+                    </tfoot>
                     </table>
 
                   

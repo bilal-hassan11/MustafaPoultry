@@ -887,24 +887,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex border-bottom" href="chat.html">
-                                    <div class="d-flex">
-                                        <i class="fe fe-message-square me-3 tx-20 text-muted"></i>
-                                        <div class="pt-1">
-                                            <h6 class="mb-0">My Messages</h6>
-                                            <p class="tx-12 mb-0 text-muted">Person message information</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex border-bottom" href="emailservices.html">
-                                    <div class="d-flex">
-                                        <i class="fe fe-mail me-3 tx-20 text-muted"></i>
-                                        <div class="pt-1">
-                                            <h6 class="mb-0">My Mails</h6>
-                                            <p class="tx-12 mb-0 text-muted">Persons mail information</p>
-                                        </div>
-                                    </div>
-                                </a>
+                                
                                 <a class="dropdown-item d-flex border-bottom" href="editprofile.html">
                                     <div class="d-flex">
                                         <i class="fe fe-settings me-3 tx-20 text-muted"></i>
@@ -914,7 +897,10 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex border-bottom" href="login.html">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+                                <a class="dropdown-item d-flex border-bottom" href="{{ route('logout') }}" onclick="logout(event)">
                                     <div class="d-flex">
                                         <i class="fe fe-power me-3 tx-20 text-muted"></i>
                                         <div class="pt-1">
