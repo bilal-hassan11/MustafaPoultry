@@ -8,7 +8,7 @@
                         <h3>Available Stock</h3>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-4">
+                        <div class="row mb-4 align-items-end">
                             <div class="col-md-6 mb-3">
                                 <label for="categoryFilter">Filter by Category</label>
                                 <select id="categoryFilter" class="form-control select2">
@@ -23,6 +23,19 @@
                                 <select id="itemFilter" class="form-control select2">
                                     <option value="">Select Item</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <form action="{{ route('admin.stock.index') }}" method="GET" target="_blank">
+                                    @csrf
+                                    <input type="hidden" name="category" id="categoryInput">
+                                    <input type="hidden" name="item" id="itemInput">
+                                    <input type="hidden" name="generate_pdf" value="1">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="ri-download-2-line"></i> Download PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <div class="row">
@@ -45,7 +58,8 @@
                                             <th colspan="4" style="text-align: right">
                                                 Grand Total
                                             </th>
-                                            <th></th>
+                                            <th id="grand-total" style="text-align:right">
+                                            </th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
@@ -68,11 +82,16 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('admin.stock.filter') }}",
+                    url: "{{ route('admin.stock.index') }}",
                     data: function(d) {
                         d.category = $('#categoryFilter').val();
                         d.item = $('#itemFilter').val();
-                    }
+                    },
+                    dataSrc: function(json) {
+                        var grandTotal = json.grandTotal;
+                        $('#grand-total').text('Rs ' + grandTotal);
+                        return json.data;
+                    },
                 },
                 columns: [{
                         data: 'id',
@@ -94,7 +113,8 @@
                         data: 'avg_amount',
                         name: 'avg_amount',
                         render: function(data, type, row) {
-                            return '<span style="text-align: right; display: block;">Rs ' + data +
+                            return '<span style="text-align: right; display: block;">Rs ' +
+                                data +
                                 '</span>';
                         }
                     },
@@ -102,7 +122,8 @@
                         data: 'rate',
                         name: 'rate',
                         render: function(data, type, row) {
-                            return '<span style="text-align: right; display: block;">Rs ' + data +
+                            return '<span style="text-align: right; display: block;">Rs ' +
+                                data +
                                 '</span>';
                         }
                     },
@@ -118,11 +139,14 @@
 
             $('#categoryFilter').change(function() {
                 var categoryId = $(this).val();
+                $('#categoryInput').val(categoryId);
                 fetchItems(categoryId);
                 stockTable.ajax.reload();
             });
 
             $('#itemFilter').change(function() {
+                var itemId = $(this).val();
+                $('#itemInput').val(itemId);
                 stockTable.ajax.reload();
             });
 
@@ -135,9 +159,11 @@
                             category_id: categoryId
                         },
                         success: function(response) {
-                            $('#itemFilter').empty().append('<option value="">Select Item</option>');
+                            $('#itemFilter').empty().append(
+                                '<option value="">Select Item</option>');
                             $.each(response.items, function(key, item) {
-                                $('#itemFilter').append('<option value="' + item.id + '">' +
+                                $('#itemFilter').append('<option value="' + item.id +
+                                    '">' +
                                     item.name + '</option>');
                             });
                         },

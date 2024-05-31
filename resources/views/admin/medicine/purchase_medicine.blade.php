@@ -178,11 +178,11 @@
                                             <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
                                             <td>{{ $purcahse->invoice_no }}</td>
                                             <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? "" }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? '' }}</span>
                                             </td>
 
                                             <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? "" }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
                                             </td>
                                             <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
                                             <?php $tot_q += $purcahse->quantity; ?>
@@ -190,7 +190,7 @@
                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                             <td>{{ $purcahse->net_amount }}</td>
                                             <td>
-                                                <a class="btn btn-ouline-info rouned-pill btn-wave"
+                                                <a class="btn btn-ouline-info rouned-pill btn-wave" type="button"
                                                     href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
                                                     <i class="ri-eye-line"></i></a>
                                                 <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
