@@ -11,7 +11,6 @@ use App\Models\AccountType;
 use App\Models\CashInHand;
 use App\Models\Expense;
 
-use App\Models\PurchaseMedicine;
 use Carbon\Carbon; 
 
 class CashController extends Controller
@@ -20,7 +19,6 @@ class CashController extends Controller
         $newDateTime = Carbon::now()->addMonth(2);
         $d = $newDateTime->toDateString();
         
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->orderBy('created_at', 'desc')->latest()->get();
 
         $tot_get_cr = CashBook::sum('payment_ammount');
         $tot_get_dr = CashBook::sum('receipt_ammount');
@@ -36,19 +34,19 @@ class CashController extends Controller
         if(isset($req->cash_from_date) && isset($req->cash_to_date)){
         
             $tot_cr = CashBook::when(isset($from_date, $to_date), function($query) use ($req){
-                                $query->whereBetween('date', [$req->cash_from_date, $req->cash_to_date]);
+                                $query->whereBetween('entry_date', [$req->cash_from_date, $req->cash_to_date]);
                             })->sum('receipt_ammount');
         $tot_dr = CashBook::when(isset($from_date, $to_date), function($query) use ($req){
-                                $query->whereBetween('date', [$req->cash_from_date, $req->cash_to_date]);
+                                $query->whereBetween('entry_date', [$req->cash_from_date, $req->cash_to_date]);
                             })->sum('payment_ammount');
         $tot_ex = Expense::when(isset($from_date, $to_date), function($query) use ($req){
-                                $query->whereBetween('date', [$req->cash_from_date, $req->cash_to_date]);
+                                $query->whereBetween('entry_date', [$req->cash_from_date, $req->cash_to_date]);
                             })->sum('ammount');
         }else{
             
             
-        $tot_cr = CashBook::wheredate('date', $month)->sum('receipt_ammount');
-        $tot_dr = CashBook::wheredate('date', $month)->sum('payment_ammount');
+        $tot_cr = CashBook::wheredate('entry_date', $month)->sum('receipt_ammount');
+        $tot_dr = CashBook::wheredate('entry_date', $month)->sum('payment_ammount');
         $tot_ex = Expense::wheredate('date', $month)->sum('ammount');
             
         }
@@ -57,7 +55,6 @@ class CashController extends Controller
         $data = array(
             'title'     => 'Cash Book',
             'cash_in_hand' =>$cash_in_hand,
-            'expire_medicine'   => $expire_medicine,
             'tot_cr' => $tot_cr,
             'tot_dr' => $tot_dr,
             'tot_ex' => $tot_ex,
@@ -71,7 +68,7 @@ class CashController extends Controller
                                 $query->where('status', $req->status);
                             })
                             ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
-                                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+                                $query->whereBetween('entry_date', [$req->from_date, $req->to_date]);
                             })
                             ->latest()->get(),
             'account_types' => AccountType::whereNull('parent_id')->latest()->get(),

@@ -25,6 +25,7 @@ class ChickInvoice extends Model
         'discount_in_rs',
         'discount_in_percentage',
         'net_amount',
+        'expiry_date',
         'type',
         'stock_type',
         'is_draft',
@@ -46,5 +47,10 @@ class ChickInvoice extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function expiryStocks()
+    {
+        return $this->hasMany(ExpiryStock::class);
     }
 }

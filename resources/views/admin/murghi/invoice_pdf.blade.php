@@ -89,20 +89,20 @@
                             <h2>{{ strtoupper($type) }} INVOICE</h2>
                         </td>
                         <td class="text-center">
-                            <h2>#{{ $medicineInvoice[0]->invoice_no }}</h2>
+                            <h2>#{{ $murghiInvoice[0]->invoice_no }}</h2>
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th style="width: 20%;">Invoice To :</th>
-                        <td> {{ $medicineInvoice[0]->account->name }}</td>
+                        <td> {{ $murghiInvoice[0]->account->name }}</td>
                         <th style="width: 20%;">Date: </th>
-                        <td class="text-center"> {{ date('d-M-Y', strtotime($medicineInvoice[0]->date)) }}</td>
+                        <td class="text-center"> {{ date('d-M-Y', strtotime($murghiInvoice[0]->date)) }}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td colspan="3">{{ $medicineInvoice[0]->account->address }}</td>
+                        <td colspan="3">{{ $murghiInvoice[0]->account->address }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -124,7 +124,7 @@
                         $subtotal = 0;
                         $totalDiscountRs = 0;
                     @endphp
-                    @foreach ($medicineInvoice as $index => $item)
+                    @foreach ($murghiInvoice as $index => $item)
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td class="text-center">

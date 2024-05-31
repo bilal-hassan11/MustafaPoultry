@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\carbon;
 
 class CashBookSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class CashBookSeeder extends Seeder
             $entryType = $i % 2 == 0 ? 'payment' : 'receipt';
 
             $entries[] = [
-                'date' => now(),
+                'entry_date' => now(),
                 'account_id' => $i,
                 'narration' => 'Transaction ' . $i . ' description',
                 'bil_no' => 1000 + $i,

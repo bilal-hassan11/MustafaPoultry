@@ -3,23 +3,7 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Administrator\AdminController;
-use App\Models\Consumption;
-use App\Models\SaleBook;
-use App\Models\SaleFeed;
-use App\Models\PurchaseFeed;
-use App\Models\ReturnFeed;
-
-use App\Models\SaleMedicine;
-use App\Models\SaleChick;
-use App\Models\PurchaseChick;
-use App\Models\PurchaseMurghi;
-use App\Models\SaleMurghi;
-use App\Models\PurchaseBook;
-use App\Models\PurchaseMedicine;
 use App\Models\Item;
-use App\Models\Inward;
-use App\Models\Outward;
-use App\Models\Formulation;
 use App\Models\Account;
 use App\Models\Staff;
 use App\Models\FeedInvoice;
@@ -86,29 +70,22 @@ class HomeController extends AdminController
         $tot_expense = Expense::where('date', $current_month)->sum('ammount');
 
         //CashBook
-        $tot_credit = CashBook::where('date', $current_month)->sum('receipt_ammount');
-        $tot_debit = CashBook::where('date', $current_month)->sum('payment_ammount');
+        $tot_credit = CashBook::where('entry_date', $current_month)->sum('receipt_ammount');
+        $tot_debit = CashBook::where('entry_date', $current_month)->sum('payment_ammount');
         $tot_cash_in_hand = $tot_debit - $tot_credit ;
 
 
         $newDateTime = Carbon::now()->addMonth(2);
         $d = $newDateTime->toDateString();
         
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->orderBy('created_at', 'desc')->latest()->get();
-        //dd($expire_medicine);
-        $sale = SaleBook::select(DB::raw("COUNT(*) as count, Month(date) as month, SUM(no_of_bags) as bag"))
-                ->whereYear('date', date('Y'))
-                ->groupBy(DB::raw("Month(date)"))
-                ->get();
-
-
-        $Item  = Item::where('status','1')->latest()->get();
-        foreach($Item as $i){
-            $available_item[] = $i['name'];
-            $available_stock[] = $i['stock_qty'];
-        }
-        $labels = [$available_item];
-        $price = [$available_stock];
+        
+        // $Item  = Item::where('status','1')->latest()->get();
+        // foreach($Item as $i){
+        //     $available_item[] = $i['name'];
+        //     $available_stock[] = $i['stock_qty'];
+        // }
+        // $labels = [$available_item];
+        // $price = [$available_stock];
         //dd($available_item);
         
         // //return view('showMap',['labels' => $label, 'prices' => $price]);
@@ -118,32 +95,28 @@ class HomeController extends AdminController
         //    ;
         // //dd($get);
         
-        $consumption = Consumption::select(DB::raw("COUNT(*) as count, Month(date) as month, SUM(qunantity) as qty"))
-        ->whereYear('date', date('Y'))
-        ->groupBy(DB::raw("Month(date)"))
-        ->get();
-        
-        $sale_array     = [0,0,0,0,0,0,0,0,0,0,0,0];
-        $sale_bag_array = [0,0,0,0,0,0,0,0,0,0,0,0];
-        $consumption_array     = [0,0,0,0,0,0,0,0,0,0,0,0];
-        $consumption_qty = [0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        // $sale_array     = [0,0,0,0,0,0,0,0,0,0,0,0];
+        // $sale_bag_array = [0,0,0,0,0,0,0,0,0,0,0,0];
+        // $consumption_array     = [0,0,0,0,0,0,0,0,0,0,0,0];
+        // $consumption_qty = [0,0,0,0,0,0,0,0,0,0,0,0];
         
 
-        foreach($sale->pluck('month') AS $index=>$month){
-            $sale_array[$month-1]     = $sale->pluck('count')[$index];
-            $sale_bag_array[$month-1] = intVal($sale->pluck('bag')[$index]);
-        }
+        // foreach($sale->pluck('month') AS $index=>$month){
+        //     $sale_array[$month-1]     = $sale->pluck('count')[$index];
+        //     $sale_bag_array[$month-1] = intVal($sale->pluck('bag')[$index]);
+        // }
 
-        foreach($consumption->pluck('month') AS $index=>$month){
-            $consumption_array[$month-1]     = $consumption->pluck('count')[$index];
-            $consumption_qty[$month-1] = intVal($consumption->pluck('qty')[$index]);
-        }
+        // foreach($consumption->pluck('month') AS $index=>$month){
+        //     $consumption_array[$month-1]     = $consumption->pluck('count')[$index];
+        //     $consumption_qty[$month-1] = intVal($consumption->pluck('qty')[$index]);
+        // }
         $month = date('m');
         $data = array(
             "title"     => "Dashboad",
-            'sale'      => $sale_array,
+            // 'sale'      => $sale_array,
             
-            'sale_bags' => $sale_bag_array,
+            // 'sale_bags' => $sale_bag_array,
 
             'tot_sale_feed_begs' => $tot_sale_feed_begs,
             'tot_sale_feed_ammount' => $tot_sale_feed_ammount,
@@ -174,11 +147,11 @@ class HomeController extends AdminController
             'tot_purchase_murghi_ammount' => $tot_purchase_murghi_ammount,
             
 
-            'consumption' => $consumption_array,
-            'consumption_qty' =>   $consumption_qty,
-            'labels' => $labels,
-            'prices' => $price,
-            'expire_medicine' => $expire_medicine, 
+            // 'consumption' => $consumption_array,
+            // 'consumption_qty' =>   $consumption_qty,
+            // 'labels' => $labels,
+            // 'prices' => $price,
+            // 'expire_medicine' => $expire_medicine, 
             'active_item'  => Item::where('status', '1')->latest()->get()->count(),
             'active_accounts'  => Account::where('status', '1')->latest()->get()->count(),
             'active_users'  => Staff::where('is_active', '1')->latest()->get()->count(),

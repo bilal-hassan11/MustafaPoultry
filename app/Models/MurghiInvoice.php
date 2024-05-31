@@ -24,6 +24,7 @@ class MurghiInvoice extends Model
         'weight_detection',
         'final_weight',
         'net_amount',
+        'expiry_date',
         'type',
         'stock_type',
         'is_draft',
@@ -46,4 +47,11 @@ class MurghiInvoice extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+
+    public function expiryStocks()
+    {
+        return $this->hasMany(ExpiryStock::class);
+    }
+
 }

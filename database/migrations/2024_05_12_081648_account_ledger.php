@@ -27,7 +27,7 @@ return new class extends Migration
             $table->integer('expense_id')->nullable();
             $table->integer('debit')->nullable();
             $table->integer('credit')->nullable();
-            $table->string('narration')->nullable();
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
