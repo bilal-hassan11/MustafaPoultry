@@ -25,6 +25,7 @@ class ChickInvoice extends Model
         'discount_in_rs',
         'discount_in_percentage',
         'net_amount',
+        'expiry_date',
         'type',
         'stock_type',
         'is_draft',

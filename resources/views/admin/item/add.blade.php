@@ -33,7 +33,8 @@
                             <label for="">Companies</label>
                             <select class="form-control select2" name="company_id" id="company_id">
                                     <option value="">Select Company</option>
-                                
+                                    <option value="1">Company1</option>
+                                    <option value="2">Company2</option>
                             </select>
                         </div>
                         <div class="col-md-4 form-group">

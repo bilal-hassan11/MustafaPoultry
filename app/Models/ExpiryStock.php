@@ -19,6 +19,17 @@ class ExpiryStock extends Model
         'expiry_date',
     ];
 
+    protected $appends = ['average_price'];
+
+    public function getAveragePriceAttribute()
+    {
+        if ($this->quantity == 0) {
+            return 0;
+        }
+
+        return $this->rate / $this->quantity;
+    }
+    
     /**
      * Get the medicine invoice associated with the expiry stock.
      */

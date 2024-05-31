@@ -25,6 +25,7 @@ return new class extends Migration
             $table->tinyInteger('commission');
             $table->tinyInteger('discount');
             $table->text('address')->nullable();
+            $table->text('phone_no')->nullable();
             $table->tinyInteger('status')->default(1)->comment('1 means active and 0 means deactive');
             $table->timestamps();
         });

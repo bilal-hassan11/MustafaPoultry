@@ -178,28 +178,26 @@
                                             <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
                                             <td style="width: 10%; !important">{{ $purcahse->invoice_no }}</td>
                                             <td style="width: 15%; !important"><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? "" }}</span>
                                             </td>
 
                                             <td style="width: 10%; !important"><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? "" }}</span>
                                             </td>
                                             <td style="width: 10%; !important">{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
                                             <?php $tot_q += $purcahse->quantity; ?>
                                             <td style="width: 10%; !important">{{ $purcahse->quantity }}</td>
                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                             <td style="width: 10%; !important">{{ $purcahse->net_amount }}</td>
-                                            <td style="width: 20%; !important">
-                                                <a
-                                                    href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"><button
-                                                        class="btn btn-outline-info  rounded-pill btn-wave"
-                                                        type="button">
-                                                        <i class="ri-eye-line"></i></a>
-                                                </button>
-                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
-                                                    type="button">
+                                            <td>
+                                                <a class="btn btn-ouline-info rouned-pill btn-wave"
+                                                    href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
+                                                    <i class="ri-eye-line"></i></a>
+                                                <a href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                    class="btn btn-outline-info rounded-pill btn-wave" type="button"
+                                                    target="_blank">
                                                     <i class="ri-download-2-line"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

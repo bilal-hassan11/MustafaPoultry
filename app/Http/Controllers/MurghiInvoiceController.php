@@ -62,9 +62,11 @@ class MurghiInvoiceController extends Controller
         $invoice_no = generateUniqueID(new MurghiInvoice, 'Sale', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = ExpiryStock::with(['latestMurghiInvoice' => function ($query) { $query->select('item_id', 'sale_price');}])
+        $products = ExpiryStock::with('item')
+                                ->whereHas('item', function ($query) {
+                                    $query->where('category_id', 8);
+                                })
                                 ->where('quantity', '>', 0)
-                                ->latest()
                                 ->get();
 
         $sale_murghi = MurghiInvoice::with('account', 'item')
@@ -88,10 +90,6 @@ class MurghiInvoiceController extends Controller
         return view('admin.murghi.sale_murghi', compact(['title','sale_murghi', 'invoice_no', 'accounts', 'products']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -103,12 +101,12 @@ class MurghiInvoiceController extends Controller
             'purchase_price.*' => 'required|numeric',
             'quantity.*' => 'required|integer',
             'amount.*' => 'required|numeric',
-            'discount_in_rs.*' => 'nullable|numeric',
-            'discount_in_percent.*' => 'nullable|numeric',
+            'weight_detection.*' => 'nullable|numeric',
+            'final_weight.*' => 'nullable|numeric',
             'expiry_date.*' => 'nullable|date',
             'whatsapp_status' => 'nullable|boolean',
         ]);
-
+        
         $invoiceNumber = generateUniqueID(new MurghiInvoice, $request->type, 'invoice_no');
 
         DB::beginTransaction();
@@ -183,75 +181,57 @@ class MurghiInvoiceController extends Controller
 
     public function storeSale(Request $request)
     {
+        // Validate request data
         $validator = Validator::make($request->all(), [
             'date' => 'required|date',
             'account' => 'required|exists:accounts,id',
             'ref_no' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'item_id.*' => 'required|exists:items,id',
+            'id.*' => 'required|exists:expiry_stocks,id',
+            'id.*' => 'required|exists:expiry_stocks,id',
             'purchase_price.*' => 'required|numeric',
             'sale_price.*' => 'required|numeric',
             'quantity.*' => 'required|integer',
             'amount.*' => 'required|numeric',
-            'discount_in_rs.*' => 'nullable|numeric',
-            'discount_in_percent.*' => 'nullable|numeric',
+            'weight_detection.*' => 'nullable|numeric',
+            'final_weight.*' => 'nullable|numeric',
             'expiry_date.*' => 'nullable|date',
             'whatsapp_status' => 'nullable|boolean',
         ]);
 
+        // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
 
-        $items = $request->input('item_id', []);
-        $quantities = $request->input('quantity', []);
-        $expiryDates = $request->input('expiry_date', []);
+        $validatedData = $validator->validated();
 
-        $itemExpiryQuantities = [];
-
-        foreach ($items as $index => $itemId) {
-            $expiryDate = $expiryDates[$index] ?? null;
-            $quantity = $quantities[$index];
-
-            $key = $itemId . '_' . ($expiryDate ?? 'no_expiry');
-
-            if (!isset($itemExpiryQuantities[$key])) {
-                $itemExpiryQuantities[$key] = 0;
-            }
-
-            $itemExpiryQuantities[$key] += $quantity;
-        }
+        $items = collect($request->input('item_id'));
+        $ids = collect($request->input('id'));
+        $quantities = collect($request->input('quantity'));
+        $groupedItems = $ids->zip($quantities)->groupBy(0)->map(function ($group) {
+            return $group->sum(1);
+        });
 
         $stockErrors = [];
-        foreach ($itemExpiryQuantities as $key => $totalQuantity) {
-            [$itemId, $expiryDate] = explode('_', $key);
-            $expiryDate = $expiryDate === 'no_expiry' ? null : $expiryDate;
 
-            $expiryStock = ExpiryStock::with('item')
-                ->where('item_id', $itemId)
-                ->where('expiry_date', $expiryDate)
-                ->where('quantity', '>', 0)
-                ->first();
-
-            if (!$expiryStock) {
-                $stockErrors["item_id.$itemId"] = ['No stock found for item with ID ' . $itemId . ' and expiry date ' . ($expiryDate ?? 'none')];
-            } elseif ($expiryStock->quantity < $totalQuantity) {
-                $stockErrors["item_id.$itemId"] = ['Insufficient stock for item ' . ($expiryStock->item->name ?? 'Unknown') . ' with expiry date ' . ($expiryDate ?? 'none')];
+        $groupedItems->each(function ($quantity, $id) use (&$stockErrors) {
+            $expiryStock = ExpiryStock::find($id);
+            if ($expiryStock->quantity < $quantity) {
+                $itemName = $expiryStock->item->name ?? 'Unknown';
+                $stockErrors["id.$id"] = ['Insufficient stock for item ' . $expiryStock->item->name];
             }
-        }
+        });
 
+        // Return stock errors if any
         if (!empty($stockErrors)) {
             return response()->json([
                 'errors' => $stockErrors
             ], 422);
         }
-
-        $validatedData = $validator->validated();
-
-
-        $invoiceNumber = generateUniqueID(new FeedInvoice, $request->type, 'invoice_no');
+        $invoiceNumber = generateUniqueID(new MurghiInvoice, $request->type, 'invoice_no');
 
         DB::beginTransaction();
 
@@ -262,7 +242,7 @@ class MurghiInvoiceController extends Controller
                 $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
                 $totalNetAmount += $netAmount;
 
-                $feedInvoice = FeedInvoice::create([
+                $murghiInvoice = MurghiInvoice::create([
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
                     'ref_no' => $validatedData['ref_no'],
@@ -275,8 +255,8 @@ class MurghiInvoiceController extends Controller
                     'sale_price' => $validatedData['sale_price'][$index],
                     'quantity' => $validatedData['quantity'][$index],
                     'amount' => $validatedData['quantity'][$index] * $validatedData['sale_price'][$index],
-                    'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
-                    'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
+                    'weight_detection' => $validatedData['discount_in_rs'][$index] ?? 0,
+                    'final_weight' => $validatedData['discount_in_percent'][$index] ?? 0,
                     'net_amount' => $netAmount,
                     'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                     'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
@@ -295,7 +275,7 @@ class MurghiInvoiceController extends Controller
                 } else {
                     ExpiryStock::create([
                         'date' => $validatedData['date'],
-                        'medicine_invoice_id' => $feedInvoice->id,
+                        'medicine_invoice_id' => $murghiInvoice->id,
                         'item_id' => $itemId,
                         'rate' => $costAmount,
                         'quantity' => $validatedData['quantity'][$index],
@@ -304,7 +284,7 @@ class MurghiInvoiceController extends Controller
                 }
 
                 AccountLedger::create([
-                    'feed_invoice_id' => $feedInvoice->id,
+                    'murghi_invoice_id' => $murghiInvoice->id,
                     'type' => $request->type,
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
@@ -313,10 +293,8 @@ class MurghiInvoiceController extends Controller
                     'credit' => 0,
                 ]);
             }
-
             $file_url = 'https://www.clickdimensions.com/links/TestPDFfile.pdf';
             $this->sendWhatsAppMessage('923003025291', 'Welcome to Laravel', $file_url);
-            
             DB::commit();
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
@@ -328,6 +306,7 @@ class MurghiInvoiceController extends Controller
 
     public function singleReturn(Request $request)
     {
+        
         $validatedData = $request->validate([
             'murghi_invoice_id' => 'required|exists:murghi_invoices,id',
             'quantity' => 'required|integer|min:1',
@@ -370,8 +349,8 @@ class MurghiInvoiceController extends Controller
                 'sale_price' =>  $originalInvoice->sale_price,
                 'quantity' => $validatedData['quantity'],
                 'amount' => $amount,
-                'weight_detection' => $originalInvoice->weight_detection,
-                'final_weight' => $originalInvoice->final_weight,
+                'weight_detection' => 2,
+                'final_weight' => 2,
                 'net_amount' => $netAmount,
                 'expiry_date' => $originalInvoice->expiry_date,
                 'whatsapp_status' => 'Not Sent',
@@ -389,15 +368,16 @@ class MurghiInvoiceController extends Controller
 
             $expiryStock->save();
 
-            $credit = 0 ;
-            $debit = 0 ;
+            $debit = 0;
+            $credit = 0;
+
 
             if ($type === 'Sale Return') {
                 $credit = $netAmount;
             } else {
                 $debit = $netAmount;
             }
-            
+
             AccountLedger::create([
                 'murghi_invoice_id' => $murghiInvoice->id,
                 'type'  => $type,
@@ -416,11 +396,10 @@ class MurghiInvoiceController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
     /**
      * Display the specified resource.
      */
+
     public function show($invoice_no)
     {
         $url = request()->url();
@@ -433,7 +412,7 @@ class MurghiInvoiceController extends Controller
             ->get();
 
         if ($murghiInvoice->isEmpty()) {
-            abort(404, 'Murghi Invoice not found');
+            abort(404, 'murghi Invoice not found');
         }
 
         $murghiInvoiceIds = $murghiInvoice->pluck('id');
@@ -450,15 +429,19 @@ class MurghiInvoiceController extends Controller
             return $item;
         });
 
-        return view('admin.murghi.show_murghi', compact('murghiInvoice', 'type'));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MedicineInvoice $medicineInvoice)
-    {
-        $medicineInvoice->delete();
-        return response()->json(null, 204);
+        if (request()->has('generate_pdf')) {
+            $html = view('admin.murghi.invoice_pdf', compact('murghiInvoice', 'type'))->render();
+            $mpdf = new Mpdf([
+                'format' => 'A4-P', 'margin_top' => 10,
+                'margin_bottom' => 2,
+                'margin_left' => 2,
+                'margin_right' => 2,
+            ]);
+            $mpdf->SetAutoPageBreak(true, 15);
+            $mpdf->SetHTMLFooter('<div style="text-align: right;">Page {PAGENO} of {nbpg}</div>');
+            return generatePDFResponse($html, $mpdf);
+        } else {
+            return view('admin.murghi.show_murghi', compact('murghiInvoice', 'type'));
+        }
     }
 }

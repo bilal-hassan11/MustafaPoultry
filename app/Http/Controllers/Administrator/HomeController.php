@@ -70,8 +70,8 @@ class HomeController extends AdminController
         $tot_expense = Expense::where('date', $current_month)->sum('ammount');
 
         //CashBook
-        $tot_credit = CashBook::where('date', $current_month)->sum('receipt_ammount');
-        $tot_debit = CashBook::where('date', $current_month)->sum('payment_ammount');
+        $tot_credit = CashBook::where('entry_date', $current_month)->sum('receipt_ammount');
+        $tot_debit = CashBook::where('entry_date', $current_month)->sum('payment_ammount');
         $tot_cash_in_hand = $tot_debit - $tot_credit ;
 
 
@@ -79,13 +79,13 @@ class HomeController extends AdminController
         $d = $newDateTime->toDateString();
         
         
-        $Item  = Item::where('status','1')->latest()->get();
-        foreach($Item as $i){
-            $available_item[] = $i['name'];
-            $available_stock[] = $i['stock_qty'];
-        }
-        $labels = [$available_item];
-        $price = [$available_stock];
+        // $Item  = Item::where('status','1')->latest()->get();
+        // foreach($Item as $i){
+        //     $available_item[] = $i['name'];
+        //     $available_stock[] = $i['stock_qty'];
+        // }
+        // $labels = [$available_item];
+        // $price = [$available_stock];
         //dd($available_item);
         
         // //return view('showMap',['labels' => $label, 'prices' => $price]);

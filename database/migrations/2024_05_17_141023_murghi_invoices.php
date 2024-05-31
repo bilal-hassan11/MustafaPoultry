@@ -28,6 +28,7 @@ return new class extends Migration
             $table->decimal('weight_detection', 10, 2);
             $table->decimal('final_weight', 10, 2);
             $table->decimal('net_amount',10,2)->default(0.00);
+            $table->date('expiry_date')->nullable();
             $table->enum('type', ['Purchase','Sale','Purchase Return','Sale Return','Adjust In','Adjust Out'])->nullable();
             $table->enum('stock_type',['In','Out'])->default('In');
             $table->enum('is_draft', [1,0])->default(0);

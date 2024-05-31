@@ -16,10 +16,14 @@ class StockController extends Controller
         $categories = Category::all();
         return view('admin.stock.index', compact('categories'));
     }
-
     public function filter(Request $request)
     {
-        $query = ExpiryStock::with('item.category');
+
+        $query = ExpiryStock::with('item.category')
+            ->where(function ($query) {
+                $query->where('quantity', '>', 0)
+                    ->orWhereNull('quantity');
+            });
 
         if ($request->filled('category')) {
             $query->whereHas('item', function ($q) use ($request) {
@@ -31,15 +35,19 @@ class StockController extends Controller
             $query->where('item_id', $request->item);
         }
 
+        $grandTotal = $query->sum('rate');
+
         return DataTables::of($query)
             ->editColumn('avg_amount', function ($stock) {
-                return number_format($stock->rate / $stock->quantity, 2);
+                return number_format($stock->average_price, 2);
             })
             ->editColumn('expiry_date', function ($stock) {
                 return $stock->expiry_date ?? 'N/A';
             })
+            ->with('grandTotal', number_format($grandTotal, 2))
             ->make(true);
     }
+
 
     public function getItemsByCategory(Request $request)
     {

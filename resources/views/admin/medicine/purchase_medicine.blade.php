@@ -160,12 +160,12 @@
                                     <tr class="text-dark">
                                         <th>S.No</th>
                                         <th>Date</th>
-                                        <th>Inv #</th>
-                                        <th>Account</th>
+                                        <th>Invoice No</th>
+                                        <th>Account Name</th>
                                         <th>Item</th>
                                         <th>Rate</th>
                                         <th>Quantity</th>
-                                        <th>Amount</th>
+                                        <th>Net Ammount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -178,11 +178,11 @@
                                             <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
                                             <td>{{ $purcahse->invoice_no }}</td>
                                             <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? "" }}</span>
                                             </td>
 
                                             <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? "" }}</span>
                                             </td>
                                             <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
                                             <?php $tot_q += $purcahse->quantity; ?>
@@ -190,16 +190,14 @@
                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                             <td>{{ $purcahse->net_amount }}</td>
                                             <td>
-                                                <a
-                                                    href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"><button
-                                                        class="btn btn-outline-info  rounded-pill btn-wave"
-                                                        type="button">
-                                                        <i class="ri-eye-line"></i></a>
-                                                </button>
-                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
-                                                    type="button">
+                                                <a class="btn btn-ouline-info rouned-pill btn-wave"
+                                                    href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
+                                                    <i class="ri-eye-line"></i></a>
+                                                <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                    class="btn btn-outline-info rounded-pill btn-wave" type="button"
+                                                    target="_blank">
                                                     <i class="ri-download-2-line"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -250,8 +248,7 @@
                             <option value="">Select Items</option>
                             @foreach ($products as $product)
                                 @php
-                                    $latestInvoice = $product->latestMedicineInvoice;
-                                    $purchasePrice = $latestInvoice ? $latestInvoice->purchase_price : 0;
+                                    $purchasePrice = $product->last_purchase_price ? $product->last_purchase_price : 1;
                                 @endphp
                                 <option value="{{ $product->id }}" data-price="{{ $purchasePrice }}">
                                     {{ $product->name ?? '' }}

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('expiry_stock', function (Blueprint $table) {
+        Schema::create('expiry_stocks', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('medicine_invoice_id')->nullable();
