@@ -94,6 +94,137 @@
                     </div>
                 </form>
             </div>
+            <div class="row">
+                <div class="col-12 col-sm-12">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('admin.medicine-invoices.sale') }}" method="GET">
+                                @csrf
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <label for="">Accounts</label>
+                                        <select class="form-control select2" name="account_id" id="account_id2">
+                                            <option value="">Select Account</option>
+                                            @foreach ($accounts as $account)
+                                                <option value="{{ $account->hashid }}">{{ $account->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Invoice No</label>
+                                        <input type="text" class="form-control" name="invoice_no" id="invoice_no">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Item</label>
+                                        <select class="form-control select2" name="item_id" id="item_id">
+                                            <option value="">Select Item</option>
+                                            @foreach ($products as $item)
+                                                <option value="{{ $item->hashid }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">From</label>
+                                        <input type="date" class="form-control" name="from_date" id="from_date">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">To</label>
+                                        <input type="date" class="form-control" name="to_date" id="to-date">
+                                    </div>
+                                    <div class="col-md-1 mt-6">
+                                        <input type="submit" class="btn btn-primary" value="Search">
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- COL END -->
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-12">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0">All Sale Medicine Detail</h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                <thead>
+                                    <tr class="text-dark">
+                                        <th>S.No</th>
+                                        <th>Date</th>
+                                        <th>Inv #</th>
+                                        <th>Account</th>
+                                        <th>Item</th>
+                                        <th>Rate</th>
+                                        <th>Quantity</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $tot_q = 0;
+                                    $tot_amt = 0; ?>
+                                    @foreach ($sale_medicine as $sale)
+                                        <tr class="text-dark">
+                                            <td style="width: 5%; !important">{{ $loop->iteration }}</td>
+                                            <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($sale->date)) }}
+                                            </td>
+                                            <td style="width: 10%; !important">{{ $sale->invoice_no }}</td>
+                                            <td style="width: 15%; !important"><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $sale->account->name ?? '' }}</span>
+                                            </td>
+
+                                            <td style="width: 10%; !important"><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
+                                            </td>
+                                            <td style="width: 10%; !important">
+                                                {{ number_format(@$sale->net_amount / @$sale->quantity, 2) }}</td>
+                                            <?php $tot_q += $sale->quantity; ?>
+                                            <td style="width: 10%; !important">{{ $sale->quantity }}</td>
+                                            <?php $tot_amt += $sale->net_amount; ?>
+                                            <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
+                                            <td style="width: 20%; !important">
+                                                <a
+                                                    href="{{ route('admin.medicine-invoices.sale.show', ['invoice_no' => $sale->invoice_no]) }}"><button
+                                                        class="btn btn-outline-info  rounded-pill btn-wave"
+                                                        type="button">
+                                                        <i class="ri-eye-line"></i></a>
+                                                </button>
+                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
+                                                    type="button">
+                                                    <i class="ri-download-2-line"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr class="text-dark">
+                                        <th>Total</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>{{ $tot_q }}</th>
+                                        <th>{{ $tot_amt }}</th>
+                                        <th>-</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- COL END -->
+            </div>
         </div>
     </div>
 @endsection
@@ -114,21 +245,20 @@
             <tr class="rows">
                 <td class="product_col">
                     @if ($products)
-                    <select class="form-control product product_val" name="item_id[]" id="products" required>
+                    <select class="form-control product product_val" name="id[]" id="products" required>
                         <option value="">Select Items</option>
                         @foreach ($products as $product)
                             @php
-                                $latestInvoice = $product->latestMedicineInvoice;
-                                $salePrice = $latestInvoice ? $latestInvoice->sale_price : 0;
                                 $qty = $product->quantity;
                                 $expiry_date = $product->expiry_date;
                                 $purchasePrice = $qty != 0 ? $product->rate / $qty : 0;
                             @endphp    
-                            <option value="{{ $product->item_id }}" data-price="{{ $salePrice }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}">
+                            <option value="{{ $product->id }}" data-price="{{ $product->item->last_sale_price }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
                                 {{ $product->item->name . ' - ' . $product->expiry_date ?? '' }}
                             </option>
                         @endforeach
                     </select>
+                    <input type="hidden" name="item_id[]" class="item_id">
                     @endif
                 </td>
                 <td class="quantity_col">
@@ -186,11 +316,13 @@
                 let qty = $selectElement.find('option:selected').data('qty');
                 let expirydate = $selectElement.find('option:selected').data('expiry_date');
                 let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
+                let itemID = $selectElement.find('option:selected').data('item_id');
                 $selectElement.closest('tr').find('.saleRate').val(salePrice);
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
                 $selectElement.closest('tr').find('.expiry_date').val(expirydate);
                 $selectElement.closest('tr').find('.quantity').attr('max', qty);
                 $selectElement.closest('tr').find('.saleRate').attr('min', purchasePrice);
+                $selectElement.closest('tr').find('.item_id').val(itemID);
                 Calculation();
             }
 

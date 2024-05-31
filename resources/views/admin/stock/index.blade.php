@@ -45,7 +45,8 @@
                                             <th colspan="4" style="text-align: right">
                                                 Grand Total
                                             </th>
-                                            <th></th>
+                                            <th id="grand-total" style="text-align:right">
+                                            </th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
@@ -72,6 +73,11 @@
                     data: function(d) {
                         d.category = $('#categoryFilter').val();
                         d.item = $('#itemFilter').val();
+                    },
+                    dataSrc: function(json) {
+                        var grandTotal = json.grandTotal;
+                        $('#grand-total').text('Rs ' + grandTotal);
+                        return json.data;
                     }
                 },
                 columns: [{

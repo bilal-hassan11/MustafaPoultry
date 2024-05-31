@@ -22,6 +22,17 @@ class ExpiryStock extends Model
     /**
      * Get the medicine invoice associated with the expiry stock.
      */
+    protected $appends = ['average_price'];
+
+    public function getAveragePriceAttribute()
+    {
+        if ($this->quantity == 0) {
+            return 0;
+        }
+
+        return $this->rate / $this->quantity;
+    }
+
     public function medicineInvoice()
     {
         return $this->belongsTo(MedicineInvoice::class);
@@ -33,10 +44,5 @@ class ExpiryStock extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
-    }
-
-    public function latestMedicineInvoice()
-    {
-        return $this->hasOne(MedicineInvoice::class,'item_id')->latest();
     }
 }

@@ -26,14 +26,22 @@ class MedicineInvoiceController extends Controller
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = Item::where('category_id', 4)
-            ->with(['latestMedicineInvoice' => function ($query) {
-                $query->select('item_id', 'purchase_price');
-            }])
-            ->latest()
-            ->get();
+        $products = Item::where('category_id', 4)->get();
+
         $purchase_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Purchase')
+            ->when(isset($req->account_id), function ($query) use ($req) {
+                $query->where('account_id', hashids_decode($req->account_id));
+            })
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
             ->latest()
             ->get();
 
@@ -41,21 +49,38 @@ class MedicineInvoiceController extends Controller
     }
 
 
-    public function createSale()
+    public function createSale(Request $req)
     {
 
         $title = "Sale Medicine";
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Sale', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = ExpiryStock::with(['latestMedicineInvoice' => function ($query) {
-            $query->select('item_id', 'sale_price');
-        }])
+        $products = ExpiryStock::with('item')
+            ->whereHas('item', function ($query) {
+                $query->where('category_id', 4);
+            })
             ->where('quantity', '>', 0)
+            ->get();
+
+        $sale_medicine = MedicineInvoice::with('account', 'item')
+            ->where('type', 'Sale')
+            ->when(isset($req->account_id), function ($query) use ($req) {
+                $query->where('account_id', hashids_decode($req->account_id));
+            })
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
             ->latest()
             ->get();
 
-        return view('admin.medicine.sale_medicine', compact(['title', 'invoice_no', 'accounts', 'products']));
+        return view('admin.medicine.sale_medicine', compact(['title', 'sale_medicine', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -154,12 +179,14 @@ class MedicineInvoiceController extends Controller
 
     public function storeSale(Request $request)
     {
+        // Validate request data
         $validator = Validator::make($request->all(), [
             'date' => 'required|date',
             'account' => 'required|exists:accounts,id',
             'ref_no' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'item_id.*' => 'required|exists:items,id',
+            'id.*' => 'required|exists:expiry_stocks,id',
+            'id.*' => 'required|exists:expiry_stocks,id',
             'purchase_price.*' => 'required|numeric',
             'sale_price.*' => 'required|numeric',
             'quantity.*' => 'required|integer',
@@ -170,58 +197,38 @@ class MedicineInvoiceController extends Controller
             'whatsapp_status' => 'nullable|boolean',
         ]);
 
+        // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
 
-        $items = $request->input('item_id', []);
-        $quantities = $request->input('quantity', []);
-        $expiryDates = $request->input('expiry_date', []);
+        $validatedData = $validator->validated();
 
-        $itemExpiryQuantities = [];
-
-        foreach ($items as $index => $itemId) {
-            $expiryDate = $expiryDates[$index] ?? null;
-            $quantity = $quantities[$index];
-
-            $key = $itemId . '_' . ($expiryDate ?? 'no_expiry');
-
-            if (!isset($itemExpiryQuantities[$key])) {
-                $itemExpiryQuantities[$key] = 0;
-            }
-
-            $itemExpiryQuantities[$key] += $quantity;
-        }
+        $items = collect($request->input('item_id'));
+        $ids = collect($request->input('id'));
+        $quantities = collect($request->input('quantity'));
+        $groupedItems = $ids->zip($quantities)->groupBy(0)->map(function ($group) {
+            return $group->sum(1);
+        });
 
         $stockErrors = [];
-        foreach ($itemExpiryQuantities as $key => $totalQuantity) {
-            [$itemId, $expiryDate] = explode('_', $key);
-            $expiryDate = $expiryDate === 'no_expiry' ? null : $expiryDate;
 
-            $expiryStock = ExpiryStock::with('item')
-                ->where('item_id', $itemId)
-                ->where('expiry_date', $expiryDate)
-                ->where('quantity', '>', 0)
-                ->first();
-
-            if (!$expiryStock) {
-                $stockErrors["item_id.$itemId"] = ['No stock found for item with ID ' . $itemId . ' and expiry date ' . ($expiryDate ?? 'none')];
-            } elseif ($expiryStock->quantity < $totalQuantity) {
-                $stockErrors["item_id.$itemId"] = ['Insufficient stock for item ' . ($expiryStock->item->name ?? 'Unknown') . ' with expiry date ' . ($expiryDate ?? 'none')];
+        $groupedItems->each(function ($quantity, $id) use (&$stockErrors) {
+            $expiryStock = ExpiryStock::find($id);
+            if ($expiryStock->quantity < $quantity) {
+                $itemName = $expiryStock->item->name ?? 'Unknown';
+                $stockErrors["id.$id"] = ['Insufficient stock for item ' . $expiryStock->item->name];
             }
-        }
+        });
 
+        // Return stock errors if any
         if (!empty($stockErrors)) {
             return response()->json([
                 'errors' => $stockErrors
             ], 422);
         }
-
-        $validatedData = $validator->validated();
-
-
         $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
 
         DB::beginTransaction();
@@ -357,6 +364,16 @@ class MedicineInvoiceController extends Controller
             }
 
             $expiryStock->save();
+
+            $debit = 0;
+            $credit = 0;
+
+
+            if ($type === 'Sale Return') {
+                $credit = $netAmount;
+            } else {
+                $debit = $netAmount;
+            }
 
             AccountLedger::create([
                 'medicine_invoice_id' => $medicineInvoice->id,
