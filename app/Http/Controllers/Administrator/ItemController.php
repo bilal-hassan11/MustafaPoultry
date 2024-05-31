@@ -63,15 +63,21 @@ class ItemController extends Controller
             $msg  = 'Item added successfully';
         }
 
-        $item->category_id = hashids_decode($req->category_id);
-        $item->name        = $req->name;
-        $item->type        = $req->type;
-        $item->price       = $req->price;
-        $item->code       = $req->code;
-        
-        $item->stock_status= $req->stock_status;
-        $item->status      = $req->item_status;
-        $item->remarks     = $req->remarks;
+        $item->category_id    = hashids_decode($req->category_id);
+        $item->company_id     = $req->company_id;
+        $item->name           = $req->name;
+        $item->type           = $req->type;
+        $item->unit           = $req->unit;
+        $item->primary_unit   = $req->primary_unit;
+        $item->price          = $req->price;
+        $item->discount       = $req->discount;
+        $item->purchase_price = $req->purchase_ammount;
+        $item->sale_price     = $req->sale_ammount;
+        $item->opening_stock  = 0;
+        $item->stock_qty  = 0;
+        $item->stock_status   = $req->stock_status;
+        $item->status         = $req->item_status;
+        $item->remarks        = $req->remarks;
         $item->save();
 
         return response()->json([

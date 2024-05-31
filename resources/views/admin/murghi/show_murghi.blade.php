@@ -10,10 +10,10 @@
                     <div class="card-header bg-primary text-white">
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>Invoice #{{ $medicineInvoice[0]->invoice_no }}</h3>
-                                <p class="mb-0">Date: {{ $medicineInvoice[0]->date }}</p>
-                                <p class="mb-0">Account: {{ $medicineInvoice[0]->account->name }}</p>
-                                <p class="mb-0">Description: {{ $medicineInvoice[0]->description }}</p>
+                                <h3>Invoice #{{ $murghiInvoice[0]->invoice_no }}</h3>
+                                <p class="mb-0">Date: {{ $murghiInvoice[0]->date }}</p>
+                                <p class="mb-0">Account: {{ $murghiInvoice[0]->account->name }}</p>
+                                <p class="mb-0">Description: {{ $murghiInvoice[0]->description }}</p>
                             </div>
                             <div class="col-md-4" style="text-align: right;">
                                 <a class="btn btn-secondary mb-3" href="{{ url()->previous() }}">
@@ -43,7 +43,7 @@
                                     $subtotal = 0;
                                     $totalDiscountRs = 0;
                                 @endphp
-                                @foreach ($medicineInvoice as $index => $item)
+                                @foreach ($murghiInvoice as $index => $item)
                                     <tr>
                                         <td style="text-align: center;">{{ $index + 1 }}</td>
                                         <td>{{ $item->item->name }}</td>
@@ -111,7 +111,7 @@
                 <div class="modal-body">
                     <form id="returnForm">
                         @csrf
-                        <input type="hidden" id="medicine_invoice_id" name="medicine_invoice_id">
+                        <input type="hidden" id="murghi_invoice_id" name="murghi_invoice_id">
                         <input type="hidden" id="type" name="type" value="{{ $type }} Return">
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
@@ -139,7 +139,7 @@
                 var description = $(this).data('description');
                 var totalreturned = $(this).data('totalreturned');
                 let remainingQty = quantity - totalreturned;
-                $('#medicine_invoice_id').val(id);
+                $('#murghi_invoice_id').val(id);
                 $('#quantity').val(1);
                 $('#returnModal').modal('show');
                 $('#quantity').attr('max', remainingQty);
@@ -167,7 +167,7 @@
                 }
 
                 $.ajax({
-                    url: "{{ route('admin.medicine-invoices.single-return') }}",
+                    url: "{{ route('admin.murghi-invoices.single-return') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {

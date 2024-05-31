@@ -108,7 +108,7 @@
 
                                     <div class="col-md-3">
                                         <label for="">Accounts</label>
-                                        <select class="form-control select2" name="account_id" id="account_id">
+                                        <select class="form-control select2" name="account_id" id="account_id2">
                                             <option value="">Select Account</option>
                                             @foreach ($accounts as $account)
                                                 <option value="{{ $account->hashid }}">{{ $account->name }}</option>
@@ -178,11 +178,11 @@
                                             <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
                                             <td>{{ $purcahse->invoice_no }}</td>
                                             <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? "" }}</span>
                                             </td>
 
                                             <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name }}</span>
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? "" }}</span>
                                             </td>
                                             <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
                                             <?php $tot_q += $purcahse->quantity; ?>

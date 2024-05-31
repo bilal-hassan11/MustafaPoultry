@@ -243,26 +243,41 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('low-selling-report', [StockController::class, 'lowSellingReport'])->name('low_selling_report');
     });
 
+    
+
     Route::controller(FeedInvoiceController::class)->prefix('feed-invoices')->name('feed-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/sale', 'createSale')->name('sale');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
+        Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::post('/store', 'store')->name('store');
+        Route::post('/store-sale', 'storeSale')->name('store-sale');
+        Route::post('/return', 'singleReturn')->name('single-return');
     });
 
     Route::controller(ChickInvoiceController::class)->prefix('chick-invoices')->name('chick-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/sale', 'createSale')->name('sale');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
+        Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::post('/store', 'store')->name('store');
+        Route::post('/store-sale', 'storeSale')->name('store-sale');
+        Route::post('/return', 'singleReturn')->name('single-return');
     });
-
+   
     Route::controller(MurghiInvoiceController::class)->prefix('murghi-invoices')->name('murghi-invoices.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/purchase', 'createPurchase')->name('purchase');
         Route::get('/sale', 'createSale')->name('sale');
+        Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
+        Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::post('/store', 'store')->name('store');
+        Route::post('/store-sale', 'storeSale')->name('store-sale');
+        Route::post('/return', 'singleReturn')->name('single-return');
     });
+
 });
 
 

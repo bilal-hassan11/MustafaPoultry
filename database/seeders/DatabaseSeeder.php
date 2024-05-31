@@ -14,7 +14,11 @@ class DatabaseSeeder extends Seeder
             FeedInvoicesTableSeeder::class,
             ChickInvoicesTableSeeder::class,
             MurghiInvoicesTableSeeder::class,
-            CashBookSeeder::class, 
+            CashBookSeeder::class,
+            ItemsTableSeeder::class,
+            AccountTypesTableSeeder::class,
+            CategoriesTableSeeder::class,
+            AccountsTableSeeder::class,
         ]);
     }
 }

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->decimal('discount_in_rs',10,2)->default(0.00);
             $table->decimal('discount_in_percent',10,2)->default(0.00);    
             $table->decimal('net_amount')->default(0);
+            $table->date('expiry_date')->nullable();
             $table->enum('type', ['Purchase','Sale','Purchase Return','Sale Return','Adjust In','Adjust Out'])->nullable();
             $table->enum('stock_type',['In','Out'])->default('In');
             $table->enum('is_draft', [1,0])->default(0);

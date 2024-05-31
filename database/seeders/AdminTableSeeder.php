@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
+use Carbon\carbon;
+use DB;
 
 class AdminTableSeeder extends Seeder
 {
@@ -12,8 +14,7 @@ class AdminTableSeeder extends Seeder
         $users = [
             [
                 'id'             => 1412,
-                'first_name'           => 'Admin',
-                'username'           => 'admin1412',
+                'username'           => 'admin',
                 'email'          => 'admin1421@admin.com',
                 'password'       => bcrypt('password'),
                 'user_type'       => 1,

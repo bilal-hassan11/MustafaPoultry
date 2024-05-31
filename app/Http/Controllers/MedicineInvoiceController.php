@@ -15,9 +15,7 @@ use Mpdf\Mpdf;
 
 class MedicineInvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     use SendsWhatsAppMessages;
 
     public function createPurchase(Request $req)
@@ -62,7 +60,7 @@ class MedicineInvoiceController extends Controller
             })
             ->where('quantity', '>', 0)
             ->get();
-
+        
         $sale_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
@@ -381,8 +379,8 @@ class MedicineInvoiceController extends Controller
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
                 'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,
-                'debit' => $netAmount,
-                'credit' => 0,
+                'debit' => $debit,
+                'credit' => $credit,
             ]);
 
             DB::commit();
@@ -401,10 +399,11 @@ class MedicineInvoiceController extends Controller
 
     public function show($invoice_no)
     {
+        
         $url = request()->url();
         preg_match('/\/(\w+)(?=\/\d+)/', $url, $matches);
         $type = isset($matches[1]) ? ucfirst($matches[1]) : 'Purchase';
-
+        
         $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
             ->where('type', $type)
             ->with('account', 'item')
