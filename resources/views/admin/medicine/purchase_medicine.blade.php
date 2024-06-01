@@ -193,6 +193,9 @@
                                                 <a class="btn btn-ouline-info rouned-pill btn-wave" type="button"
                                                     href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
                                                     <i class="ri-eye-line"></i></a>
+                                                <a class="btn btn-ouline-info rouned-pill btn-wave" type="button"
+                                                    href="{{ route('admin.medicine-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}">
+                                                    <i class="ri-marker"></i></a>
                                                 <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
                                                     class="btn btn-outline-info rounded-pill btn-wave" type="button"
                                                     target="_blank">
