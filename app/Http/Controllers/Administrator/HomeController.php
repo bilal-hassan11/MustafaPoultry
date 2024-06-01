@@ -72,7 +72,6 @@ class HomeController extends AdminController
         $newDateTime = Carbon::now()->addMonth(2);
         $d = $newDateTime->toDateString();
 
-
         // $Item  = Item::where('status','1')->latest()->get();
         // foreach($Item as $i){
         //     $available_item[] = $i['name'];
