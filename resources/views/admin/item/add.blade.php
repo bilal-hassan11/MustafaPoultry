@@ -43,52 +43,35 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label for="">Item Type</label>
-                            <select class="form-control select2" name="type" id="type">
-                                <option value="">Select item type</option>
-                                <option value="purchase" @if(@$edit_item->type == 'purchase') selected @endif>Purchase</option>
-                                <option value="sale" @if(@$edit_item->type == 'sale') selected @endif>Sale</option>
-                            </select>
-                        </div>
+                       
 
-                        <div class="col-md-2 form-group">
+                        <div class="col-md-3 form-group">
                             <label for="">Item Unit</label>
                             <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->unit }}"  name="unit"  required>
 
                         </div>
-                        <div class="col-md-2 form-group">
+                        <div class="col-md-3 form-group">
                             <label for="">Primary Unit</label>
                             <input type="text" class="form-control" placeholder="Enter Primary Unit" value="{{ @$edit_item->primary_unit }}"  name="primary_unit"  required>
 
                         </div>
 
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-2 form-group">
                             <label for="">Item Rate</label>
                             <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->price }}" min="0" name="price" id="price" required>
                         </div>
-                        
-                    </div>
-                    <div class="row">
-                        
-
-                        <div class="col-md-4 form-group">
-                            <label for="">Discount(%)</label>
-                            <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->discount }}"  id="discount" name="discount"  required>
-
-                        </div>
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-2 form-group">
                             <label for="">Purchase Ammount</label>
                             <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->purchase_ammount }}" id="purchase_ammount"  name="purchase_ammount"  required>
 
                         </div>
 
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-2 form-group">
                             <label for="">Sale Ammount</label>
                             <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->sale_ammount }}"  name="sale_ammount" id="sale_ammount" required>
                         </div>
-                        
                     </div>
+                    
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <label for="">Item Stock Status</label>

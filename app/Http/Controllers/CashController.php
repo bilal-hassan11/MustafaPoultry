@@ -24,7 +24,7 @@ class CashController extends Controller
         $tot_get_dr = CashBook::sum('receipt_ammount');
         $c_ex  = Expense::sum('ammount');
         
-        $tot = 2909858;
+        $tot = 0;
         $Tot_net_dr = $tot_get_dr +  $tot;
         $cash_in_hand = $Tot_net_dr - ($tot_get_cr + $c_ex)   ;
         //dd($tot_get_cr);
@@ -79,163 +79,16 @@ class CashController extends Controller
 
 public function store(CashBookRequest $req){
         //check if today cash in hand
-        $cash = CashInHand::whereDate('created_at', Carbon::today())->latest('created_at')->get();
+        
 
         //Edit or save  Cash In Hand
         if(check_empty($req->cash_id)){
             $cashbook = CashBook::findOrFail(hashids_decode($req->cash_id));
             $msg      = 'Cash Book udpated successfully';
 
-            //dd($req->date);
-            $cash = CashInHand::whereDate('created_at', Carbon::today())->latest('created_at')->get();
-            //dd($cash);
-            $update_cash_in_hand = CashInHand::whereDate('created_at', $req->date)->latest()->get();
-            
-            
-            //if cash in hand is empty for today so you will get last cash in hand and then make changes
-            if($cash->isEmpty()){
-                $cash = CashInHand::latest('created_at')->get();
-                
-                $cash_in_hand = $cash[0]->cash_in_hand;//get last cash in hand
-                $cash_in_hand_detail = new CashInHand();
-
-                //check weather payment or receipt 
-                if($req->receipt_ammount == null){
-                    //Receipt Coming
-                    $tot_debit = $cash_in_hand - $req->payment_ammount;
-                    $cash_in_hand_detail->date = Carbon::today();
-                    $cash_in_hand_detail->cash_in_hand          = $tot_debit;
-                    $cash_in_hand_detail->total_debit             = $req->payment_ammount;
-                    $cash_in_hand_detail->total_credit            = 0;
-                    $cash_in_hand_detail->save();                                                                                                                        
-                    
-                }else{
-                    //Receipt Coming
-                    $tot_credit                                 = $cash_in_hand + $req->receipt_ammount;
-                    $cash_in_hand_detail->date = Carbon::today();
-                    $cash_in_hand_detail->cash_in_hand          = $tot_credit;
-                    $cash_in_hand_detail->total_debit          = 0;
-                    $cash_in_hand_detail->total_credit          = $req->receipt_ammount;
-                    $cash_in_hand_detail->save();
-                   
-                }
-
-            }else{//if cash in hand is not empty for today so you will get today cash in hand and then make changes
-                   
-                $cashupdate = CashInHand::findOrFail($cash[0]->id);
-                
-                $cash_in_hand = $cash[0]->cash_in_hand;//get last cash in hand
-                $pymnt_amt = $cashbook->payment_ammount;
-                $recpt_amt = $cashbook->receipt_ammount;
-                if($req->receipt_ammount == null){
-                    //Payment Coming
-                    $difference_value =  $req->payment_ammount -  $pymnt_amt ;
-                    //dd($difference_value);
-                    $tot_debit = $cash_in_hand - $difference_value;
-                    //dd($tot_debit);
-                    $cashupdate->cash_in_hand          = $tot_debit;
-                    $cashupdate->total_debit             = $req->payment_ammount;
-                    $cashupdate->total_credit            = 0;
-                    $cashupdate->save();
-                    
-                }else{
-
-                    //Receipt Coming
-                    $difference_value =  $req->receipt_ammount  - $recpt_amt ;
-                    //dd($difference_value);
-                    
-                    if($difference_value >= 0){
-                        $tot_credit = $cash_in_hand + $difference_value;
-
-                        //dd($tot_credit);
-                        $cashupdate->cash_in_hand          = $tot_credit;
-                        $cashupdate->total_debit             = 0;
-    
-                        $cashupdate->total_credit             = $req->receipt_ammount;
-                        $cashupdate->save();
-                    }else{
-                        $tot_credit = $cash_in_hand + $difference_value;
-                        //dd($tot_credit);    
-                        //dd($tot_credit);
-                        $cashupdate->cash_in_hand          = $tot_credit;
-                        $cashupdate->total_debit             = 0;
-
-                        $cashupdate->total_credit             = $req->receipt_ammount;
-                        $cashupdate->save();
-                    }
-            
-                }
-
-            }
-            
-            
-
         }else{
             $cashbook = new CashBook();
             $msg      = 'Cash Book added successfully';
-
-            if($cash->isEmpty()){
-                $cash = CashInHand::latest('created_at')->get();
-                $cash_in_hand = $cash[0]->cash_in_hand;//get last cash in hand
-                $cashin = new CashInHand();//create new row i database
-                
-                // //check weather payment or receipt 
-                if($req->receipt_ammount == null){
-    
-                    $tot_debit = $cash[0]->cash_in_hand - $req->payment_ammount;
-                    $cashin->date               = Carbon::today();
-                    $cashin->cash_in_hand          = $tot_debit;
-                    $cashin->total_debit             = $req->payment_ammount;
-                    $cashin->total_credit            = 0;
-                    $cashin->save();
-                    
-                }else{
-                    
-                    $tot_credit = $cash[0]->cash_in_hand + $req->receipt_ammount;
-                    $cashin->date               = Carbon::today();
-                    $cashin->cash_in_hand          = $tot_credit;
-                    $cashin->total_credit             = $req->receipt_ammount;
-                    $cashin->total_debit            = 0;
-                    $cashin->save();
-                }
-            
-            }else{
-                $cashin = CashInHand::findOrFail($cash[0]->id);
-                
-                if($req->receipt_ammount == null){
-                    $cash = CashInHand::whereDate('created_at', Carbon::today())->latest('created_at')->get();
-    
-                    $cash_in_hand = $cash[0]->cash_in_hand;//get Today Cash IN Hand
-                    $pre_debit = $cash[0]->total_debit;//get previos debit of  
-    
-                    $cash_in = $cash_in_hand - $req->payment_ammount;
-                    $debit_in = $pre_debit + $req->payment_ammount;
-    
-                    $cashin->cash_in_hand          = $cash_in;
-                    $cashin->total_debit             = $debit_in;
-                    $cashin->total_credit             = $cash[0]->total_credit;
-    
-                    $cashin->save();
-                    
-                }else{
-                    $cash = CashInHand::whereDate('created_at', Carbon::today())->latest('created_at')->get();
-    
-                    $cash_in_hand = $cash[0]->cash_in_hand;//get Today Cash IN Hand
-                    $pre_credit = $cash[0]->total_credit;//get previos credit of  
-    
-                    $cash_in = $cash_in_hand + $req->receipt_ammount;
-                    $credit_in = $pre_credit + $req->receipt_ammount;
-                    
-                    //dd($cash_in_hand);
-    
-                    $cashin->cash_in_hand          = $cash_in;
-                    $cashin->total_credit             = $credit_in;
-                    $cashin->total_debit             = $cash[0]->total_debit;
-    
-                    $cashin->save();
-                }    
-            
-            }
 
         }
         
@@ -250,7 +103,7 @@ public function store(CashBookRequest $req){
             $cashbook->payment_ammount    = 0;
         }
 
-        $cashbook->date               = $req->date;
+        $cashbook->entry_date               = $req->date;
         $cashbook->bil_no             = $req->bil_no;
         $cashbook->account_id         = hashids_decode($req->account_id);
         $cashbook->narration          = $req->narration;
@@ -272,19 +125,6 @@ public function store(CashBookRequest $req){
                 $accountledger->account_id = hashids_decode($req->account_id);
                 
                 $accountledger->date               = $req->date;
-                $accountledger->sale_chick_id          = 0;
-                $accountledger->purchase_chick_id          = 0;
-                $accountledger->sale_medicine_id          = 0;
-                $accountledger->return_medicine_id          = 0;
-                $accountledger->expire_medicine_id          = 0;
-                $accountledger->purchase_medicine_id          = 0;
-                $accountledger->sale_feed_id          = 0;
-                $accountledger->purchase_feed_id          = 0;
-                $accountledger->purchase_murghi_id          = 0;
-                $accountledger->sale_murghi_id          = 0;
-                $accountledger->general_purchase_id          = 0;
-                $accountledger->general_sale_id      = 0;
-                $accountledger->expense_id      = 0;
                 $accountledger->cash_id             = hashids_decode($req->cash_id);
                 $accountledger->debit            = $pay_ammount;
                 $accountledger->credit          = 0;
@@ -301,19 +141,6 @@ public function store(CashBookRequest $req){
                 $accountledger->account_id = hashids_decode($req->account_id);
                 
                 $accountledger->date               = $req->date;
-                $accountledger->sale_chick_id          = 0;
-                $accountledger->purchase_chick_id          = 0;
-                $accountledger->sale_medicine_id          = 0;
-                $accountledger->return_medicine_id          = 0;
-                $accountledger->expire_medicine_id          = 0;
-                $accountledger->purchase_medicine_id          = 0;
-                $accountledger->sale_feed_id          = 0;
-                $accountledger->purchase_feed_id          = 0;
-                $accountledger->purchase_murghi_id          = 0;
-                $accountledger->sale_murghi_id          = 0;
-                $accountledger->general_purchase_id          = 0;
-                $accountledger->general_sale_id      = 0;
-                $accountledger->expense_id      = 0;
                 $accountledger->cash_id          = hashids_decode($req->cash_id);
                 $accountledger->debit            = 0 ;
                 $accountledger->credit           = $pay_ammount ;
@@ -334,20 +161,6 @@ public function store(CashBookRequest $req){
                 $accountledger->account_id = hashids_decode($req->account_id);
                 
                 $accountledger->date               = $req->date;
-                $accountledger->sale_chick_id          = 0;
-                $accountledger->purchase_chick_id          = 0;
-                $accountledger->sale_medicine_id          = 0;
-                $accountledger->return_medicine_id          = 0;
-                $accountledger->expire_medicine_id          = 0;
-                $accountledger->purchase_medicine_id          = 0;
-                $accountledger->sale_feed_id          = 0;
-                $accountledger->purchase_feed_id          = 0;
-                $accountledger->purchase_murghi_id          = 0;
-                $accountledger->sale_murghi_id          = 0;
-                $accountledger->general_purchase_id          = 0;
-                $accountledger->general_sale_id      = 0;
-                $accountledger->expense_id      = 0;
-
                 $accountledger->cash_id          = $id->id;
                 $accountledger->debit            = $pay_ammount ;
                 $accountledger->credit           = 0 ;
@@ -361,24 +174,8 @@ public function store(CashBookRequest $req){
                 $pay_ammount = $req->receipt_ammount;
                 $id = CashBook::latest('created_at')->first();
                 $accountledger->account_id = hashids_decode($req->account_id);
-                
                 $accountledger->date               = $req->date;
-                $accountledger->sale_chick_id          = 0;
-                $accountledger->purchase_chick_id          = 0;
-                $accountledger->sale_medicine_id          = 0;
-                $accountledger->return_medicine_id          = 0;
-                $accountledger->expire_medicine_id          = 0;
-                $accountledger->purchase_medicine_id          = 0;
-                $accountledger->sale_feed_id          = 0;
-                $accountledger->purchase_feed_id          = 0;
-                $accountledger->purchase_murghi_id          = 0;
-                $accountledger->sale_murghi_id          = 0;
-                $accountledger->general_purchase_id          = 0;
-                $accountledger->general_sale_id      = 0;
-                $accountledger->expense_id      = 0;
-
                 $accountledger->cash_id          = $id->id;
-                
                 $accountledger->debit           = 0 ;
                 $accountledger->credit           = $pay_ammount ;
                 $accountledger->description      = $req->narration;
@@ -398,11 +195,7 @@ public function store(CashBookRequest $req){
    
     public function edit($id){
 
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
         
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->orderBy('created_at', 'desc')->latest()->get();
-
         $i = CashBook::findOrFail(hashids_decode($id));
           $month = date('Y-m-d');
         $tot_cr = CashBook::wheredate('created_at', $month)->sum('receipt_ammount');
@@ -412,8 +205,7 @@ public function store(CashBookRequest $req){
         if($i->status == "receipt"){
             
             $data = array(
-                'title'     => 'Cash Book',
-                'expire_medicine'   => $expire_medicine,
+                'title'     => 'Edit Cash Book',
                 'tot_cr' => $tot_cr,
                 'tot_dr' => $tot_dr,
                 'tot_ex' => $tot_ex,
@@ -427,8 +219,8 @@ public function store(CashBookRequest $req){
         }else{
             
             $data = array(
-                'title'     => 'Cash Book',
-                'expire_medicine'   => $expire_medicine,
+                'title'     => 'Edit Cash Book',
+                
                  'tot_cr' => $tot_cr,
                 'tot_dr' => $tot_dr,
                 'accounts'  => Account::latest()->get()->sortBy('name'),

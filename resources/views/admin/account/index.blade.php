@@ -63,12 +63,9 @@
                                               <td>{!! wordwrap($account->address, 10, "<br />\n", true) !!}</td>
                                               
                                               <td width="120">
-                                                  <a href="{{route('admin.accounts.edit', $account->hashid)}}" >
-                                                      <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
-                                                  </a>
-                                                  <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.accounts.delete', $account->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
-                                                      <i class="fas fa-trash"></i>
-                                                  </button>
+                                                <div class="btn-list"> 
+                                                  <a  href="{{route('admin.accounts.edit', $account->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                                </div>
                                               </td>
                                           </tr>
                                       @endforeach

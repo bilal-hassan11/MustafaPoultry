@@ -28,7 +28,7 @@ class HomeController extends AdminController
         //Purchase Feed
         $tot_purchase_feed_begs = FeedInvoice::where('type', 'Purchase')->whereMonth('date', $current_month)->sum('quantity');
         $tot_purchase_feed_ammount = FeedInvoice::where('type', 'Purchase')->whereMonth('date', $current_month)->sum('net_amount');
-        //dd($tot_purchase_feed_ammount);
+        
         // Sale Return Feed
         $tot_sale_return_feed_begs = FeedInvoice::where('type', 'Sale Return')->whereMonth('date', $current_month)->sum('quantity');
         $tot_sale_return_feed_ammount = FeedInvoice::where('type', 'Sale Return')->whereMonth('date', $current_month)->sum('net_amount');
@@ -43,6 +43,13 @@ class HomeController extends AdminController
 
         $tot_purchase_medicine_qty = MedicineInvoice::where('type', 'Purchase')->where('date', $current_month)->sum('quantity');
         $tot_purchase_medicine_ammount = MedicineInvoice::where('type', 'Purchase')->where('date', $current_month)->sum('net_amount');
+        // Sale Return Medicine
+        $tot_sale_return_medicine_qty = MedicineInvoice::where('type', 'Sale Return')->whereMonth('date', $current_month)->sum('quantity');
+        $tot_sale_return_medicine_ammount = MedicineInvoice::where('type', 'Sale Return')->whereMonth('date', $current_month)->sum('net_amount');
+
+        //Purchase Return Medicine
+        $tot_purchase_return_medicine_qty = MedicineInvoice::where('type', 'Purchase Return')->whereMonth('date', $current_month)->sum('quantity');
+        $tot_purchase_return_medicine_ammount = MedicineInvoice::where('type', 'Purchase Return')->whereMonth('date', $current_month)->sum('net_amount');
 
 
         //Chicks 
@@ -128,11 +135,16 @@ class HomeController extends AdminController
             'tot_purchase_return_feed_ammount' => $tot_purchase_return_feed_ammount,
 
 
-            'tot_purchase_medicine_qty' => $tot_sale_medicine_qty,
-            'tot_purchase_medicine_ammount' => $tot_sale_medicine_ammount,
+            'tot_sale_medicine_qty' => $tot_sale_medicine_qty,
+            'tot_sale_medicine_ammount' => $tot_sale_medicine_ammount,
             'tot_purchase_medicine_qty' => $tot_purchase_medicine_qty,
             'tot_purchase_medicine_ammount' => $tot_purchase_medicine_ammount,
 
+            'tot_sale_return_medicine_qty' => $tot_sale_return_medicine_qty,
+            'tot_sale_return_medicine_ammount' => $tot_sale_return_medicine_ammount,
+            'tot_purchase_return_medicine_qty' => $tot_purchase_return_medicine_qty,
+            'tot_purchase_return_medicine_ammount' => $tot_purchase_return_medicine_ammount,
+            
             'tot_sale_chick_qty' => $tot_sale_chick_qty,
             'tot_sale_chick_ammount' => $tot_sale_chick_ammount,
             'tot_purchase_chick_qty' => $tot_purchase_chick_qty,

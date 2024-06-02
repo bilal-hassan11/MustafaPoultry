@@ -59,15 +59,17 @@
                 </div>
                 <div class="card-body">
                 
-                <table id="example" class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100">
+                <table id="example54" class="table table-bordered text-nowrap mb-0 dataTable no-footer" role="grid" aria-describedby="data-table_info">
+
                 <thead>
                 <tr class="text-dark">
+                    <th>S.No</th>
                     <th>Category</th>
                     <th>Item <br />Name</th>
                     <th>Available <br />Stock</th>
                     <th>Rate</th>
                     <th>Stock value</th>
-                    <th>Item <br /> Type</th>
+                    
                     <th>Stock <br /> Status</th>
                     <th>Item <br />Status</th>
                     <th>Remarks</th>
@@ -78,13 +80,14 @@
                <?php $tot = 0; ?>
                 @foreach($items AS $item)
                     <tr class="text-dark">
-                        <td>{{ $item->category->name }}</td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->category->name ?? "" }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->stock_qty }}</td>
                         <td>{{ number_format($item->price, 2) }}</td>
                         <?php $tot +=  $item->price * $item->stock_qty; ?>
                         <td>{{ $item->price * $item->stock_qty }}</td>
-                        <td>{{ $item->type }}</td>
+                        
                         <td>
                             @if($item->stock_status == 1)
                                 Enabled
@@ -101,10 +104,10 @@
                         </td>
                         <td>{!! wordwrap($item->remarks, 10, "<br />\n", true) !!}</td>
                         <td width="120">
-                            <a href="{{route('admin.items.edit', $item->hashid)}}" >
-                            <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
-
-                            </a>
+                          <div class="btn-list"> 
+                            <a  href="{{route('admin.items.edit', $item->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                          </div>
+                           
                             <!-- <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.items.delete', $item->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                                 <i class="fas fa-trash"></i>
                             </button> -->

@@ -72,7 +72,7 @@
                                     </div>
                                     <div class="col-md-3 form-group ">
                                         <label for="">Account Nature</label>
-                                        <select class="form-control js-example-basic-single22" name="account_nature" id="account_nature" required>
+                                        <select class="form-control select2" name="account_nature" id="account_nature" required>
                                             <option value="">Select account nature</option>
                                             <option value="credit" @if(@$edit_account->account_nature == 'credit') selected @endif>Credit</option>
                                             <option value="debit" @if(@$edit_account->account_nature == 'debit') selected @endif>Debit</option>
@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="col-md-3 form-group ">
                                         <label for="">Account Status</label>
-                                        <select class="form-control js-example-basic-single" name="status" id="account_nature" required>
+                                        <select class="form-control select2" name="status" id="account_nature" required>
                                             <option value="">Select account nature</option>
                                             <option value="1" @if(@$edit_account->status == 1) selected @endif>Enable</option>
                                             <option value="0" @if(@$edit_account->status == 0) selected @endif>Disable</option>
@@ -171,12 +171,11 @@
                                               <td>{!! wordwrap($account->address, 10, "<br />\n", true) !!}</td>
                                               
                                               <td width="120">
-                                                  <a href="{{route('admin.accounts.edit', $account->hashid)}}" >
-                                                      <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
-                                                  </a>
-                                                  <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.accounts.delete', $account->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
-                                                      <i class="fas fa-trash"></i>
-                                                  </button>
+                                                <div class="btn-list"> 
+                                                    <a  href="{{route('admin.accounts.edit', $account->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                                    
+                                                </div>
+                                                
                                               </td>
                                           </tr>
                                       @endforeach

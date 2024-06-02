@@ -13,7 +13,7 @@
           <div class="col-12 col-sm-12">
               <div class="card ">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">All Accounts Detail</h3>
+                    <h3 class="card-title mb-0">Add Payments Detail</h3>
                 </div>
                 <div class="card-body">
                 
@@ -28,7 +28,7 @@
 
                         </div>
                         <div class="col-md-3">
-                            <label >Payer Account (Supplier)</label>
+                            <label >Debtor Account</label>
                             <select class="form-control select2"  type="text" name="debtor_id" >
                                 <option value="">Select account </option>
                                 @foreach($accounts AS $account)
@@ -41,7 +41,7 @@
                             <input type="text" class="form-control" placeholder="Enter Amount Paid" value="{{ @$edit_Payment->debtor_ammount	 }}" name="debtor_amount" id="debtor_amount" required>
                         </div>
                         <div class="col-md-3">
-                            <label for="">Reference Account (Farms)</label>
+                            <label for="">Creditor Account</label>
                             <select class="form-control select2"  type="text" name="creditor_id" >
                                 <option value="">Select account </option>
                                 @foreach($accounts AS $account)
@@ -78,7 +78,7 @@
           <div class="col-12 col-sm-12">
               <div class="card ">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">All Accounts Detail</h3>
+                    <h3 class="card-title mb-0">All Payments Detail</h3>
                 </div>
                 <div class="card-body">
                 
@@ -86,12 +86,10 @@
 						    <thead>
 							    <tr class="text-dark">
                                     <th>Date</th>
-                                    
-                                    
-                                    <th> Farmer/Feed Debtor Account </th>
+                                    <th> Creditor Account </th>
                                     <th> Amount </th>
-                                    <th> Supplier Account </th>
-                                    <th> Supplier Amount </th>
+                                    <th> Debtor Account </th>
+                                    <th> Amount </th>
                                     <th> Remarks  </th>
                                     <th>Action</th>
                                 </tr>
@@ -108,10 +106,9 @@
                                         
                                         <td>{{ @$pay->remarks }}</td>
                                         <td width="120">
-                                            <a href="{{route('admin.paymentbooks.edit', $pay->hashid)}}" >
-                                            <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
-
-                                            </a>
+                                            <div class="btn-list"> 
+                                                <a  href="{{route('admin.paymentbooks.edit', $pay->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                            </div>
                                             
                                         </td>
                                     </tr>
