@@ -190,7 +190,23 @@
                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                             <td>{{ $purcahse->net_amount }}</td>
                                             <td>
-
+                                                <div class="btn-group" role="group">
+                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
+                                                        href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                        title="View">
+                                                        <i class="ri-eye-line"></i>
+                                                    </a>
+                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
+                                                        href="{{ route('admin.medicine-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                        title="Edit">
+                                                        <i class="ri-edit-line"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
+                                                        title="Download">
+                                                        <i class="ri-download-2-line"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
