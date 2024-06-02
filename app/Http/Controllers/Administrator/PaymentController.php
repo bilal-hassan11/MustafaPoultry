@@ -32,7 +32,6 @@ class PaymentController extends Controller
             $paymentbook     = Payment::findOrFail(hashids_decode($req->payment_id));
             $msg          = 'Payment updated successfully';
             
-
             $paymentbook->date            = $req->date;
             $paymentbook->debtor_account_id     = hashids_decode($req->debtor_id);
             $paymentbook->debtor_ammount         = $req->debtor_amount;
@@ -52,13 +51,9 @@ class PaymentController extends Controller
 
             $accountledger->account_id = hashids_decode($req->debtor_id);
             $accountledger->payment_id          = $paymentbook->id;
-            $accountledger->item_id      = 0;
-            $accountledger->purchase_id      = 0;
-            $accountledger->sale_id      = 0;
-            $accountledger->cash_id          = 0;
             $accountledger->debit            = $req->debtor_amount ;
             $accountledger->credit           = 0 ;
-            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->fare;
+            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->debtor_amount;
             $accountledger->save();
 
             //Farm/Feed Account Ledger
@@ -70,13 +65,9 @@ class PaymentController extends Controller
 
             $accountledger->account_id = hashids_decode($req->creditor_id);
             $accountledger->payment_id          = $paymentbook->id;
-            $accountledger->item_id      = 0;
-            $accountledger->purchase_id      = 0;
-            $accountledger->sale_id      = 0;
-            $accountledger->cash_id          = 0;
             $accountledger->debit            = 0 ;
             $accountledger->credit           = $req->creditor_amount ;
-            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->fare;
+            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->creditor_amount;
             $accountledger->save();
 
 
@@ -102,13 +93,9 @@ class PaymentController extends Controller
 
             $accountledger->account_id = hashids_decode($req->debtor_id);
             $accountledger->payment_id          = $paymentbook->id;
-            $accountledger->item_id      = 0;
-            $accountledger->purchase_id      = 0;
-            $accountledger->sale_id      = 0;
-            $accountledger->cash_id          = 0;
             $accountledger->debit            = $req->debtor_amount ;
             $accountledger->credit           = 0 ;
-            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->fare;
+            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->debtor_amount;
             $accountledger->save();
 
             //Farm/Feed Account Ledger
@@ -119,13 +106,9 @@ class PaymentController extends Controller
 
             $accountledger->account_id = hashids_decode($req->creditor_id);
             $accountledger->payment_id          = $paymentbook->id;
-            $accountledger->item_id      = 0;
-            $accountledger->purchase_id      = 0;
-            $accountledger->sale_id      = 0;
-            $accountledger->cash_id          = 0;
             $accountledger->debit            = 0 ;
             $accountledger->credit           = $req->creditor_amount ;
-            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->fare;
+            $accountledger->description      = ' Account #'.'['.$account->id.']'.$account->name.',  Paid Ammount '.$req->creditor_amount;
             $accountledger->save();
 
 

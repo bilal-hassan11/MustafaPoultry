@@ -52,8 +52,8 @@
                             <div class="form-group">
                               <label>Status </label>
                                 <select class="form-control select2" name="status" id="status">
-                                  <option value="active">Active</option>
-                                  <option value="not_active">Not Active</option>
+                                  <option value="enable">Enable</option>
+                                  <option value="disable">Disable</option>
                                 </select>
                             </div>
                           </div>
@@ -116,9 +116,11 @@
                                           <td>{{ $c->status }}</td>
                                           <td>{{ $c->address }}</td>
                                           <td width="120">
-                                              <a href="{{route('admin.companys.edit', $c->hashid)}}" >
-                                              <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
-                                              </a>
+                                              <div class="btn-list"> 
+                                                <a  href="{{route('admin.companys.edit', $c->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                                    
+                                              </div>
+                                              
                                               <!-- <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.companys.delete', $c->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
                                                   <i class="fas fa-trash"></i>
                                               </button> -->

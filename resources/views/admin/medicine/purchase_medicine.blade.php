@@ -190,6 +190,7 @@
                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                             <td>{{ $purcahse->net_amount }}</td>
                                             <td>
+                                            
                                                 <a class="btn btn-ouline-info rouned-pill btn-wave" type="button"
                                                     href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
                                                     <i class="ri-eye-line"></i></a>

@@ -27,7 +27,6 @@ class ItemRequest extends FormRequest
             'category_id'   => ['required', 'max:500'],
             'name'          => ['required', 'max:255'],
             'price'         => ['required'],
-            'type'          => ['required', 'in:purchase,sale'],
             'stock_status'  => ['required', 'in:0,1'],
             'item_status'   => ['required', 'in:0,1'],
             'remarks'       => ['nullable', 'max:65000'],

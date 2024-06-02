@@ -87,7 +87,7 @@
                   <div class="col-md-2">
                     <div class="form-group">
                       <label>Date</label>
-                      <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="date" value="{{ (isset($is_update_receipt)) ? date('Y-m-d', strtotime(@$edit_receipt->date)) : date('Y-m-d') }}" required>
+                      <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="date" value="{{ (isset($is_update_receipt)) ? date('Y-m-d', strtotime(@$edit_receipt->entry_date)) : date('Y-m-d') }}" required>
                       
                     </div>
                   </div>
@@ -157,7 +157,7 @@
                   <div class="col-md-2">
                     <div class="form-group">
                       <label>Date</label>
-                      <input class="form-control" type="date" name="date" value="{{ (@$is_update_payment) ? date('Y-m-d', strtotime($edit_payment->date)) : date('Y-m-d') }}" required>
+                      <input class="form-control" type="date" name="date" value="{{ (@$is_update_payment) ? date('Y-m-d', strtotime($edit_payment->entry_date)) : date('Y-m-d') }}" required>
                     </div>
                   </div>
                   <input type="hidden" name="cash_id" value="{{ @$edit_payment->hashid }}">
@@ -289,7 +289,7 @@
                 <table id="example54" class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100">
                   <thead>
                     <tr class="text-dark">
-                      <th>Id.No</th>
+                      <th>S.No</th>
                       <th>Date</th>
                       <th>Inst #</th>
                       <th> Account Name </th>
@@ -304,7 +304,7 @@
                     @foreach($cash AS $c)
                       <tr class="text-dark">
                           <td>{{ $loop->iteration }}</td>
-                          <td>{{ date('d-M-Y', strtotime($c->date)) }}</td>
+                          <td>{{ date('d-M-Y', strtotime($c->entry_date)) }}</td>
                           <td>{{ $c->bil_no }}</td>
                           <td ><span class="waves-effect waves-light btn btn-primary-light">{{ @$c->account->name }}</span></td>
                           <td>{{ $c->narration }}</td>
@@ -312,9 +312,9 @@
                           <td>{{ $c->payment_ammount }}</td>
                           <td>{{ $c->receipt_ammount }}</td>
                           <td width="120">
-                            <a href="{{route('admin.cash.edit', $c->hashid)}}" >
-                            <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
-                            </a>
+                            <div class="btn-list"> 
+                              <a  href="{{route('admin.cash.edit', $c->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                            </div>
                             <!-- <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.cash.delete', $c->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                                 <i class="fas fa-trash"></i>
                             </button> -->

@@ -615,7 +615,7 @@
                                 <li class="sub-category">
                                     <h3>Inventory Items</h3>
                                 </li>
-                                <li class="slide">
+                                <!-- <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
                                             class="side-menu__label">Category</span><i
@@ -626,7 +626,7 @@
                                                 Category</a></li>
 
                                     </ul>
-                                </li>
+                                </li> -->
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
