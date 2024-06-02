@@ -15,7 +15,7 @@ use Mpdf\Mpdf;
 
 class MedicineInvoiceController extends Controller
 {
-    
+
     use SendsWhatsAppMessages;
 
     public function createPurchase(Request $req)
@@ -46,6 +46,18 @@ class MedicineInvoiceController extends Controller
         return view('admin.medicine.purchase_medicine', compact(['title', 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
     }
 
+    public function editPurchase($invoice_no)
+    {
+        $title = "Edit Purchase Medicine";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = Item::where('category_id', 4)->get();
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Purchase')
+            ->with('account', 'item')
+            ->get();
+
+        return view('admin.medicine.edit_purhcase_medicine', compact(['title', 'accounts', 'products', 'medicineInvoice']));
+    }
 
     public function createSale(Request $req)
     {
@@ -60,7 +72,7 @@ class MedicineInvoiceController extends Controller
             })
             ->where('quantity', '>', 0)
             ->get();
-        
+
         $sale_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
@@ -89,13 +101,14 @@ class MedicineInvoiceController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'invoice_no' =>  'required',
             'date' => 'required|date',
             'account' => 'required|exists:accounts,id',
             'ref_no' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'item_id.*' => 'required|exists:items,id',
             'purchase_price.*' => 'required|numeric',
-            'quantity.*' => 'required|integer',
+            'quantity.*' => 'required|numeric',
             'amount.*' => 'required|numeric',
             'discount_in_rs.*' => 'nullable|numeric',
             'discount_in_percent.*' => 'nullable|numeric',
@@ -103,9 +116,21 @@ class MedicineInvoiceController extends Controller
             'whatsapp_status' => 'nullable|boolean',
         ]);
 
-        $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
-
         DB::beginTransaction();
+        if ($request->has('editMode')) {
+            $invoiceNumber = $request->invoice_no;
+            $medicineInvoices = MedicineInvoice::where('invoice_no', $invoiceNumber)
+                ->where('type', $request->type)
+                ->get();
+            $medicineInvoiceIds = $medicineInvoices->pluck('id');
+            MedicineInvoice::whereIn('id', $medicineInvoiceIds)->delete();
+
+            AccountLedger::whereIn('medicine_invoice_id', $medicineInvoiceIds)
+                ->where('type', $request->type)
+                ->delete();
+        } else {
+            $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
+        }
 
         try {
             $totalNetAmount = 0;
@@ -134,33 +159,13 @@ class MedicineInvoiceController extends Controller
                     'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                     'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
                 ]);
-
-                $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
-                $expiryStock = ExpiryStock::where('item_id', $itemId)
-                    ->where('expiry_date', $validatedData['expiry_date'][$index] ?? null)
-                    ->first();
-
-                if ($expiryStock) {
-                    $expiryStock->quantity += $validatedData['quantity'][$index];
-                    $expiryStock->rate += $costAmount;
-                    $expiryStock->save();
-                } else {
-                    $expiryStock = ExpiryStock::create([
-                        'date' => $validatedData['date'],
-                        'medicine_invoice_id' => $invoiceNumber,
-                        'item_id' => $itemId,
-                        'rate' => $costAmount,
-                        'quantity' => $validatedData['quantity'][$index],
-                        'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
-                    ]);
-                }
-
+                $item = Item::find($itemId);
                 AccountLedger::create([
                     'medicine_invoice_id' => $medicineInvoice->id,
                     'type'  => $request->type,
                     'date' => $validatedData['date'],
                     'account_id' => $validatedData['account'],
-                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['purchase_price'][$index],
+                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['purchase_price'][$index],
                     'debit' => 0,
                     'credit' => $netAmount,
                 ]);
@@ -399,11 +404,11 @@ class MedicineInvoiceController extends Controller
 
     public function show($invoice_no)
     {
-        
+
         $url = request()->url();
         preg_match('/\/(\w+)(?=\/\d+)/', $url, $matches);
         $type = isset($matches[1]) ? ucfirst($matches[1]) : 'Purchase';
-        
+
         $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
             ->where('type', $type)
             ->with('account', 'item')
