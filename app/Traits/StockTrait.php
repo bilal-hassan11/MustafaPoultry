@@ -28,7 +28,6 @@ trait StockTrait
         )
             ->groupBy('item_id', 'expiry_date')
             ->with(['item:id,name,category_id', 'item.category:id,name'])
-            ->havingRaw('total_quantity > 0')
             ->get();
         $srno = 1;
         return $invoices->map(function ($invoice) use (&$srno) {

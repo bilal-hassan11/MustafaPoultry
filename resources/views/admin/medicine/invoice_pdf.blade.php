@@ -131,7 +131,7 @@
                                 {{ $item->item->name }}{{ $item->expiry_date ? ' - ' . $item->expiry_date : '' }}
                             </td>
 
-                            <td class="text-right">{{ $item->quantity }}</td>
+                            <td class="text-right">{{ abs($item->quantity) }}</td>
                             <td class="text-right">Rs
                                 {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                             </td>
@@ -141,7 +141,8 @@
                         </tr>
                         @php
                             $subtotal +=
-                                $item->quantity * ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
+                                abs($item->quantity) *
+                                ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
                             $totalDiscountRs += $item->discount_in_rs;
                         @endphp
                     @endforeach

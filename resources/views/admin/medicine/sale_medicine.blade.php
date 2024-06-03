@@ -197,6 +197,11 @@
                                                         type="button">
                                                         <i class="ri-eye-line"></i></a>
                                                 </button>
+                                                <a href="{{ route('admin.medicine-invoices.edit.sale', ['invoice_no' => $sale->invoice_no]) }}"
+                                                    title="Edit"><button
+                                                        class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                            class="ri-edit-line"></i></button>
+                                                </a>
                                                 <button class="btn btn-outline-info  rounded-pill btn-wave"
                                                     type="button">
                                                     <i class="ri-download-2-line"></i>

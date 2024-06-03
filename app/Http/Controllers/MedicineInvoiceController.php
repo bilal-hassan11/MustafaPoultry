@@ -63,6 +63,17 @@ class MedicineInvoiceController extends Controller
 
         return view('admin.medicine.edit_purhcase_medicine', compact(['title', 'accounts', 'products', 'medicineInvoice']));
     }
+    public function editSale($invoice_no)
+    {
+        $title = "Edit Sale Medicine";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = $this->medicineInvoice->getStockInfo();
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Sale')
+            ->get();
+        //dd($medicineInvoice);
+        return view('admin.medicine.edit_sale_medicine', compact(['title', 'accounts', 'products', 'medicineInvoice']));
+    }
 
     public function createSale(Request $req)
     {
@@ -253,7 +264,7 @@ class MedicineInvoiceController extends Controller
             return response()->json(['error' => 'Stock not found for the given item and expiry date'], 422);
         }
 
-        if ($type == 'Purchase Return' ||  $type == 'Ajust Out') {
+        if ($type == 'Purchase Return') {
             $price = $originalInvoice->purchase_price;
             if ($stock->quantity < $validatedData['quantity']) {
                 return response()->json(['error' => 'Insufficient stock for the return. (' . $stock->quantity . ')'], 422);
@@ -277,15 +288,15 @@ class MedicineInvoiceController extends Controller
                 'description' => $validatedData['description'],
                 'invoice_no' => $invoiceNumber,
                 'type' => $validatedData['type'],
-                'stock_type' => in_array($type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
+                'stock_type' => ($type == 'Purchase Return') ? 'Out' : 'In',
                 'item_id' => $originalInvoice->item_id,
                 'purchase_price' => $originalInvoice->purchase_price,
                 'sale_price' =>  $originalInvoice->sale_price,
-                'quantity' => $validatedData['quantity'],
+                'quantity' => ($type == 'Purchase Return') ?  -$validatedData['quantity'] : $validatedData['quantity'],
                 'amount' => $amount,
                 'discount_in_rs' => $originalInvoice->discount_in_rs,
                 'discount_in_percent' => $originalInvoice->discount_in_percent,
-                'total_cost' => $$validatedData['quantity'] * $originalInvoice->purchase_price,
+                'total_cost' => (($type == 'Purchase Return') ? -$netAmount : $amount),
                 'net_amount' => $netAmount,
                 'expiry_date' => $originalInvoice->expiry_date,
                 'whatsapp_status' => 'Not Sent',
@@ -300,13 +311,13 @@ class MedicineInvoiceController extends Controller
             } else {
                 $debit = $netAmount;
             }
-
+            $items = Item::find($originalInvoice->item_id);
             AccountLedger::create([
                 'medicine_invoice_id' => $medicineInvoice->id,
                 'type'  => $type,
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
-                'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,
+                'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $items->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,
                 'debit' => $debit,
                 'credit' => $credit,
             ]);
@@ -315,6 +326,7 @@ class MedicineInvoiceController extends Controller
 
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
+            info($e);
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }

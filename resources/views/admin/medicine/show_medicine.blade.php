@@ -47,7 +47,7 @@
                                     <tr>
                                         <td style="text-align: center;">{{ $index + 1 }}</td>
                                         <td>{{ $item->item->name }}</td>
-                                        <td style="text-align: right;">{{ $item->quantity }}</td>
+                                        <td style="text-align: right;">{{ abs($item->quantity) }}</td>
                                         <td style="text-align: right;">Rs
                                             {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                                         </td>
@@ -62,7 +62,7 @@
                                         <td style="text-align: right;">Rs {{ number_format($item->net_amount, 2) }}</td>
                                         <td>
                                             <button class="btn-sm btn-primary open-modal" data-id="{{ $item->id }}"
-                                                data-quantity="{{ $item->quantity }}"
+                                                data-quantity="{{ abs($item->quantity) }}"
                                                 data-description="{{ $item->description }}"
                                                 data-totalreturned="{{ $item->total_returned }}">
                                                 <i class="bi bi-arrow-return-right"></i>
@@ -71,7 +71,7 @@
 
                                     </tr>
                                     @php
-                                        $subtotal += $item->quantity * $item->purchase_price;
+                                        $subtotal += abs($item->quantity) * $item->purchase_price;
                                         $totalDiscountRs += $item->discount_in_rs;
                                     @endphp
                                 @endforeach
@@ -79,15 +79,15 @@
                             <tfoot style="text-align: right;">
                                 <tr>
                                     <th colspan="8">Subtotal</th>
-                                    <th>Rs {{ number_format($subtotal, 2) }}</th>
+                                    <th>Rs {{ number_format($medicineInvoice->sum('amount'), 2) }}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="8">Total Discount</th>
-                                    <th>Rs {{ number_format($totalDiscountRs, 2) }}</th>
+                                    <th>Rs {{ number_format($medicineInvoice->sum('discount_in_rs'), 2) }}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="8">Net Amount</th>
-                                    <th>Rs {{ number_format($subtotal - $totalDiscountRs, 2) }}</th>
+                                    <th>Rs {{ number_format($medicineInvoice->sum('net_amount'), 2) }}</th>
                                 </tr>
                             </tfoot>
                         </table>

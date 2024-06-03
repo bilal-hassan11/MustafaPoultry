@@ -229,6 +229,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/purchase/edit/{invoice_no}', 'editPurchase')->name('edit.purchase');
         Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
         Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
+        Route::get('/sale/edit/{invoice_no}', 'editSale')->name('edit.sale');
         Route::post('/store', 'store')->name('store');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
