@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\MedicineInvoice;
 use App\Models\Account;
 use App\Models\Item;
-use App\Models\ExpiryStock;
 use Illuminate\Support\Facades\DB;
 use App\Models\AccountLedger;
 use Illuminate\Http\Request;
@@ -17,6 +16,12 @@ class MedicineInvoiceController extends Controller
 {
 
     use SendsWhatsAppMessages;
+    protected $medicineInvoice;
+
+    public function __construct(MedicineInvoice $medicineInvoice)
+    {
+        $this->medicineInvoice = $medicineInvoice;
+    }
 
     public function createPurchase(Request $req)
     {
@@ -66,14 +71,11 @@ class MedicineInvoiceController extends Controller
         $invoice_no = generateUniqueID(new MedicineInvoice, 'Sale', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = ExpiryStock::with('item')
-            ->whereHas('item', function ($query) {
-                $query->where('category_id', 4);
-            })
-            ->where('quantity', '>', 0)
-            ->get();
+        $medicineInvoice = new MedicineInvoice();
 
-        $sale_medicine = MedicineInvoice::with('account', 'item')
+        $products = $medicineInvoice->getStockInfo();
+
+        $sale_medicine = $medicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
                 $query->where('account_id', hashids_decode($req->account_id));
@@ -107,7 +109,9 @@ class MedicineInvoiceController extends Controller
             'ref_no' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'item_id.*' => 'required|exists:items,id',
+            'id.*' => 'nullable',
             'purchase_price.*' => 'required|numeric',
+            'sale_price.*' => 'required|numeric',
             'quantity.*' => 'required|numeric',
             'amount.*' => 'required|numeric',
             'discount_in_rs.*' => 'nullable|numeric',
@@ -115,6 +119,16 @@ class MedicineInvoiceController extends Controller
             'expiry_date.*' => 'nullable|date',
             'whatsapp_status' => 'nullable|boolean',
         ]);
+
+        $date = $request->input('date');
+
+        if ($request->type == 'Sale' || $request->type == 'Adjust Out') {
+            $stockErrors = $this->validateStockQuantities($validatedData);
+
+            if (!empty($stockErrors)) {
+                return response()->json(['errors' => $stockErrors], 422);
+            }
+        }
 
         DB::beginTransaction();
         if ($request->has('editMode')) {
@@ -124,7 +138,6 @@ class MedicineInvoiceController extends Controller
                 ->get();
             $medicineInvoiceIds = $medicineInvoices->pluck('id');
             MedicineInvoice::whereIn('id', $medicineInvoiceIds)->delete();
-
             AccountLedger::whereIn('medicine_invoice_id', $medicineInvoiceIds)
                 ->where('type', $request->type)
                 ->delete();
@@ -133,41 +146,44 @@ class MedicineInvoiceController extends Controller
         }
 
         try {
-            $totalNetAmount = 0;
 
             $items = $validatedData['item_id'];
             foreach ($items as $index => $itemId) {
-                $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
-                $totalNetAmount += $netAmount;
+
+                $price = in_array($request->type, ['Sale', 'Adjust Out']) ? $validatedData['sale_price'][$index] : $validatedData['purchase_price'][$index];
+                $netAmount = ($price * $validatedData['quantity'][$index]) - ($validatedData['discount_in_rs'][$index] ?? 0);
+                $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
 
                 $medicineInvoice = MedicineInvoice::create([
-                    'date' => $validatedData['date'],
+                    'date' => $date,
                     'account_id' => $validatedData['account'],
                     'ref_no' => $validatedData['ref_no'],
                     'description' => $validatedData['description'],
                     'invoice_no' => $invoiceNumber,
                     'type' => $request->type,
-                    'stock_type' => in_array($request->type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
+                    'stock_type' => in_array($request->type, ['Purchase', 'Adjust In']) ? 'In' : 'Out',
                     'item_id' => $itemId,
                     'purchase_price' => $validatedData['purchase_price'][$index],
-                    'sale_price' => 0,
-                    'quantity' => $validatedData['quantity'][$index],
-                    'amount' => $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index],
+                    'sale_price' => $validatedData['sale_price'][$index],
+                    'quantity' => in_array($request->type, ['Sale', 'Adjust Out']) ? -$validatedData['quantity'][$index] : $validatedData['quantity'][$index],
+                    'amount' => $validatedData['amount'][$index],
                     'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
                     'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
+                    'total_cost' => in_array($request->type, ['Sale', 'Adjust Out']) ? -$costAmount : $netAmount,
                     'net_amount' => $netAmount,
                     'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                     'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
                 ]);
                 $item = Item::find($itemId);
+
                 AccountLedger::create([
                     'medicine_invoice_id' => $medicineInvoice->id,
                     'type'  => $request->type,
-                    'date' => $validatedData['date'],
+                    'date' => $date,
                     'account_id' => $validatedData['account'],
-                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['purchase_price'][$index],
-                    'debit' => 0,
-                    'credit' => $netAmount,
+                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $price,
+                    'debit' => in_array($request->type, ['Sale', 'Adjust Out']) ? $netAmount : 0,
+                    'credit' => in_array($request->type, ['Purchase', 'Adjust In']) ? $netAmount : 0,
                 ]);
             }
 
@@ -175,134 +191,43 @@ class MedicineInvoiceController extends Controller
 
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
+            info($e);
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function storeSale(Request $request)
+    private function validateStockQuantities($validatedData)
     {
-        // Validate request data
-        $validator = Validator::make($request->all(), [
-            'date' => 'required|date',
-            'account' => 'required|exists:accounts,id',
-            'ref_no' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'id.*' => 'required|exists:expiry_stocks,id',
-            'id.*' => 'required|exists:expiry_stocks,id',
-            'purchase_price.*' => 'required|numeric',
-            'sale_price.*' => 'required|numeric',
-            'quantity.*' => 'required|integer',
-            'amount.*' => 'required|numeric',
-            'discount_in_rs.*' => 'nullable|numeric',
-            'discount_in_percent.*' => 'nullable|numeric',
-            'expiry_date.*' => 'nullable|date',
-            'whatsapp_status' => 'nullable|boolean',
-        ]);
-
-        // Check if validation fails
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $validatedData = $validator->validated();
-
-        $items = collect($request->input('item_id'));
-        $ids = collect($request->input('id'));
-        $quantities = collect($request->input('quantity'));
-        $groupedItems = $ids->zip($quantities)->groupBy(0)->map(function ($group) {
-            return $group->sum(1);
-        });
+        $products = $this->medicineInvoice->getStockInfo();
 
         $stockErrors = [];
+        $stockQuantities = [];
 
-        $groupedItems->each(function ($quantity, $id) use (&$stockErrors) {
-            $expiryStock = ExpiryStock::find($id);
-            if ($expiryStock->quantity < $quantity) {
-                $itemName = $expiryStock->item->name ?? 'Unknown';
-                $stockErrors["id.$id"] = ['Insufficient stock for item ' . $expiryStock->item->name];
-            }
-        });
-
-        // Return stock errors if any
-        if (!empty($stockErrors)) {
-            return response()->json([
-                'errors' => $stockErrors
-            ], 422);
+        foreach ($validatedData['id'] as $index => $item_id) {
+            $quantity = $validatedData['quantity'][$index];
+            $stockQuantities[$item_id] = isset($stockQuantities[$item_id]) ? $stockQuantities[$item_id] + $quantity : $quantity;
         }
-        $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
 
-        DB::beginTransaction();
+        foreach ($stockQuantities as $item_id => $summedQuantity) {
+            $filteredProducts = $products->filter(function ($product) use ($item_id) {
+                return $product->id == $item_id;
+            });
 
-        try {
-            $totalNetAmount = 0;
-
-            foreach ($items as $index => $itemId) {
-                $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
-                $totalNetAmount += $netAmount;
-
-                $medicineInvoice = MedicineInvoice::create([
-                    'date' => $validatedData['date'],
-                    'account_id' => $validatedData['account'],
-                    'ref_no' => $validatedData['ref_no'],
-                    'description' => $validatedData['description'],
-                    'invoice_no' => $invoiceNumber,
-                    'type' => $request->type,
-                    'stock_type' => in_array($request->type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
-                    'item_id' => $itemId,
-                    'purchase_price' => $validatedData['purchase_price'][$index],
-                    'sale_price' => $validatedData['sale_price'][$index],
-                    'quantity' => $validatedData['quantity'][$index],
-                    'amount' => $validatedData['quantity'][$index] * $validatedData['sale_price'][$index],
-                    'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
-                    'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
-                    'net_amount' => $netAmount,
-                    'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
-                    'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
-                ]);
-
-                $expiryStock = ExpiryStock::where('item_id', $itemId)
-                    ->where('expiry_date', $validatedData['expiry_date'][$index] ?? null)
-                    ->first();
-
-                $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
-
-                if ($expiryStock) {
-                    $expiryStock->quantity -= $validatedData['quantity'][$index];
-                    $expiryStock->rate -= $costAmount;
-                    $expiryStock->save();
-                } else {
-                    ExpiryStock::create([
-                        'date' => $validatedData['date'],
-                        'medicine_invoice_id' => $medicineInvoice->id,
-                        'item_id' => $itemId,
-                        'rate' => $costAmount,
-                        'quantity' => $validatedData['quantity'][$index],
-                        'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
-                    ]);
+            if ($filteredProducts->isEmpty()) {
+                $stockErrors["item_id.$item_id"] = ['Product not found'];
+            } else {
+                $totalStockQuantity = $filteredProducts->sum('quantity');
+                if ($totalStockQuantity < $summedQuantity) {
+                    $itemName = $filteredProducts->first()->name;
+                    $stockErrors["item_id.$item_id"] = ['Insufficient stock for item ' . $itemName];
                 }
-
-                AccountLedger::create([
-                    'medicine_invoice_id' => $medicineInvoice->id,
-                    'type' => $request->type,
-                    'date' => $validatedData['date'],
-                    'account_id' => $validatedData['account'],
-                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['sale_price'][$index],
-                    'debit' => $netAmount,
-                    'credit' => 0,
-                ]);
             }
-            $file_url = 'https://www.clickdimensions.com/links/TestPDFfile.pdf';
-            $this->sendWhatsAppMessage('923003025291', 'Welcome to Laravel', $file_url);
-            DB::commit();
-            return response()->json(['success' => true], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
         }
+
+        return $stockErrors;
     }
+
 
 
     public function singleReturn(Request $request)
@@ -314,20 +239,29 @@ class MedicineInvoiceController extends Controller
             'type' => 'required',
         ]);
         $type = $validatedData['type'];
-        $originalInvoice = MedicineInvoice::findOrFail($validatedData['medicine_invoice_id']);
 
-        $expiryStock = ExpiryStock::where('item_id', $originalInvoice->item_id)
-            ->where('expiry_date', $originalInvoice->expiry_date)
-            ->first();
+        $originalInvoice = $this->medicineInvoice->findOrFail($validatedData['medicine_invoice_id']);
+
+        $stockInfo = $this->medicineInvoice->getStockInfo();
+
+        $stock = $stockInfo->first(function ($item) use ($originalInvoice) {
+            return $item->item_id == $originalInvoice->item_id
+                && $item->expiry_date == $originalInvoice->expiry_date;
+        });
+
+        if (!$stock) {
+            return response()->json(['error' => 'Stock not found for the given item and expiry date'], 422);
+        }
 
         if ($type == 'Purchase Return' ||  $type == 'Ajust Out') {
-            $price  = $originalInvoice->purchase_price;
-            if ($expiryStock->quantity < $validatedData['quantity']) {
-                return response()->json(['error' => 'Insufficient stock for the return. (' . $expiryStock->quantity . ')'], 422);
+            $price = $originalInvoice->purchase_price;
+            if ($stock->quantity < $validatedData['quantity']) {
+                return response()->json(['error' => 'Insufficient stock for the return. (' . $stock->quantity . ')'], 422);
             }
         } else {
-            $price  = $originalInvoice->sale_price;
+            $price = $originalInvoice->sale_price;
         }
+
 
         DB::beginTransaction();
         try {
@@ -351,22 +285,11 @@ class MedicineInvoiceController extends Controller
                 'amount' => $amount,
                 'discount_in_rs' => $originalInvoice->discount_in_rs,
                 'discount_in_percent' => $originalInvoice->discount_in_percent,
+                'total_cost' => $$validatedData['quantity'] * $originalInvoice->purchase_price,
                 'net_amount' => $netAmount,
                 'expiry_date' => $originalInvoice->expiry_date,
                 'whatsapp_status' => 'Not Sent',
             ]);
-
-            if ($type == 'Purchase Return') {
-                $costPrice =  ($originalInvoice->purchase_price * $validatedData['quantity']) - $originalInvoice->discount_in_rs;
-                $expiryStock->quantity -= $validatedData['quantity'];
-                $expiryStock->rate -= $costPrice;
-            } else {
-                $costPrice =  ($originalInvoice->purchase_price * $validatedData['quantity']);
-                $expiryStock->quantity += $validatedData['quantity'];
-                $expiryStock->rate += $costPrice;
-            }
-
-            $expiryStock->save();
 
             $debit = 0;
             $credit = 0;

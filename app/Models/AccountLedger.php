@@ -17,6 +17,7 @@ class AccountLedger extends Model
     protected $fillable = [
         'account_id',
         'type',
+        'date',
         'medicine_invoice_id',
         'chick_invoice_id',
         'murghi_invoice_id',

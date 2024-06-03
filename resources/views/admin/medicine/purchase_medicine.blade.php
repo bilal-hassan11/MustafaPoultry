@@ -271,6 +271,7 @@
                     </td>
                     <td class="purchase_rate_col">
                         <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;" required>
+                        <input type="hidden" name="sale_price[]" class="form-control saleRate text-right" value="0" step="any" style="text-align: right;" required>
                     </td>
                     <td class="expiry_date">
                         <input type="date" name="expiry_date[]" class="form-control text-right">

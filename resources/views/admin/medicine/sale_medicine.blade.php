@@ -110,7 +110,7 @@
                                         <select class="form-control select2" name="account_id" id="account_id2">
                                             <option value="">Select Account</option>
                                             @foreach ($accounts as $account)
-                                                <option value="{{ $account->hashid }}">{{ $account->name }}</option>
+                                                <option value="{{ $account->id }}">{{ $account->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -123,7 +123,7 @@
                                         <select class="form-control select2" name="item_id" id="item_id">
                                             <option value="">Select Item</option>
                                             @foreach ($products as $item)
-                                                <option value="{{ $item->hashid }}">{{ $item->name }}</option>
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -251,15 +251,16 @@
                             @php
                                 $qty = $product->quantity;
                                 $expiry_date = $product->expiry_date;
-                                $purchasePrice = $qty != 0 ? $product->rate / $qty : 0;
                             @endphp    
-                            <option value="{{ $product->id }}" data-price="{{ $product->item->last_sale_price }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
-                                {{ $product->item->name . ' - ' . $product->expiry_date ?? '' }}
+                            <option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
+                                {{ $product->name . ' - ' . $product->expiry_date ?? '' }}
                             </option>
+                           
+                </td>
                         @endforeach
                     </select>
-                    <input type="hidden" name="item_id[]" class="item_id">
                     @endif
+                    <input type="hidden" name="item_id[]" class="item_id">
                 </td>
                 <td class="quantity_col">
                     <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
@@ -321,7 +322,9 @@
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
                 $selectElement.closest('tr').find('.expiry_date').val(expirydate);
                 $selectElement.closest('tr').find('.quantity').attr('max', qty);
-                $selectElement.closest('tr').find('.saleRate').attr('min', purchasePrice);
+                $selectElement.closest('tr').find('.quantity').attr('title', 'Available stock :' + qty);
+                $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' +
+                    purchasePrice);
                 $selectElement.closest('tr').find('.item_id').val(itemID);
                 Calculation();
             }
@@ -339,7 +342,7 @@
                 $("#saveButton").attr("disabled", true);
 
                 $.ajax({
-                    url: "{{ route('admin.medicine-invoices.store-sale') }}",
+                    url: "{{ route('admin.medicine-invoices.store') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {

@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\StockTrait;
 
 class MedicineInvoice extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, StockTrait;
 
     protected $fillable = [
         'date',
@@ -23,6 +24,7 @@ class MedicineInvoice extends Model
         'amount',
         'discount_in_rs',
         'discount_in_percent',
+        'total_cost',
         'net_amount',
         'expiry_date',
         'type',
@@ -46,13 +48,5 @@ class MedicineInvoice extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
-    }
-
-    /**
-     * Get the expiry stocks for the item.
-     */
-    public function expiryStocks()
-    {
-        return $this->hasMany(ExpiryStock::class);
     }
 }
