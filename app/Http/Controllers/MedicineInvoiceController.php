@@ -8,7 +8,6 @@ use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use App\Models\AccountLedger;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Traits\SendsWhatsAppMessages;
 use Mpdf\Mpdf;
 
@@ -85,7 +84,7 @@ class MedicineInvoiceController extends Controller
         $medicineInvoice = new MedicineInvoice();
 
         $products = $medicineInvoice->getStockInfo();
-
+        // dd($products);
         $sale_medicine = $medicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
