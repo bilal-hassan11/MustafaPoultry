@@ -10,6 +10,7 @@ use App\Traits\StockTrait;
 class MedicineInvoice extends Model
 {
     use HasFactory, SoftDeletes, StockTrait;
+    protected $table = "medicine_invoices";
 
     protected $fillable = [
         'date',

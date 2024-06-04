@@ -101,18 +101,19 @@
                         <th class="text-center" style="width:10%">Quantity</th>
                         <th class="text-center" style="width:15%">Average Amount</th>
                         <th class="text-center" style="width:15%">Amount</th>
+                        <th class="text-center" style="width:15%">Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($stocks as $stock)
                         <tr>
                             <td class="text-center">{{ $stock->id }}</td>
-                            <td class="text-center">{{ $stock->item->name }}</td>
+                            <td class="text-center">{{ $stock->name }}</td>
                             <td class="text-center">{{ $stock->expiry_date }}</td>
                             <td class="text-right">{{ $stock->quantity }}</td>
                             <td class="text-right">Rs {{ number_format($stock->average_price, 2) }}</td>
-                            <td class="text-right">Rs {{ $stock->rate }}</td>
-
+                            <td class="text-right">Rs {{ $stock->total_cost }}</td>
+                            <td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -121,7 +122,8 @@
                         <td colspan="5" class="text-right">
                             <h4>Grand Total :</h4>
                         </td>
-                        <td class="text-right">Rs {{ number_format($stocks->sum('rate'), 2) }}</td>
+                        <td class="text-right">Rs {{ number_format($stocks->sum('total_cost'), 2) }}</td>
+                        <td></td>
                     </tr>
                 </tfoot>
             </table>

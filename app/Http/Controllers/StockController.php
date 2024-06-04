@@ -4,38 +4,60 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\ExpiryStock;
+use App\Models\ChickInvoice;
+use App\Models\FeedInvoice;
 use App\Models\Item;
 use App\Models\MedicineInvoice;
+use App\Models\MurghiInvoice;
+use App\Models\OtherInvoice;
 use Mpdf\Mpdf;
 use Yajra\DataTables\Facades\DataTables;
 
 class StockController extends Controller
 {
+    protected $stockInfo;
+
+    public function __construct(
+        MedicineInvoice $medicineInvoice,
+        ChickInvoice $chickInvoice,
+        FeedInvoice $feedInvoice,
+        OtherInvoice $otherInvoice,
+        MurghiInvoice $murghiInvoice
+    ) {
+        $medicineStockInfo = $medicineInvoice->getStockInfo();
+        $chickStockInfo = $chickInvoice->getStockInfo();
+        $feedStockInfo = $feedInvoice->getStockInfo();
+        $otherStockInfo = $otherInvoice->getStockInfo();
+        $murghiStockInfo = $murghiInvoice->getStockInfo();
+
+        $this->stockInfo = $medicineStockInfo
+            ->merge($chickStockInfo)
+            ->merge($feedStockInfo)
+            ->merge($otherStockInfo)
+            ->merge($murghiStockInfo);
+    }
     public function index(Request $request)
     {
         $categories = Category::all();
-        $query = ExpiryStock::with('item.category')
-            ->where(function ($query) {
-                $query->where('quantity', '>', 0)
-                    ->orWhereNull('quantity');
-            });
+        $item_id = $request->item_id;
+        $category_id = $request->category;
 
-        if ($request->filled('category')) {
-            $query->whereHas('item', function ($q) use ($request) {
-                $q->where('category_id', $request->category);
+        if ($request->filled('item_id')) {
+            $stocks = $this->stockInfo->filter(function ($item) use ($item_id) {
+                return $item->item_id == $item_id;
             });
+        } elseif ($request->filled('category')) {
+            $stocks = $this->stockInfo->filter(function ($item) use ($category_id) {
+                return $item->category_id == $category_id;
+            });
+        } else {
+            $stocks = $this->stockInfo;
         }
 
-        if ($request->filled('item')) {
-            $query->where('item_id', $request->item);
-        }
-
-        $stocks = $query->orderBy('item_id')->get();
-        $grandTotal = $query->sum('rate');
+        $grandTotal = $stocks->sum('total_cost');
 
         if ($request->ajax()) {
-            return DataTables::of($query)
+            return DataTables::of($stocks)
                 ->editColumn('avg_amount', fn ($stock) => number_format($stock->average_price, 2))
                 ->editColumn('expiry_date', fn ($stock) => $stock->expiry_date ?? 'N/A')
                 ->with('grandTotal', number_format($grandTotal, 2))
@@ -66,26 +88,31 @@ class StockController extends Controller
 
     public function expiryStockReport(Request $request)
     {
-        $query = ExpiryStock::with('item')->whereNot('expiry_date', null);
+        $medicineInvoice = new MedicineInvoice();
+        $query = $medicineInvoice->getStockInfo();
 
         if ($request->ajax()) {
             if ($request->filled('category')) {
-                $query->whereHas('item', function ($q) use ($request) {
-                    $q->where('category_id', $request->category);
+                $query = $query->filter(function ($item) use ($request) {
+                    return $item->category_id == $request->category;
                 });
             }
 
             if ($request->filled('item')) {
-                $query->where('item_id', $request->item);
+                $query = $query->filter(function ($item) use ($request) {
+                    return $item->item_id == $request->item;
+                });
             }
 
             if ($request->filled('from_date') && $request->filled('to_date')) {
-                $query->whereBetween('expiry_date', [$request->from_date, $request->to_date]);
+                $query = $query->filter(function ($item) use ($request) {
+                    return $item->expiry_date >= $request->from_date && $item->expiry_date <= $request->to_date;
+                });
             }
 
             return DataTables::of($query)
-                ->addColumn('item.name', function (ExpiryStock $stock) {
-                    return $stock->item->name;
+                ->addColumn('item.name', function ($item) {
+                    return $item->name;
                 })
                 ->make(true);
         }
@@ -96,20 +123,21 @@ class StockController extends Controller
 
     public function lowStockReport(Request $request)
     {
-        $query = ExpiryStock::with('item.category')->where('quantity', '<', 10);
+        $medicineInvoice = new MedicineInvoice();
+        $query = $medicineInvoice->getStockInfo()->filter(function ($item) {
+            return $item->quantity < 10;
+        });
 
         if ($request->ajax()) {
             return DataTables::of($query)
-                ->addColumn('item.name', function (ExpiryStock $stock) {
-                    return $stock->item->name;
+                ->addColumn('item.name', function ($item) {
+                    return $item->name;
                 })
                 ->make(true);
         }
 
         return view('admin.stock.low_stock_report');
     }
-
-
 
     public function maxSellingReport(Request $request)
     {

@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\StockTrait;
 
 class OtherInvoice extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory, SoftDeletes, StockTrait;
+    protected $table = "other_invoices";
     protected $fillable = [
         'date',
         'invoice_no',
@@ -47,10 +48,5 @@ class OtherInvoice extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
-    }
-
-    public function expiryStocks()
-    {
-        return $this->hasMany(ExpiryStock::class);
     }
 }

@@ -98,8 +98,8 @@
                         name: 'id'
                     },
                     {
-                        data: 'item.name',
-                        name: 'item.name'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
                         data: 'quantity',
@@ -119,8 +119,8 @@
                         }
                     },
                     {
-                        data: 'rate',
-                        name: 'rate',
+                        data: 'total_cost',
+                        name: 'total_cost',
                         render: function(data, type, row) {
                             return '<span style="text-align: right; display: block;">Rs ' +
                                 data +
