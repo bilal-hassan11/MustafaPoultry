@@ -86,7 +86,7 @@
                 <thead>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <h2>{{ strtoupper($type) }} INVOICE</h2>
+                            <h2>{{ strtoupper($medicineInvoice[0]->type) }} INVOICE</h2>
                         </td>
                         <td class="text-center">
                             <h2>#{{ $medicineInvoice[0]->invoice_no }}</h2>
@@ -133,7 +133,7 @@
 
                             <td class="text-right">{{ abs($item->quantity) }}</td>
                             <td class="text-right">Rs
-                                {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
+                                {{ number_format($medicineInvoice[0]->type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                             </td>
                             <td class="text-right">Rs {{ number_format($item->discount_in_rs, 2) }}</td>
                             <td class="text-right">{{ number_format($item->discount_in_percent, 2) }}%</td>
@@ -142,7 +142,7 @@
                         @php
                             $subtotal +=
                                 abs($item->quantity) *
-                                ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
+                                ($medicineInvoice[0]->type == 'Purchase' ? $item->purchase_price : $item->sale_price);
                             $totalDiscountRs += $item->discount_in_rs;
                         @endphp
                     @endforeach

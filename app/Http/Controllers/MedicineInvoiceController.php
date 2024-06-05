@@ -10,11 +10,13 @@ use App\Models\AccountLedger;
 use Illuminate\Http\Request;
 use App\Traits\SendsWhatsAppMessages;
 use Mpdf\Mpdf;
+use App\Traits\GeneratePdfTrait;
 
 class MedicineInvoiceController extends Controller
 {
 
     use SendsWhatsAppMessages;
+    use GeneratePdfTrait;
     protected $medicineInvoice;
 
     public function __construct(MedicineInvoice $medicineInvoice)
@@ -49,11 +51,11 @@ class MedicineInvoiceController extends Controller
 
         $pending_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Purchase')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get();     
+            ->get();
 
-        return view('admin.medicine.purchase_medicine', compact(['title','pending_medicine' , 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
+        return view('admin.medicine.purchase_medicine', compact(['title', 'pending_medicine', 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
     }
 
     public function editPurchase($invoice_no)
@@ -79,11 +81,11 @@ class MedicineInvoiceController extends Controller
 
         $pending_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
+            ->get();
 
-        return view('admin.medicine.edit_sale_medicine', compact(['title','pending_medicine', 'accounts', 'products', 'medicineInvoice']));
+        return view('admin.medicine.edit_sale_medicine', compact(['title', 'pending_medicine', 'accounts', 'products', 'medicineInvoice']));
     }
 
     public function createSale(Request $req)
@@ -116,11 +118,11 @@ class MedicineInvoiceController extends Controller
 
         $pending_medicine = $medicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
-            
-        return view('admin.medicine.sale_medicine', compact(['title','pending_medicine', 'sale_medicine', 'invoice_no', 'accounts', 'products']));
+            ->get();
+
+        return view('admin.medicine.sale_medicine', compact(['title', 'pending_medicine', 'sale_medicine', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -214,12 +216,19 @@ class MedicineInvoiceController extends Controller
                     'credit' => in_array($request->type, ['Purchase', 'Adjust In']) ? $netAmount : 0,
                 ]);
             }
-
+            if ($request->type == 'Sale') {
+                $medicineInvoice = MedicineInvoice::where('invoice_no', $medicineInvoice->invoice_no)
+                    ->where('type', $request->type)
+                    ->with('account', 'item')
+                    ->get();
+                // dd($medicineInvoice[0]->account->phone_no);
+                $htmlContent = view('admin.medicine.invoice_pdf', compact('medicineInvoice'))->render();
+                $pdfPath = $this->generatePdf($htmlContent, 'Sale-' . $medicineInvoice[0]->invoice_no);
+                $result = $this->sendWhatsAppMessage($medicineInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
+            }
             DB::commit();
-
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
-            info($e);
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
