@@ -98,7 +98,7 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
+                            <h3 class="card-title mb-0"> Sale Medicine Filters</h3>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('admin.medicine-invoices.sale') }}" method="GET">
@@ -146,7 +146,76 @@
                 </div>
                 <!-- COL END -->
             </div>
+            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <div class="ms-auto pageheader-btn"> 
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
+                </div> 
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    
+                    
+                    <div class="card-body">
+                        
+                        <div class="modal fade" id="modaldemo8" style="display: none" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                                <div class="modal-content modal-content-demo">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title">Pending Sales</h6>
+                                        <button
+                                        aria-label="Close"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        ></button>
+                                    </div>
+                                    <div class="modal-body text-start">
+                                    <table id="example54" class="text-fade table table-bordered" >
+                                        <thead>
+                                            <tr class="text-dark">
+                                                <th>Account</th>
+                                                <th>Item</th>
+                                                <th>Qty</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($pending_medicine as $pending)
+                                                <tr class="text-dark">
+                                                    
+                                                    <td style="width: 15%; !important"><span
+                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                    </td>
 
+                                                    <td style="width: 10%; !important"><span
+                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
+                                                    </td>
+                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
+                                                    <td style="width: 20%; !important">
+                                                        
+                                                        <a href="{{ route('admin.medicine-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"
+                                                            title="Edit"><button
+                                                                class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                                    class="ri-edit-line"></i></button>
+                                                        </a>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        
+                                    </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" data-bs-dismiss="modal">
+                                        Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 col-sm-12">
                     <div class="card ">
@@ -185,9 +254,9 @@
                                                     class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
                                             </td>
                                             <td style="width: 10%; !important">
-                                                {{ number_format(@$sale->net_amount / @$sale->quantity, 2) }}</td>
+                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}</td>
                                             <?php $tot_q += $sale->quantity; ?>
-                                            <td style="width: 10%; !important">{{ $sale->quantity }}</td>
+                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}</td>
                                             <?php $tot_amt += $sale->net_amount; ?>
                                             <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
                                             <td style="width: 20%; !important">
@@ -218,7 +287,7 @@
                                         <th>-</th>
                                         <th>-</th>
                                         <th>-</th>
-                                        <th>{{ $tot_q }}</th>
+                                        <th>{{ abs($tot_q) }}</th>
                                         <th>{{ $tot_amt }}</th>
                                         <th>-</th>
                                     </tr>

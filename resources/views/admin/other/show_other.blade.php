@@ -10,10 +10,10 @@
                     <div class="card-header bg-primary text-white">
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>Invoice #{{ $FeedInvoice[0]->invoice_no }}</h3>
-                                <p class="mb-0">Date: {{ $FeedInvoice[0]->date }}</p>
-                                <p class="mb-0">Account: {{ $FeedInvoice[0]->account->name }}</p>
-                                <p class="mb-0">Description: {{ $FeedInvoice[0]->description }}</p>
+                                <h3>Invoice #{{ $OtherInvoice[0]->invoice_no }}</h3>
+                                <p class="mb-0">Date: {{ $OtherInvoice[0]->date }}</p>
+                                <p class="mb-0">Account: {{ $OtherInvoice[0]->account->name }}</p>
+                                <p class="mb-0">Description: {{ $OtherInvoice[0]->description }}</p>
                             </div>
                             <div class="col-md-4" style="text-align: right;">
                                 <a class="btn btn-secondary mb-3" href="{{ url()->previous() }}">
@@ -43,7 +43,7 @@
                                     $subtotal = 0;
                                     $totalDiscountRs = 0;
                                 @endphp
-                                @foreach ($FeedInvoice as $index => $item)
+                                @foreach ($OtherInvoice as $index => $item)
                                     <tr>
                                         <td style="text-align: center;">{{ $index + 1 }}</td>
                                         <td>{{ $item->item->name }}</td>
@@ -79,15 +79,15 @@
                             <tfoot style="text-align: right;">
                                 <tr>
                                     <th colspan="8">Subtotal</th>
-                                    <th>Rs {{ number_format($FeedInvoice->sum('amount'), 2) }}</th>
+                                    <th>Rs {{ number_format($OtherInvoice->sum('amount'), 2) }}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="8">Total Discount</th>
-                                    <th>Rs {{ number_format($FeedInvoice->sum('discount_in_rs'), 2) }}</th>
+                                    <th>Rs {{ number_format($OtherInvoice->sum('discount_in_rs'), 2) }}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="8">Net Amount</th>
-                                    <th>Rs {{ number_format($FeedInvoice->sum('net_amount'), 2) }}</th>
+                                    <th>Rs {{ number_format($OtherInvoice->sum('net_amount'), 2) }}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -111,7 +111,7 @@
                 <div class="modal-body">
                     <form id="returnForm">
                         @csrf
-                        <input type="hidden" id="Feed_invoice_id" name="Feed_invoice_id">
+                        <input type="hidden" id="Other_invoice_id" name="Other_invoice_id">
                         <input type="hidden" id="type" name="type" value="{{ $type }} Return">
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
@@ -139,7 +139,7 @@
                 var description = $(this).data('description');
                 var totalreturned = $(this).data('totalreturned');
                 let remainingQty = quantity - totalreturned;
-                $('#Feed_invoice_id').val(id);
+                $('#Other_invoice_id').val(id);
                 $('#quantity').val(1);
                 $('#returnModal').modal('show');
                 $('#quantity').attr('max', remainingQty);
@@ -167,7 +167,7 @@
                 }
 
                 $.ajax({
-                    url: "{{ route('admin.feed-invoices.single-return') }}",
+                    url: "{{ route('admin.other-invoices.single-return') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {

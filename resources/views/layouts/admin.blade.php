@@ -732,6 +732,25 @@
 
                                     </ul>
                                 </li>
+                                <!-- Other -->
+                                <li class="slide">
+                                    <a class="side-menu__item {{ request()->is('web_admin/other-invoices/purchase') || request()->is('web_admin/other-invoices/sale') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file-text"
+                                            aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
+                                            class="side-menu__label">Others Items</span><i
+                                            class="angle fa fa-angle-right"></i></a>
+                                    <ul class="slide-menu">
+
+                                        <li><a href="{{ route('admin.other-invoices.purchase') }}"
+                                                class="slide-item {{ request()->is('web_admin/other-invoices/purchase') ? 'active open' : '' }}">
+                                                Purchase Other</a></li>
+                                        <li><a href="{{ route('admin.other-invoices.sale') }}"
+                                                class="slide-item {{ request()->is('web_admin/other-invoices/sale') ? 'active open' : '' }}">
+                                                Sale Other</a></li>
+
+
+                                    </ul>
+                                </li>
                                 <li> <a class="side-menu__item" href="{{ route('admin.stock.index') }}"><i
                                             class="side-menu__icon fe fe-grid"></i><span
                                             class="side-menu__label">Available Stock</span></a> </li>

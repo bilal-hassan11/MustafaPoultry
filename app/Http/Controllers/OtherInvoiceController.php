@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MedicineInvoice;
+use App\Models\OtherInvoice;
 use App\Models\Account;
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
@@ -11,26 +11,26 @@ use Illuminate\Http\Request;
 use App\Traits\SendsWhatsAppMessages;
 use Mpdf\Mpdf;
 
-class MedicineInvoiceController extends Controller
+class OtherInvoiceController extends Controller
 {
 
     use SendsWhatsAppMessages;
-    protected $medicineInvoice;
+    protected $OtherInvoice;
 
-    public function __construct(MedicineInvoice $medicineInvoice)
+    public function __construct(OtherInvoice $OtherInvoice)
     {
-        $this->medicineInvoice = $medicineInvoice;
+        $this->OtherInvoice = $OtherInvoice;
     }
 
     public function createPurchase(Request $req)
     {
-        $title = "Purchase Medicine";
-        $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase', 'invoice_no');
+        $title = "Purchase Other";
+        $invoice_no = generateUniqueID(new OtherInvoice, 'Purchase', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = Item::where('category_id', 4)->get();
+        $products = Item::where('category_id', 5)->get();
 
-        $purchase_medicine = MedicineInvoice::with('account', 'item')
+        $purchase_Other = OtherInvoice::with('account', 'item')
             ->where('type', 'Purchase')
             ->when(isset($req->account_id), function ($query) use ($req) {
                 $query->where('account_id', hashids_decode($req->account_id));
@@ -47,57 +47,57 @@ class MedicineInvoiceController extends Controller
             ->latest()
             ->get();
 
-        $pending_medicine = MedicineInvoice::with('account', 'item')
+        $pending_Other = OtherInvoice::with('account', 'item')
             ->where('type', 'Purchase')
             ->where('net_amount',0)
             ->latest()
             ->get();     
 
-        return view('admin.medicine.purchase_medicine', compact(['title','pending_medicine' , 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
+        return view('admin.other.purchase_other', compact(['title','pending_Other' , 'invoice_no', 'accounts', 'products', 'purchase_Other']));
     }
 
     public function editPurchase($invoice_no)
     {
-        $title = "Edit Purchase Medicine";
+        $title = "Edit Purchase Other";
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
-        $products = Item::where('category_id', 4)->get();
-        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+        $products = Item::where('category_id', 5)->get();
+        $OtherInvoice = OtherInvoice::where('invoice_no', $invoice_no)
             ->where('type', 'Purchase')
             ->with('account', 'item')
             ->get();
 
-        return view('admin.medicine.edit_purhcase_medicine', compact(['title', 'accounts', 'products', 'medicineInvoice']));
+        return view('admin.other.edit_purchase_other', compact(['title', 'accounts', 'products', 'OtherInvoice']));
     }
     public function editSale($invoice_no)
     {
-        $title = "Edit Sale Medicine";
+        $title = "Edit Sale Other";
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
-        $products = $this->medicineInvoice->getStockInfo();
-        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+        $products = $this->OtherInvoice->getStockInfo();
+        $OtherInvoice = OtherInvoice::where('invoice_no', $invoice_no)
             ->where('type', 'Sale')
             ->get();
 
-        $pending_medicine = MedicineInvoice::with('account', 'item')
+        $pending_Other = OtherInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->where('net_amount',0)
             ->latest()
             ->get(); 
 
-        return view('admin.medicine.edit_sale_medicine', compact(['title','pending_medicine', 'accounts', 'products', 'medicineInvoice']));
+        return view('admin.other.edit_sale_other', compact(['title','pending_Other', 'accounts', 'products', 'OtherInvoice']));
     }
 
     public function createSale(Request $req)
     {
 
-        $title = "Sale Medicine";
-        $invoice_no = generateUniqueID(new MedicineInvoice, 'Sale', 'invoice_no');
+        $title = "Sale Other";
+        $invoice_no = generateUniqueID(new OtherInvoice, 'Sale', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $medicineInvoice = new MedicineInvoice();
+        $OtherInvoice = new OtherInvoice();
 
-        $products = $medicineInvoice->getStockInfo();
+        $products = $OtherInvoice->getStockInfo();
         // dd($products);
-        $sale_medicine = $medicineInvoice::with('account', 'item')
+        $sale_Other = $OtherInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
                 $query->where('account_id', hashids_decode($req->account_id));
@@ -114,13 +114,13 @@ class MedicineInvoiceController extends Controller
             ->latest()
             ->get();
 
-        $pending_medicine = $medicineInvoice::with('account', 'item')
+        $pending_Other = $OtherInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->where('net_amount',0)
             ->latest()
             ->get(); 
             
-        return view('admin.medicine.sale_medicine', compact(['title','pending_medicine', 'sale_medicine', 'invoice_no', 'accounts', 'products']));
+        return view('admin.other.sale_other', compact(['title','pending_Other', 'sale_Other', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -161,16 +161,16 @@ class MedicineInvoiceController extends Controller
         DB::beginTransaction();
         if ($request->has('editMode')) {
             $invoiceNumber = $request->invoice_no;
-            $medicineInvoices = MedicineInvoice::where('invoice_no', $invoiceNumber)
+            $OtherInvoices = OtherInvoice::where('invoice_no', $invoiceNumber)
                 ->where('type', $request->type)
                 ->get();
-            $medicineInvoiceIds = $medicineInvoices->pluck('id');
-            MedicineInvoice::whereIn('id', $medicineInvoiceIds)->delete();
-            AccountLedger::whereIn('medicine_invoice_id', $medicineInvoiceIds)
+            $OtherInvoiceIds = $OtherInvoices->pluck('id');
+            OtherInvoice::whereIn('id', $OtherInvoiceIds)->delete();
+            AccountLedger::whereIn('other_invoice_id', $OtherInvoiceIds)
                 ->where('type', $request->type)
                 ->delete();
         } else {
-            $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
+            $invoiceNumber = generateUniqueID(new OtherInvoice, $request->type, 'invoice_no');
         }
 
         try {
@@ -182,7 +182,7 @@ class MedicineInvoiceController extends Controller
                 $netAmount = ($price * $validatedData['quantity'][$index]) - ($validatedData['discount_in_rs'][$index] ?? 0);
                 $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
 
-                $medicineInvoice = MedicineInvoice::create([
+                $OtherInvoice = OtherInvoice::create([
                     'date' => $date,
                     'account_id' => $validatedData['account'],
                     'ref_no' => $validatedData['ref_no'],
@@ -205,7 +205,7 @@ class MedicineInvoiceController extends Controller
                 $item = Item::find($itemId);
 
                 AccountLedger::create([
-                    'medicine_invoice_id' => $medicineInvoice->id,
+                    'other_invoice_id' => $OtherInvoice->id,
                     'type'  => $request->type,
                     'date' => $date,
                     'account_id' => $validatedData['account'],
@@ -227,7 +227,7 @@ class MedicineInvoiceController extends Controller
 
     private function validateStockQuantities($validatedData)
     {
-        $products = $this->medicineInvoice->getStockInfo();
+        $products = $this->OtherInvoice->getStockInfo();
 
         $stockErrors = [];
         $stockQuantities = [];
@@ -261,16 +261,16 @@ class MedicineInvoiceController extends Controller
     public function singleReturn(Request $request)
     {
         $validatedData = $request->validate([
-            'medicine_invoice_id' => 'required|exists:medicine_invoices,id',
+            'Other_invoice_id' => 'required|exists:Other_invoices,id',
             'quantity' => 'required|integer|min:1',
             'description' => 'nullable|string',
             'type' => 'required',
         ]);
         $type = $validatedData['type'];
 
-        $originalInvoice = $this->medicineInvoice->findOrFail($validatedData['medicine_invoice_id']);
+        $originalInvoice = $this->OtherInvoice->findOrFail($validatedData['Other_invoice_id']);
 
-        $stockInfo = $this->medicineInvoice->getStockInfo();
+        $stockInfo = $this->OtherInvoice->getStockInfo();
 
         $stock = $stockInfo->first(function ($item) use ($originalInvoice) {
             return $item->item_id == $originalInvoice->item_id
@@ -293,15 +293,15 @@ class MedicineInvoiceController extends Controller
 
         DB::beginTransaction();
         try {
-            $invoiceNumber = generateUniqueID(new MedicineInvoice, $type, 'invoice_no');
+            $invoiceNumber = generateUniqueID(new OtherInvoice, $type, 'invoice_no');
             $amount =  $price * $validatedData['quantity'];
             $netAmount = $amount - $originalInvoice->discount_in_rs;
 
 
-            $medicineInvoice = MedicineInvoice::create([
+            $OtherInvoice = OtherInvoice::create([
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
-                'ref_no' => $validatedData['medicine_invoice_id'],
+                'ref_no' => $validatedData['Other_invoice_id'],
                 'description' => $validatedData['description'],
                 'invoice_no' => $invoiceNumber,
                 'type' => $validatedData['type'],
@@ -330,7 +330,7 @@ class MedicineInvoiceController extends Controller
             }
             $items = Item::find($originalInvoice->item_id);
             AccountLedger::create([
-                'medicine_invoice_id' => $medicineInvoice->id,
+                'other_invoice_id' => $OtherInvoice->id,
                 'type'  => $type,
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
@@ -361,31 +361,31 @@ class MedicineInvoiceController extends Controller
         preg_match('/\/(\w+)(?=\/\d+)/', $url, $matches);
         $type = isset($matches[1]) ? ucfirst($matches[1]) : 'Purchase';
 
-        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+        $OtherInvoice = OtherInvoice::where('invoice_no', $invoice_no)
             ->where('type', $type)
             ->with('account', 'item')
             ->get();
 
-        if ($medicineInvoice->isEmpty()) {
-            abort(404, 'Medicine Invoice not found');
+        if ($OtherInvoice->isEmpty()) {
+            abort(404, 'Other Invoice not found');
         }
 
-        $medicineInvoiceIds = $medicineInvoice->pluck('id');
+        $OtherInvoiceIds = $OtherInvoice->pluck('id');
         $returnType = $type . ' Return';
 
-        $returnedQuantities = MedicineInvoice::whereIn('ref_no', $medicineInvoiceIds)
+        $returnedQuantities = OtherInvoice::whereIn('ref_no', $OtherInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
             ->select('ref_no', DB::raw('SUM(quantity) as total_returned'))
             ->pluck('total_returned', 'ref_no');
 
-        $medicineInvoice = $medicineInvoice->map(function ($item) use ($returnedQuantities) {
+        $OtherInvoice = $OtherInvoice->map(function ($item) use ($returnedQuantities) {
             $item->total_returned = $returnedQuantities->get($item->id, 0);
             return $item;
         });
 
         if (request()->has('generate_pdf')) {
-            $html = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'type'))->render();
+            $html = view('admin.other.invoice_pdf', compact('OtherInvoice', 'type'))->render();
             $mpdf = new Mpdf([
                 'format' => 'A4-P', 'margin_top' => 10,
                 'margin_bottom' => 2,
@@ -396,7 +396,7 @@ class MedicineInvoiceController extends Controller
             $mpdf->SetHTMLFooter('<div style="text-align: right;">Page {PAGENO} of {nbpg}</div>');
             return generatePDFResponse($html, $mpdf);
         } else {
-            return view('admin.medicine.show_medicine', compact('medicineInvoice', 'type'));
+            return view('admin.other.show_other', compact('OtherInvoice', 'type'));
         }
     }
 }

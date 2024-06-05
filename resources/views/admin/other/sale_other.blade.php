@@ -4,14 +4,14 @@
         <div class="side-app">
             <div class="card">
                 <div class="card-header">
-                    <h4>Purchase Chick</h4>
+                    <h4>Sale Other Items</h4>
                 </div>
                 <form id="formData">
                     @csrf
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-2 mb-3">
-                                <input type="hidden" name="type" class="form-control text-right" value="Purchase">
+                                <input type="hidden" name="type" class="form-control text-right" value="Sale">
                                 <label for="invoice_no" class="required">Invoice No</label>
                                 <input type="text" name="invoice_no" class="form-control" value="{{ $invoice_no }}"
                                     readonly>
@@ -39,7 +39,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
                         </div>
                     </div>
                     <div class="card-body" style="width: 100%; overflow-x: auto">
@@ -99,10 +98,10 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title mb-0"> Purchase Chick Filters</h3>
+                            <h3 class="card-title mb-0"> Sale Other Items Filters</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('admin.chick-invoices.purchase') }}" method="GET">
+                            <form action="{{ route('admin.other-invoices.sale') }}" method="GET">
                                 @csrf
                                 <div class="row">
 
@@ -111,7 +110,7 @@
                                         <select class="form-control select2" name="account_id" id="account_id2">
                                             <option value="">Select Account</option>
                                             @foreach ($accounts as $account)
-                                                <option value="{{ $account->hashid }}">{{ $account->name }}</option>
+                                                <option value="{{ $account->id }}">{{ $account->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -124,7 +123,7 @@
                                         <select class="form-control select2" name="item_id" id="item_id">
                                             <option value="">Select Item</option>
                                             @foreach ($products as $item)
-                                                <option value="{{ $item->hashid }}">{{ $item->name }}</option>
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -149,7 +148,7 @@
             </div>
             <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
                 <div class="ms-auto pageheader-btn"> 
-                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Purchases</a>
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
                 </div> 
             </div>
             <div class="row">
@@ -162,7 +161,7 @@
                             <div class="modal-dialog modal-dialog-centered text-center" role="document">
                                 <div class="modal-content modal-content-demo">
                                     <div class="modal-header">
-                                        <h6 class="modal-title">Pending Purchases</h6>
+                                        <h6 class="modal-title">Pending Sales</h6>
                                         <button
                                         aria-label="Close"
                                         class="btn-close"
@@ -180,7 +179,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pending_Chick as $pending)
+                                            @foreach ($pending_Other as $pending)
                                                 <tr class="text-dark">
                                                     
                                                     <td style="width: 15%; !important"><span
@@ -193,10 +192,10 @@
                                                     <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
                                                     <td style="width: 20%; !important">
                                                         
-                                                        <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                            href="{{ route('admin.chick-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
-                                                            title="Edit">
-                                                            <i class="ri-edit-line"></i>
+                                                        <a href="{{ route('admin.other-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"
+                                                            title="Edit"><button
+                                                                class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                                    class="ri-edit-line"></i></button>
                                                         </a>
                                                         
                                                     </td>
@@ -221,7 +220,7 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title mb-0">All Purchase Chick Detail</h3>
+                            <h3 class="card-title mb-0">All Other Items Sale Detail</h3>
                         </div>
                         <div class="card-body">
                             <table id="example54" class="text-fade table table-bordered" style="width:100%">
@@ -229,53 +228,53 @@
                                     <tr class="text-dark">
                                         <th>S.No</th>
                                         <th>Date</th>
-                                        <th>Invoice No</th>
-                                        <th>Account Name</th>
+                                        <th>Inv #</th>
+                                        <th>Account</th>
                                         <th>Item</th>
                                         <th>Rate</th>
                                         <th>Quantity</th>
-                                        <th>Net Ammount</th>
+                                        <th>Amount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $tot_q = 0;
                                     $tot_amt = 0; ?>
-                                    @foreach ($purchase_Chick as $purcahse)
+                                    @foreach ($sale_Other as $sale)
                                         <tr class="text-dark">
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
-                                            <td>{{ $purcahse->invoice_no }}</td>
-                                            <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? '' }}</span>
+                                            <td style="width: 5%; !important">{{ $loop->iteration }}</td>
+                                            <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($sale->date)) }}
+                                            </td>
+                                            <td style="width: 10%; !important">{{ $sale->invoice_no }}</td>
+                                            <td style="width: 15%; !important"><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $sale->account->name ?? '' }}</span>
                                             </td>
 
-                                            <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
+                                            <td style="width: 10%; !important"><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
                                             </td>
-                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
-                                            <?php $tot_q += $purcahse->quantity; ?>
-                                            <td>{{ $purcahse->quantity }}</td>
-                                            <?php $tot_amt += $purcahse->net_amount; ?>
-                                            <td>{{ $purcahse->net_amount }}</td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
-                                                        href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
-                                                        title="View">
-                                                        <i class="ri-eye-line"></i>
-                                                    </a>
-                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                        href="{{ route('admin.chick-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
-                                                        title="Edit">
-                                                        <i class="ri-edit-line"></i>
-                                                    </a>
-                                                    <a href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
-                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
-                                                        title="Download">
-                                                        <i class="ri-download-2-line"></i>
-                                                    </a>
-                                                </div>
+                                            <td style="width: 10%; !important">
+                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}</td>
+                                            <?php $tot_q += $sale->quantity; ?>
+                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}</td>
+                                            <?php $tot_amt += $sale->net_amount; ?>
+                                            <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
+                                            <td style="width: 20%; !important">
+                                                <a
+                                                    href="{{ route('admin.other-invoices.sale.show', ['invoice_no' => $sale->invoice_no]) }}"><button
+                                                        class="btn btn-outline-info  rounded-pill btn-wave"
+                                                        type="button">
+                                                        <i class="ri-eye-line"></i></a>
+                                                </button>
+                                                <a href="{{ route('admin.other-invoices.edit.sale', ['invoice_no' => $sale->invoice_no]) }}"
+                                                    title="Edit"><button
+                                                        class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                            class="ri-edit-line"></i></button>
+                                                </a>
+                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
+                                                    type="button">
+                                                    <i class="ri-download-2-line"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -288,7 +287,7 @@
                                         <th>-</th>
                                         <th>-</th>
                                         <th>-</th>
-                                        <th>{{ $tot_q }}</th>
+                                        <th>{{ abs($tot_q) }}</th>
                                         <th>{{ $tot_amt }}</th>
                                         <th>-</th>
                                     </tr>
@@ -301,72 +300,75 @@
                 <!-- COL END -->
             </div>
         </div>
-
     </div>
 @endsection
 @section('page-scripts')
     <script type="text/javascript">
         let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
+
         $(document).ready(function() {
 
+            // Initial Select2 initialization
             $('select.product_val').select2({
                 width: '100%',
             });
 
-            addRow();
-
-            $(".add-row").click(addRow);
-
+            // Function to add a new row
             function addRow() {
                 let row = `
-                <tr class="rows">
-                    <td class="product_col">
-                        @if ($products)
-                        <select class="form-control product product_val" name="item_id[]" id="products" required>
-                            <option value="">Select Items</option>
-                            @foreach ($products as $product)
-                                @php
-                                    $purchasePrice = $product->last_purchase_price ? $product->last_purchase_price : 1;
-                                @endphp
-                                <option value="{{ $product->id }}" data-price="{{ $purchasePrice }}">
-                                    {{ $product->name ?? '' }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @endif
-                    </td>
-                    <td class="quantity_col">
-                        <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
-                    </td>
-                    <td class="purchase_rate_col">
-                        <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;" required>
-                        <input type="hidden" name="sale_price[]" class="form-control saleRate text-right" value="0" step="any" style="text-align: right;" required>
-                    </td>
-                    <td class="expiry_date">
-                        <input type="date" name="expiry_date[]" class="form-control text-right">
-                    </td>
-                    <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
-                    <td class="dis_in_rs_col">
-                        <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
-                    </td>
-                    <td class="dis_in_percentage_col">
-                        <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
-                    </td>
-                    <td class="net_amount_col">
-                        <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
-                    </td>
-                    <td>
-                        <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
-                    </td>
-                </tr>
-                `;
+            <tr class="rows">
+                <td class="product_col">
+                    @if ($products)
+                    <select class="form-control product product_val" name="id[]" id="products" required>
+                        <option value="">Select Items</option>
+                        @foreach ($products as $product)
+                            @php
+                                $qty = $product->quantity;
+                                $expiry_date = $product->expiry_date;
+                            @endphp    
+                            <option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
+                                {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
+                            </option>
+                           @endforeach
+                    </select>
+                    @endif
+                    <input type="hidden" name="item_id[]" class="item_id">
+                </td>
+                <td class="quantity_col">
+                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                </td>
+                <input type="hidden" name="purchase_price[]" class="form-control purchaseRate text-right" value="1" step="any" style="text-align: right;">
+                <td class="sale_rate_col">
+                    <input type="number" name="sale_price[]" class="form-control saleRate text-right" value="1" step="any" style="text-align: right;" required>
+                </td>
+                <td class="expiry_date">
+                    <input type="text" name="expiry_date[]" class="form-control expiry_date text-right" readonly>
+                </td>
+                <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
+                <td class="dis_in_rs_col">
+                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
+                </td>
+                <td class="dis_in_percentage_col">
+                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
+                </td>
+                <td class="net_amount_col">
+                    <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
+                </td>
+                <td>
+                    <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
+                </td>
+            </tr>
+            `;
                 $("#row").append(row);
+
+                // Initialize select2 for the new row
                 $('select.product_val').select2({
                     width: '100%',
                 });
 
+                // Attach event handlers to the newly added row
                 $(".product_val").last().change(function() {
-                    updatePurchasePrice($(this));
+                    updatePriceQty($(this));
                 });
 
                 $(".dis_in_rs").last().on('input', function() {
@@ -375,14 +377,31 @@
 
             }
 
+            // Add initial row
+            addRow();
 
+            // Add new row on button click
+            $(".add-row").click(addRow);
 
-            function updatePurchasePrice($selectElement) {
-                let purchasePrice = $selectElement.find('option:selected').data('price');
+            // Update price, quantity, and expiry date based on the selected product
+            function updatePriceQty($selectElement) {
+                let salePrice = $selectElement.find('option:selected').data('price');
+                let qty = $selectElement.find('option:selected').data('qty');
+                let expirydate = $selectElement.find('option:selected').data('expiry_date');
+                let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
+                let itemID = $selectElement.find('option:selected').data('item_id');
+                $selectElement.closest('tr').find('.saleRate').val(salePrice);
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
+                $selectElement.closest('tr').find('.expiry_date').val(expirydate);
+                $selectElement.closest('tr').find('.quantity').attr('max', qty);
+                $selectElement.closest('tr').find('.quantity').attr('title', 'Available stock :' + qty);
+                $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' +
+                    purchasePrice);
+                $selectElement.closest('tr').find('.item_id').val(itemID);
                 Calculation();
             }
 
+            // Form submission
             $("#formData").submit(function(e) {
                 e.preventDefault();
 
@@ -395,7 +414,7 @@
                 $("#saveButton").attr("disabled", true);
 
                 $.ajax({
-                    url: "{{ route('admin.chick-invoices.store') }}",
+                    url: "{{ route('admin.other-invoices.store') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {
@@ -426,11 +445,12 @@
                 Calculation();
             });
 
-            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .dis_in_percentage",
-                function() {
-                    Calculation();
-                });
+            // Event handler for input changes
+            $("body").on("input keyup blur", ".quantity, .saleRate, .dis_in_percentage", function() {
+                Calculation();
+            });
 
+            // Calculation function
             function Calculation(isManualUpdate = false) {
                 let subtotal = 0;
                 let totalDiscount = 0;
@@ -439,7 +459,7 @@
                 $("tr.rows").each(function() {
                     let $row = $(this);
                     let qty = parseFloat($row.find(".quantity").val()) || 0;
-                    let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
+                    let rate = parseFloat($row.find(".saleRate").val()) || 0;
                     let amount = qty * rate;
                     let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
 

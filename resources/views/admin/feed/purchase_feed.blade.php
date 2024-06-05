@@ -147,7 +147,76 @@
                 </div>
                 <!-- COL END -->
             </div>
+            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <div class="ms-auto pageheader-btn"> 
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Purchases</a>
+                </div> 
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    
+                    
+                    <div class="card-body">
+                        
+                        <div class="modal fade" id="modaldemo8" style="display: none" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                                <div class="modal-content modal-content-demo">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title">Pending Purchases</h6>
+                                        <button
+                                        aria-label="Close"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        ></button>
+                                    </div>
+                                    <div class="modal-body text-start">
+                                    <table id="example54" class="text-fade table table-bordered" >
+                                        <thead>
+                                            <tr class="text-dark">
+                                                <th>Account</th>
+                                                <th>Item</th>
+                                                <th>Qty</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($pending_Feed as $pending)
+                                                <tr class="text-dark">
+                                                    
+                                                    <td style="width: 15%; !important"><span
+                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                    </td>
 
+                                                    <td style="width: 10%; !important"><span
+                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
+                                                    </td>
+                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
+                                                    <td style="width: 20%; !important">
+                                                        
+                                                        <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
+                                                            href="{{ route('admin.feed-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
+                                                            title="Edit">
+                                                            <i class="ri-edit-line"></i>
+                                                        </a>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        
+                                    </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" data-bs-dismiss="modal">
+                                        Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 col-sm-12">
                     <div class="card ">
@@ -160,44 +229,53 @@
                                     <tr class="text-dark">
                                         <th>S.No</th>
                                         <th>Date</th>
-                                        <th>Inv #</th>
-                                        <th>Account</th>
+                                        <th>Invoice No</th>
+                                        <th>Account Name</th>
                                         <th>Item</th>
                                         <th>Rate</th>
                                         <th>Quantity</th>
-                                        <th>Amount</th>
+                                        <th>Net Ammount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $tot_q = 0;
                                     $tot_amt = 0; ?>
-                                    @foreach ($purchase_feed as $purcahse)
-                                    <tr class="text-dark">
-                                            <td style="width: 5%; !important">{{ $loop->iteration }}</td>
-                                            <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
-                                            <td style="width: 10%; !important">{{ $purcahse->invoice_no }}</td>
-                                            <td style="width: 15%; !important"><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? "" }}</span>
+                                    @foreach ($purchase_Feed as $purcahse)
+                                        <tr class="text-dark">
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
+                                            <td>{{ $purcahse->invoice_no }}</td>
+                                            <td><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? '' }}</span>
                                             </td>
 
-                                            <td style="width: 10%; !important"><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? "" }}</span>
+                                            <td><span
+                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
                                             </td>
-                                            <td style="width: 10%; !important">{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
+                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
                                             <?php $tot_q += $purcahse->quantity; ?>
-                                            <td style="width: 10%; !important">{{ $purcahse->quantity }}</td>
+                                            <td>{{ $purcahse->quantity }}</td>
                                             <?php $tot_amt += $purcahse->net_amount; ?>
-                                            <td style="width: 10%; !important">{{ $purcahse->net_amount }}</td>
+                                            <td>{{ $purcahse->net_amount }}</td>
                                             <td>
-                                                <a class="btn btn-ouline-info rouned-pill btn-wave"
-                                                    href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}">
-                                                    <i class="ri-eye-line"></i></a>
-                                                <a href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
-                                                    class="btn btn-outline-info rounded-pill btn-wave" type="button"
-                                                    target="_blank">
-                                                    <i class="ri-download-2-line"></i>
-                                                </a>
+                                                <div class="btn-group" role="group">
+                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
+                                                        href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                        title="View">
+                                                        <i class="ri-eye-line"></i>
+                                                    </a>
+                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
+                                                        href="{{ route('admin.feed-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                        title="Edit">
+                                                        <i class="ri-edit-line"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.feed-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
+                                                        title="Download">
+                                                        <i class="ri-download-2-line"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -248,8 +326,7 @@
                             <option value="">Select Items</option>
                             @foreach ($products as $product)
                                 @php
-                                    $latestInvoice = $product->latestFeedInvoice;
-                                    $purchasePrice = $latestInvoice ? $latestInvoice->purchase_price : 0;
+                                    $purchasePrice = $product->last_purchase_price ? $product->last_purchase_price : 1;
                                 @endphp
                                 <option value="{{ $product->id }}" data-price="{{ $purchasePrice }}">
                                     {{ $product->name ?? '' }}
@@ -263,6 +340,7 @@
                     </td>
                     <td class="purchase_rate_col">
                         <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;" required>
+                        <input type="hidden" name="sale_price[]" class="form-control saleRate text-right" value="0" step="any" style="text-align: right;" required>
                     </td>
                     <td class="expiry_date">
                         <input type="date" name="expiry_date[]" class="form-control text-right">

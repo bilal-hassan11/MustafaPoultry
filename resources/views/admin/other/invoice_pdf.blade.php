@@ -89,20 +89,20 @@
                             <h2>{{ strtoupper($type) }} INVOICE</h2>
                         </td>
                         <td class="text-center">
-                            <h2>#{{ $ChickInvoice[0]->invoice_no }}</h2>
+                            <h2>#{{ $OtherInvoice[0]->invoice_no }}</h2>
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th style="width: 20%;">Invoice To :</th>
-                        <td> {{ $ChickInvoice[0]->account->name }}</td>
+                        <td> {{ $OtherInvoice[0]->account->name }}</td>
                         <th style="width: 20%;">Date: </th>
-                        <td class="text-center"> {{ date('d-M-Y', strtotime($ChickInvoice[0]->date)) }}</td>
+                        <td class="text-center"> {{ date('d-M-Y', strtotime($OtherInvoice[0]->date)) }}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td colspan="3">{{ $ChickInvoice[0]->account->address }}</td>
+                        <td colspan="3">{{ $OtherInvoice[0]->account->address }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -124,7 +124,7 @@
                         $subtotal = 0;
                         $totalDiscountRs = 0;
                     @endphp
-                    @foreach ($ChickInvoice as $index => $item)
+                    @foreach ($OtherInvoice as $index => $item)
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td class="text-center">

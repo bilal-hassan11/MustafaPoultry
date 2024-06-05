@@ -5,52 +5,88 @@ namespace App\Http\Controllers;
 use App\Models\FeedInvoice;
 use App\Models\Account;
 use App\Models\Item;
-use App\Models\ExpiryStock;
 use Illuminate\Support\Facades\DB;
 use App\Models\AccountLedger;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Traits\SendsWhatsAppMessages;
+use Mpdf\Mpdf;
 
 class FeedInvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     use SendsWhatsAppMessages;
-    
+    protected $FeedInvoice;
+
+    public function __construct(FeedInvoice $FeedInvoice)
+    {
+        $this->FeedInvoice = $FeedInvoice;
+    }
+
     public function createPurchase(Request $req)
     {
         $title = "Purchase Feed";
         $invoice_no = generateUniqueID(new FeedInvoice, 'Purchase', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = Item::where('category_id', 3)
-            ->with(['latestFeedInvoice' => function ($query) {
-                $query->select('item_id', 'purchase_price');
-            }])
+        $products = Item::where('category_id', 3)->get();
+
+        $purchase_Feed = FeedInvoice::with('account', 'item')
+            ->where('type', 'Purchase')
+            ->when(isset($req->account_id), function ($query) use ($req) {
+                $query->where('account_id', hashids_decode($req->account_id));
+            })
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
             ->latest()
             ->get();
-        $purchase_feed = FeedInvoice::with('account', 'item')
-                                    ->where('type', 'Purchase')
-                                    ->when(isset($req->account_id), function($query) use ($req){
-                                        $query->where('account_id', hashids_decode($req->account_id));
-                                    })
-                                    ->when(isset($req->invoice_no), function($query) use ($req){
-                                        $query->where('invoice_no', $req->invoice_no);
-                                    })
-                                    ->when(isset($req->item_id), function($query) use ($req){
-                                        $query->where('item_id', hashids_decode($req->item_id));
-                                    })
-                                    ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
-                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
-                                    })
-                                    ->latest()
-                                    ->get();
 
-        return view('admin.feed.purchase_feed', compact(['title', 'invoice_no', 'accounts', 'products', 'purchase_feed']));
+        $pending_Feed = FeedInvoice::with('account', 'item')
+            ->where('type', 'Purchase')
+            ->where('net_amount',0)
+            ->latest()
+            ->get();     
+
+        return view('admin.feed.purchase_feed', compact(['title','pending_Feed' , 'invoice_no', 'accounts', 'products', 'purchase_Feed']));
     }
 
+    public function editPurchase($invoice_no)
+    {
+        $title = "Edit Purchase Feed";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = Item::where('category_id', 3)->get();
+        $FeedInvoice = FeedInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Purchase')
+            ->with('account', 'item')
+            ->get();
+
+          
+
+        return view('admin.feed.edit_purchase_feed', compact(['title', 'accounts', 'products', 'FeedInvoice']));
+    }
+    public function editSale($invoice_no)
+    {
+        $title = "Edit Sale Feed";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = $this->FeedInvoice->getStockInfo();
+        $FeedInvoice = FeedInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Sale')
+            ->get();
+
+        $pending_Feed = FeedInvoice::with('account', 'item')
+            ->where('type', 'Sale')
+            ->where('net_amount',0)
+            ->latest()
+            ->get(); 
+
+        return view('admin.feed.edit_sale_feed', compact(['title','pending_Feed', 'accounts', 'products', 'FeedInvoice']));
+    }
 
     public function createSale(Request $req)
     {
@@ -59,33 +95,36 @@ class FeedInvoiceController extends Controller
         $invoice_no = generateUniqueID(new FeedInvoice, 'Sale', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
-        $products = ExpiryStock::with('item')
-            ->whereHas('item', function ($query) {
-                $query->where('category_id', 3);
+        $FeedInvoice = new FeedInvoice();
+
+        $products = $FeedInvoice->getStockInfo();
+        // dd($products);
+        $sale_Feed = $FeedInvoice::with('account', 'item')
+            ->where('type', 'Sale')
+            ->when(isset($req->account_id), function ($query) use ($req) {
+                $query->where('account_id', hashids_decode($req->account_id));
             })
-            ->where('quantity', '>', 0)
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
+            ->latest()
             ->get();
 
-        $sale_feed = FeedInvoice::with('account', 'item')
-                                    ->where('type', 'Sale')
-                                    ->when(isset($req->account_id), function($query) use ($req){
-                                        $query->where('account_id', hashids_decode($req->account_id));
-                                    })
-                                    ->when(isset($req->invoice_no), function($query) use ($req){
-                                        $query->where('invoice_no', $req->invoice_no);
-                                    })
-                                    ->when(isset($req->item_id), function($query) use ($req){
-                                        $query->where('item_id', hashids_decode($req->item_id));
-                                    })
-                                    ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
-                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
-                                    })
-                                    ->latest()
-                                    ->get();
-
-
-        return view('admin.feed.sale_feed', compact(['title','sale_feed', 'invoice_no', 'accounts', 'products']));
+        $pending_Feed = $FeedInvoice::with('account', 'item')
+            ->where('type', 'Sale')
+            ->where('net_amount',0)
+            ->latest()
+            ->get(); 
+            
+        return view('admin.feed.sale_feed', compact(['title','pending_Feed', 'sale_Feed', 'invoice_no', 'accounts', 'products']));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -94,241 +133,163 @@ class FeedInvoiceController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'invoice_no' =>  'required',
             'date' => 'required|date',
             'account' => 'required|exists:accounts,id',
             'ref_no' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'item_id.*' => 'required|exists:items,id',
+            'id.*' => 'nullable',
             'purchase_price.*' => 'required|numeric',
-            'quantity.*' => 'required|integer',
+            'sale_price.*' => 'required|numeric',
+            'quantity.*' => 'required|numeric',
             'amount.*' => 'required|numeric',
             'discount_in_rs.*' => 'nullable|numeric',
             'discount_in_percent.*' => 'nullable|numeric',
             'expiry_date.*' => 'nullable|date',
             'whatsapp_status' => 'nullable|boolean',
         ]);
-        
-        $invoiceNumber = generateUniqueID(new FeedInvoice, $request->type, 'invoice_no');
+
+        $date = $request->input('date');
+
+        if ($request->type == 'Sale' || $request->type == 'Adjust Out') {
+            $stockErrors = $this->validateStockQuantities($validatedData);
+
+            if (!empty($stockErrors)) {
+                return response()->json(['errors' => $stockErrors], 422);
+            }
+        }
 
         DB::beginTransaction();
+        if ($request->has('editMode')) {
+            $invoiceNumber = $request->invoice_no;
+            $FeedInvoices = FeedInvoice::where('invoice_no', $invoiceNumber)
+                ->where('type', $request->type)
+                ->get();
+            $FeedInvoiceIds = $FeedInvoices->pluck('id');
+            FeedInvoice::whereIn('id', $FeedInvoiceIds)->delete();
+            AccountLedger::whereIn('feed_invoice_id', $FeedInvoiceIds)
+                ->where('type', $request->type)
+                ->delete();
+        } else {
+            $invoiceNumber = generateUniqueID(new FeedInvoice, $request->type, 'invoice_no');
+        }
 
         try {
-            $totalNetAmount = 0;
 
             $items = $validatedData['item_id'];
             foreach ($items as $index => $itemId) {
-                $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
-                $totalNetAmount += $netAmount;
 
-                $feedInvoice = FeedInvoice::create([
-                    'date' => $validatedData['date'],
-                    'account_id' => $validatedData['account'],
-                    'ref_no' => $validatedData['ref_no'],
-                    'description' => $validatedData['description'],
-                    'invoice_no' => $invoiceNumber,
-                    'type' => $request->type,
-                    'stock_type' => in_array($request->type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
-                    'item_id' => $itemId,
-                    'purchase_price' => $validatedData['purchase_price'][$index],
-                    'sale_price' => 0,
-                    'quantity' => $validatedData['quantity'][$index],
-                    'amount' => $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index],
-                    'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
-                    'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
-                    'net_amount' => $netAmount,
-                    'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
-                    'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
-                ]);
-
+                $price = in_array($request->type, ['Sale', 'Adjust Out']) ? $validatedData['sale_price'][$index] : $validatedData['purchase_price'][$index];
+                $netAmount = ($price * $validatedData['quantity'][$index]) - ($validatedData['discount_in_rs'][$index] ?? 0);
                 $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
-                $expiryStock = ExpiryStock::where('item_id', $itemId)
-                    ->where('expiry_date', $validatedData['expiry_date'][$index] ?? null)
-                    ->first();
 
-                if ($expiryStock) {
-                    $expiryStock->quantity += $validatedData['quantity'][$index];
-                    $expiryStock->rate += $costAmount;
-                    $expiryStock->save();
-                } else {
-                    $expiryStock = ExpiryStock::create([
-                        'date' => $validatedData['date'],
-                        'medicine_invoice_id' => $invoiceNumber,
-                        'item_id' => $itemId,
-                        'rate' => $costAmount,
-                        'quantity' => $validatedData['quantity'][$index],
-                        'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
-                    ]);
-                }
-
-                AccountLedger::create([
-                    'feed_invoice_id' => $feedInvoice->id,
-                    'type'  => $request->type,
-                    'date' => $validatedData['date'],
-                    'account_id' => $validatedData['account'],
-                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['purchase_price'][$index],
-                    'debit' => 0,
-                    'credit' => $netAmount,
-                ]);
-            }
-
-            DB::commit();
-
-            return response()->json(['success' => true], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function storeSale(Request $request)
-    {
-        // Validate request data
-        $validator = Validator::make($request->all(), [
-            'date' => 'required|date',
-            'account' => 'required|exists:accounts,id',
-            'ref_no' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'id.*' => 'required|exists:expiry_stocks,id',
-            'id.*' => 'required|exists:expiry_stocks,id',
-            'purchase_price.*' => 'required|numeric',
-            'sale_price.*' => 'required|numeric',
-            'quantity.*' => 'required|integer',
-            'amount.*' => 'required|numeric',
-            'discount_in_rs.*' => 'nullable|numeric',
-            'discount_in_percent.*' => 'nullable|numeric',
-            'expiry_date.*' => 'nullable|date',
-            'whatsapp_status' => 'nullable|boolean',
-        ]);
-
-        // Check if validation fails
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $validatedData = $validator->validated();
-
-        $items = collect($request->input('item_id'));
-        $ids = collect($request->input('id'));
-        $quantities = collect($request->input('quantity'));
-        $groupedItems = $ids->zip($quantities)->groupBy(0)->map(function ($group) {
-            return $group->sum(1);
-        });
-
-        $stockErrors = [];
-
-        $groupedItems->each(function ($quantity, $id) use (&$stockErrors) {
-            $expiryStock = ExpiryStock::find($id);
-            if ($expiryStock->quantity < $quantity) {
-                $itemName = $expiryStock->item->name ?? 'Unknown';
-                $stockErrors["id.$id"] = ['Insufficient stock for item ' . $expiryStock->item->name];
-            }
-        });
-
-        // Return stock errors if any
-        if (!empty($stockErrors)) {
-            return response()->json([
-                'errors' => $stockErrors
-            ], 422);
-        }
-        $invoiceNumber = generateUniqueID(new FeedInvoice, $request->type, 'invoice_no');
-
-        DB::beginTransaction();
-
-        try {
-            $totalNetAmount = 0;
-
-            foreach ($items as $index => $itemId) {
-                $netAmount = $validatedData['amount'][$index] - ($validatedData['discount_in_rs'][$index] ?? 0);
-                $totalNetAmount += $netAmount;
-
-                $feedInvoice = FeedInvoice::create([
-                    'date' => $validatedData['date'],
+                $FeedInvoice = FeedInvoice::create([
+                    'date' => $date,
                     'account_id' => $validatedData['account'],
                     'ref_no' => $validatedData['ref_no'],
                     'description' => $validatedData['description'],
                     'invoice_no' => $invoiceNumber,
                     'type' => $request->type,
-                    'stock_type' => in_array($request->type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
+                    'stock_type' => in_array($request->type, ['Purchase', 'Adjust In']) ? 'In' : 'Out',
                     'item_id' => $itemId,
                     'purchase_price' => $validatedData['purchase_price'][$index],
                     'sale_price' => $validatedData['sale_price'][$index],
-                    'quantity' => $validatedData['quantity'][$index],
-                    'amount' => $validatedData['quantity'][$index] * $validatedData['sale_price'][$index],
+                    'quantity' => in_array($request->type, ['Sale', 'Adjust Out']) ? -$validatedData['quantity'][$index] : $validatedData['quantity'][$index],
+                    'amount' => $validatedData['amount'][$index],
                     'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
                     'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
+                    'total_cost' => in_array($request->type, ['Sale', 'Adjust Out']) ? -$costAmount : $netAmount,
                     'net_amount' => $netAmount,
                     'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                     'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
                 ]);
-
-                $expiryStock = ExpiryStock::where('item_id', $itemId)
-                    ->where('expiry_date', $validatedData['expiry_date'][$index] ?? null)
-                    ->first();
-
-                $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
-
-                if ($expiryStock) {
-                    $expiryStock->quantity -= $validatedData['quantity'][$index];
-                    $expiryStock->rate -= $costAmount;
-                    $expiryStock->save();
-                } else {
-                    ExpiryStock::create([
-                        'date' => $validatedData['date'],
-                        'medicine_invoice_id' => $feedInvoice->id,
-                        'item_id' => $itemId,
-                        'rate' => $costAmount,
-                        'quantity' => $validatedData['quantity'][$index],
-                        'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
-                    ]);
-                }
+                $item = Item::find($itemId);
 
                 AccountLedger::create([
-                    'feed_invoice_id' => $feedInvoice->id,
-                    'type' => $request->type,
-                    'date' => $validatedData['date'],
+                    'feed_invoice_id' => $FeedInvoice->id,
+                    'type'  => $request->type,
+                    'date' => $date,
                     'account_id' => $validatedData['account'],
-                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $validatedData['sale_price'][$index],
-                    'debit' => $netAmount,
-                    'credit' => 0,
+                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Item: ' . $item->name . ', Qty: ' . $validatedData['quantity'][$index] . ', Rate: ' . $price,
+                    'debit' => in_array($request->type, ['Sale', 'Adjust Out']) ? $netAmount : 0,
+                    'credit' => in_array($request->type, ['Purchase', 'Adjust In']) ? $netAmount : 0,
                 ]);
             }
-            $file_url = 'https://www.clickdimensions.com/links/TestPDFfile.pdf';
-            $this->sendWhatsAppMessage('923003025291', 'Welcome to Laravel', $file_url);
+
             DB::commit();
+
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
+            info($e);
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
+    private function validateStockQuantities($validatedData)
+    {
+        $products = $this->FeedInvoice->getStockInfo();
+
+        $stockErrors = [];
+        $stockQuantities = [];
+
+        foreach ($validatedData['id'] as $index => $item_id) {
+            $quantity = $validatedData['quantity'][$index];
+            $stockQuantities[$item_id] = isset($stockQuantities[$item_id]) ? $stockQuantities[$item_id] + $quantity : $quantity;
+        }
+
+        foreach ($stockQuantities as $item_id => $summedQuantity) {
+            $filteredProducts = $products->filter(function ($product) use ($item_id) {
+                return $product->id == $item_id;
+            });
+
+            if ($filteredProducts->isEmpty()) {
+                $stockErrors["item_id.$item_id"] = ['Product not found'];
+            } else {
+                $totalStockQuantity = $filteredProducts->sum('quantity');
+                if ($totalStockQuantity < $summedQuantity) {
+                    $itemName = $filteredProducts->first()->name;
+                    $stockErrors["item_id.$item_id"] = ['Insufficient stock for item ' . $itemName];
+                }
+            }
+        }
+
+        return $stockErrors;
+    }
 
     public function singleReturn(Request $request)
     {
-        
         $validatedData = $request->validate([
-            'feed_invoice_id' => 'required|exists:feed_invoices,id',
+            'Feed_invoice_id' => 'required|exists:Feed_invoices,id',
             'quantity' => 'required|integer|min:1',
             'description' => 'nullable|string',
             'type' => 'required',
         ]);
         $type = $validatedData['type'];
-        $originalInvoice = FeedInvoice::findOrFail($validatedData['feed_invoice_id']);
 
-        $expiryStock = ExpiryStock::where('item_id', $originalInvoice->item_id)
-            ->where('expiry_date', $originalInvoice->expiry_date)
-            ->first();
+        $originalInvoice = $this->FeedInvoice->findOrFail($validatedData['Feed_invoice_id']);
 
-        if ($type == 'Purchase Return' ||  $type == 'Ajust Out') {
-            $price  = $originalInvoice->purchase_price;
-            if ($expiryStock->quantity < $validatedData['quantity']) {
-                return response()->json(['error' => 'Insufficient stock for the return. (' . $expiryStock->quantity . ')'], 422);
+        $stockInfo = $this->FeedInvoice->getStockInfo();
+
+        $stock = $stockInfo->first(function ($item) use ($originalInvoice) {
+            return $item->item_id == $originalInvoice->item_id
+                && $item->expiry_date == $originalInvoice->expiry_date;
+        });
+
+        if (!$stock) {
+            return response()->json(['error' => 'Stock not found for the given item and expiry date'], 422);
+        }
+
+        if ($type == 'Purchase Return') {
+            $price = $originalInvoice->purchase_price;
+            if ($stock->quantity < $validatedData['quantity']) {
+                return response()->json(['error' => 'Insufficient stock for the return. (' . $stock->quantity . ')'], 422);
             }
         } else {
-            $price  = $originalInvoice->sale_price;
+            $price = $originalInvoice->sale_price;
         }
+
 
         DB::beginTransaction();
         try {
@@ -337,37 +298,26 @@ class FeedInvoiceController extends Controller
             $netAmount = $amount - $originalInvoice->discount_in_rs;
 
 
-            $feedInvoice = FeedInvoice::create([
+            $FeedInvoice = FeedInvoice::create([
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
-                'ref_no' => $validatedData['feed_invoice_id'],
+                'ref_no' => $validatedData['Feed_invoice_id'],
                 'description' => $validatedData['description'],
                 'invoice_no' => $invoiceNumber,
                 'type' => $validatedData['type'],
-                'stock_type' => in_array($type, ['Purchase', 'Sale Return', 'Adjust In']) ? 'In' : 'Out',
+                'stock_type' => ($type == 'Purchase Return') ? 'Out' : 'In',
                 'item_id' => $originalInvoice->item_id,
                 'purchase_price' => $originalInvoice->purchase_price,
                 'sale_price' =>  $originalInvoice->sale_price,
-                'quantity' => $validatedData['quantity'],
+                'quantity' => ($type == 'Purchase Return') ?  -$validatedData['quantity'] : $validatedData['quantity'],
                 'amount' => $amount,
                 'discount_in_rs' => $originalInvoice->discount_in_rs,
                 'discount_in_percent' => $originalInvoice->discount_in_percent,
+                'total_cost' => (($type == 'Purchase Return') ? -$netAmount : $amount),
                 'net_amount' => $netAmount,
                 'expiry_date' => $originalInvoice->expiry_date,
                 'whatsapp_status' => 'Not Sent',
             ]);
-
-            if ($type == 'Purchase Return') {
-                $costPrice =  ($originalInvoice->purchase_price * $validatedData['quantity']) - $originalInvoice->discount_in_rs;
-                $expiryStock->quantity -= $validatedData['quantity'];
-                $expiryStock->rate -= $costPrice;
-            } else {
-                $costPrice =  ($originalInvoice->purchase_price * $validatedData['quantity']);
-                $expiryStock->quantity += $validatedData['quantity'];
-                $expiryStock->rate += $costPrice;
-            }
-
-            $expiryStock->save();
 
             $debit = 0;
             $credit = 0;
@@ -378,13 +328,13 @@ class FeedInvoiceController extends Controller
             } else {
                 $debit = $netAmount;
             }
-
+            $items = Item::find($originalInvoice->item_id);
             AccountLedger::create([
-                'feed_invoice_id' => $feedInvoice->id,
+                'feed_invoice_id' => $FeedInvoice->id,
                 'type'  => $type,
                 'date' => now(),
                 'account_id' => $originalInvoice->account_id,
-                'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $expiryStock->item->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,
+                'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $items->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,
                 'debit' => $debit,
                 'credit' => $credit,
             ]);
@@ -393,45 +343,49 @@ class FeedInvoiceController extends Controller
 
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
+            info($e);
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+
     /**
      * Display the specified resource.
      */
 
     public function show($invoice_no)
     {
+
         $url = request()->url();
         preg_match('/\/(\w+)(?=\/\d+)/', $url, $matches);
         $type = isset($matches[1]) ? ucfirst($matches[1]) : 'Purchase';
 
-        $feedInvoice = FeedInvoice::where('invoice_no', $invoice_no)
+        $FeedInvoice = FeedInvoice::where('invoice_no', $invoice_no)
             ->where('type', $type)
             ->with('account', 'item')
             ->get();
 
-        if ($feedInvoice->isEmpty()) {
+        if ($FeedInvoice->isEmpty()) {
             abort(404, 'Feed Invoice not found');
         }
 
-        $feedInvoiceIds = $feedInvoice->pluck('id');
+        $FeedInvoiceIds = $FeedInvoice->pluck('id');
         $returnType = $type . ' Return';
 
-        $returnedQuantities = FeedInvoice::whereIn('ref_no', $feedInvoiceIds)
+        $returnedQuantities = FeedInvoice::whereIn('ref_no', $FeedInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
             ->select('ref_no', DB::raw('SUM(quantity) as total_returned'))
             ->pluck('total_returned', 'ref_no');
 
-        $feedInvoice = $feedInvoice->map(function ($item) use ($returnedQuantities) {
+        $FeedInvoice = $FeedInvoice->map(function ($item) use ($returnedQuantities) {
             $item->total_returned = $returnedQuantities->get($item->id, 0);
             return $item;
         });
 
         if (request()->has('generate_pdf')) {
-            $html = view('admin.feed.invoice_pdf', compact('feedInvoice', 'type'))->render();
+            $html = view('admin.feed.invoice_pdf', compact('FeedInvoice', 'type'))->render();
             $mpdf = new Mpdf([
                 'format' => 'A4-P', 'margin_top' => 10,
                 'margin_bottom' => 2,
@@ -442,7 +396,7 @@ class FeedInvoiceController extends Controller
             $mpdf->SetHTMLFooter('<div style="text-align: right;">Page {PAGENO} of {nbpg}</div>');
             return generatePDFResponse($html, $mpdf);
         } else {
-            return view('admin.feed.show_feed', compact('feedInvoice', 'type'));
+            return view('admin.feed.show_feed', compact('FeedInvoice', 'type'));
         }
     }
 }
