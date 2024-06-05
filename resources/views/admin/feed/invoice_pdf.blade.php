@@ -79,7 +79,7 @@
 <body>
     <div class="container">
         <div class="company-info">
-            <h1>Al Mustafa Poultry</h1>
+            <h1>Tawakkal Marketing Traders</h1>
         </div>
         <div class="table-container">
             <table>
@@ -89,20 +89,20 @@
                             <h2>{{ strtoupper($type) }} INVOICE</h2>
                         </td>
                         <td class="text-center">
-                            <h2>#{{ $feedInvoice[0]->invoice_no }}</h2>
+                            <h2>#{{ $FeedInvoice[0]->invoice_no }}</h2>
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th style="width: 20%;">Invoice To :</th>
-                        <td> {{ $feedInvoice[0]->account->name }}</td>
+                        <td> {{ $FeedInvoice[0]->account->name }}</td>
                         <th style="width: 20%;">Date: </th>
-                        <td class="text-center"> {{ date('d-M-Y', strtotime($feedInvoice[0]->date)) }}</td>
+                        <td class="text-center"> {{ date('d-M-Y', strtotime($FeedInvoice[0]->date)) }}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td colspan="3">{{ $feedInvoice[0]->account->address }}</td>
+                        <td colspan="3">{{ $FeedInvoice[0]->account->address }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -124,14 +124,14 @@
                         $subtotal = 0;
                         $totalDiscountRs = 0;
                     @endphp
-                    @foreach ($feedInvoice as $index => $item)
+                    @foreach ($FeedInvoice as $index => $item)
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td class="text-center">
                                 {{ $item->item->name }}{{ $item->expiry_date ? ' - ' . $item->expiry_date : '' }}
                             </td>
 
-                            <td class="text-right">{{ $item->quantity }}</td>
+                            <td class="text-right">{{ abs($item->quantity) }}</td>
                             <td class="text-right">Rs
                                 {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                             </td>
@@ -141,7 +141,8 @@
                         </tr>
                         @php
                             $subtotal +=
-                                $item->quantity * ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
+                                abs($item->quantity) *
+                                ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
                             $totalDiscountRs += $item->discount_in_rs;
                         @endphp
                     @endforeach

@@ -10,10 +10,10 @@
                     <div class="card-header bg-primary text-white">
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>Invoice #{{ $murghiInvoice[0]->invoice_no }}</h3>
-                                <p class="mb-0">Date: {{ $murghiInvoice[0]->date }}</p>
-                                <p class="mb-0">Account: {{ $murghiInvoice[0]->account->name }}</p>
-                                <p class="mb-0">Description: {{ $murghiInvoice[0]->description }}</p>
+                                <h3>Invoice #{{ $MurghiInvoice[0]->invoice_no }}</h3>
+                                <p class="mb-0">Date: {{ $MurghiInvoice[0]->date }}</p>
+                                <p class="mb-0">Account: {{ $MurghiInvoice[0]->account->name }}</p>
+                                <p class="mb-0">Description: {{ $MurghiInvoice[0]->description }}</p>
                             </div>
                             <div class="col-md-4" style="text-align: right;">
                                 <a class="btn btn-secondary mb-3" href="{{ url()->previous() }}">
@@ -43,11 +43,11 @@
                                     $subtotal = 0;
                                     $totalDiscountRs = 0;
                                 @endphp
-                                @foreach ($murghiInvoice as $index => $item)
+                                @foreach ($MurghiInvoice as $index => $item)
                                     <tr>
                                         <td style="text-align: center;">{{ $index + 1 }}</td>
                                         <td>{{ $item->item->name }}</td>
-                                        <td style="text-align: right;">{{ $item->quantity }}</td>
+                                        <td style="text-align: right;">{{ abs($item->quantity) }}</td>
                                         <td style="text-align: right;">Rs
                                             {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                                         </td>
@@ -62,7 +62,7 @@
                                         <td style="text-align: right;">Rs {{ number_format($item->net_amount, 2) }}</td>
                                         <td>
                                             <button class="btn-sm btn-primary open-modal" data-id="{{ $item->id }}"
-                                                data-quantity="{{ $item->quantity }}"
+                                                data-quantity="{{ abs($item->quantity) }}"
                                                 data-description="{{ $item->description }}"
                                                 data-totalreturned="{{ $item->total_returned }}">
                                                 <i class="bi bi-arrow-return-right"></i>
@@ -71,7 +71,7 @@
 
                                     </tr>
                                     @php
-                                        $subtotal += $item->quantity * $item->purchase_price;
+                                        $subtotal += abs($item->quantity) * $item->purchase_price;
                                         $totalDiscountRs += $item->discount_in_rs;
                                     @endphp
                                 @endforeach
@@ -79,15 +79,15 @@
                             <tfoot style="text-align: right;">
                                 <tr>
                                     <th colspan="8">Subtotal</th>
-                                    <th>Rs {{ number_format($subtotal, 2) }}</th>
+                                    <th>Rs {{ number_format($MurghiInvoice->sum('amount'), 2) }}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="8">Total Discount</th>
-                                    <th>Rs {{ number_format($totalDiscountRs, 2) }}</th>
+                                    <th>Rs {{ number_format($MurghiInvoice->sum('discount_in_rs'), 2) }}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="8">Net Amount</th>
-                                    <th>Rs {{ number_format($subtotal - $totalDiscountRs, 2) }}</th>
+                                    <th>Rs {{ number_format($MurghiInvoice->sum('net_amount'), 2) }}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -111,7 +111,7 @@
                 <div class="modal-body">
                     <form id="returnForm">
                         @csrf
-                        <input type="hidden" id="murghi_invoice_id" name="murghi_invoice_id">
+                        <input type="hidden" id="Murghi_invoice_id" name="Murghi_invoice_id">
                         <input type="hidden" id="type" name="type" value="{{ $type }} Return">
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
@@ -139,7 +139,7 @@
                 var description = $(this).data('description');
                 var totalreturned = $(this).data('totalreturned');
                 let remainingQty = quantity - totalreturned;
-                $('#murghi_invoice_id').val(id);
+                $('#Murghi_invoice_id').val(id);
                 $('#quantity').val(1);
                 $('#returnModal').modal('show');
                 $('#quantity').attr('max', remainingQty);

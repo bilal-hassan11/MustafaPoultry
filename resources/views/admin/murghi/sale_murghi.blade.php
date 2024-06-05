@@ -110,7 +110,7 @@
                                         <select class="form-control select2" name="account_id" id="account_id2">
                                             <option value="">Select Account</option>
                                             @foreach ($accounts as $account)
-                                                <option value="{{ $account->hashid }}">{{ $account->name }}</option>
+                                                <option value="{{ $account->id }}">{{ $account->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -123,7 +123,7 @@
                                         <select class="form-control select2" name="item_id" id="item_id">
                                             <option value="">Select Item</option>
                                             @foreach ($products as $item)
-                                                <option value="{{ $item->hashid }}">{{ $item->name }}</option>
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -146,7 +146,76 @@
                 </div>
                 <!-- COL END -->
             </div>
+            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <div class="ms-auto pageheader-btn"> 
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
+                </div> 
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    
+                    
+                    <div class="card-body">
+                        
+                        <div class="modal fade" id="modaldemo8" style="display: none" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                                <div class="modal-content modal-content-demo">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title">Pending Sales</h6>
+                                        <button
+                                        aria-label="Close"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        ></button>
+                                    </div>
+                                    <div class="modal-body text-start">
+                                    <table id="example54" class="text-fade table table-bordered" >
+                                        <thead>
+                                            <tr class="text-dark">
+                                                <th>Account</th>
+                                                <th>Item</th>
+                                                <th>Qty</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($pending_Murghi as $pending)
+                                                <tr class="text-dark">
+                                                    
+                                                    <td style="width: 15%; !important"><span
+                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                    </td>
 
+                                                    <td style="width: 10%; !important"><span
+                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
+                                                    </td>
+                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
+                                                    <td style="width: 20%; !important">
+                                                        
+                                                        <a href="{{ route('admin.murghi-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"
+                                                            title="Edit"><button
+                                                                class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                                    class="ri-edit-line"></i></button>
+                                                        </a>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        
+                                    </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" data-bs-dismiss="modal">
+                                        Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 col-sm-12">
                     <div class="card ">
@@ -171,7 +240,7 @@
                                 <tbody>
                                     <?php $tot_q = 0;
                                     $tot_amt = 0; ?>
-                                    @foreach ($sale_murghi as $sale)
+                                    @foreach ($sale_Murghi as $sale)
                                         <tr class="text-dark">
                                             <td style="width: 5%; !important">{{ $loop->iteration }}</td>
                                             <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($sale->date)) }}
@@ -185,9 +254,9 @@
                                                     class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
                                             </td>
                                             <td style="width: 10%; !important">
-                                                {{ number_format(@$sale->net_amount / @$sale->quantity, 2) }}</td>
+                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}</td>
                                             <?php $tot_q += $sale->quantity; ?>
-                                            <td style="width: 10%; !important">{{ $sale->quantity }}</td>
+                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}</td>
                                             <?php $tot_amt += $sale->net_amount; ?>
                                             <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
                                             <td style="width: 20%; !important">
@@ -197,6 +266,11 @@
                                                         type="button">
                                                         <i class="ri-eye-line"></i></a>
                                                 </button>
+                                                <a href="{{ route('admin.murghi-invoices.edit.sale', ['invoice_no' => $sale->invoice_no]) }}"
+                                                    title="Edit"><button
+                                                        class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                            class="ri-edit-line"></i></button>
+                                                </a>
                                                 <button class="btn btn-outline-info  rounded-pill btn-wave"
                                                     type="button">
                                                     <i class="ri-download-2-line"></i>
@@ -213,7 +287,7 @@
                                         <th>-</th>
                                         <th>-</th>
                                         <th>-</th>
-                                        <th>{{ $tot_q }}</th>
+                                        <th>{{ abs($tot_q) }}</th>
                                         <th>{{ $tot_amt }}</th>
                                         <th>-</th>
                                     </tr>
@@ -251,15 +325,14 @@
                             @php
                                 $qty = $product->quantity;
                                 $expiry_date = $product->expiry_date;
-                                $purchasePrice = $qty != 0 ? $product->rate / $qty : 0;
                             @endphp    
-                            <option value="{{ $product->id }}" data-price="{{ $product->item->last_sale_price_of_murghi }}" data-purchase_price="{{ $purchasePrice }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
-                                {{ $product->item->name . ' - ' . $product->expiry_date ?? '' }}
+                            <option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
+                                {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
                             </option>
-                        @endforeach
+                           @endforeach
                     </select>
-                    <input type="hidden" name="item_id[]" class="item_id">
                     @endif
+                    <input type="hidden" name="item_id[]" class="item_id">
                 </td>
                 <td class="quantity_col">
                     <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
@@ -321,7 +394,9 @@
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
                 $selectElement.closest('tr').find('.expiry_date').val(expirydate);
                 $selectElement.closest('tr').find('.quantity').attr('max', qty);
-                $selectElement.closest('tr').find('.saleRate').attr('min', purchasePrice);
+                $selectElement.closest('tr').find('.quantity').attr('title', 'Available stock :' + qty);
+                $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' +
+                    purchasePrice);
                 $selectElement.closest('tr').find('.item_id').val(itemID);
                 Calculation();
             }
@@ -339,7 +414,7 @@
                 $("#saveButton").attr("disabled", true);
 
                 $.ajax({
-                    url: "{{ route('admin.murghi-invoices.store-sale') }}",
+                    url: "{{ route('admin.murghi-invoices.store') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {

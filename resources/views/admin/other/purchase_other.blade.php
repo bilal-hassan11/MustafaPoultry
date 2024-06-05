@@ -4,7 +4,7 @@
         <div class="side-app">
             <div class="card">
                 <div class="card-header">
-                    <h4>Purchase Chick</h4>
+                    <h4>Purchase other Items</h4>
                 </div>
                 <form id="formData">
                     @csrf
@@ -99,10 +99,10 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title mb-0"> Purchase Chick Filters</h3>
+                            <h3 class="card-title mb-0"> Purchase other Items Filters</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('admin.chick-invoices.purchase') }}" method="GET">
+                            <form action="{{ route('admin.other-invoices.purchase') }}" method="GET">
                                 @csrf
                                 <div class="row">
 
@@ -162,7 +162,7 @@
                             <div class="modal-dialog modal-dialog-centered text-center" role="document">
                                 <div class="modal-content modal-content-demo">
                                     <div class="modal-header">
-                                        <h6 class="modal-title">Pending Purchases</h6>
+                                        <h6 class="modal-title">Pending Others Items Purchases</h6>
                                         <button
                                         aria-label="Close"
                                         class="btn-close"
@@ -180,7 +180,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pending_Chick as $pending)
+                                            @foreach ($pending_Other as $pending)
                                                 <tr class="text-dark">
                                                     
                                                     <td style="width: 15%; !important"><span
@@ -194,7 +194,7 @@
                                                     <td style="width: 20%; !important">
                                                         
                                                         <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                            href="{{ route('admin.chick-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
+                                                            href="{{ route('admin.other-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
                                                             title="Edit">
                                                             <i class="ri-edit-line"></i>
                                                         </a>
@@ -221,7 +221,7 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title mb-0">All Purchase Chick Detail</h3>
+                            <h3 class="card-title mb-0">All Purchase Other Items Detail</h3>
                         </div>
                         <div class="card-body">
                             <table id="example54" class="text-fade table table-bordered" style="width:100%">
@@ -241,7 +241,7 @@
                                 <tbody>
                                     <?php $tot_q = 0;
                                     $tot_amt = 0; ?>
-                                    @foreach ($purchase_Chick as $purcahse)
+                                    @foreach ($purchase_Other as $purcahse)
                                         <tr class="text-dark">
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
@@ -261,16 +261,16 @@
                                             <td>
                                                 <div class="btn-group" role="group">
                                                     <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
-                                                        href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                        href="{{ route('admin.other-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
                                                         title="View">
                                                         <i class="ri-eye-line"></i>
                                                     </a>
                                                     <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                        href="{{ route('admin.chick-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                        href="{{ route('admin.other-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
                                                         title="Edit">
                                                         <i class="ri-edit-line"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                    <a href="{{ route('admin.other-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
                                                         class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
                                                         title="Download">
                                                         <i class="ri-download-2-line"></i>
@@ -395,7 +395,7 @@
                 $("#saveButton").attr("disabled", true);
 
                 $.ajax({
-                    url: "{{ route('admin.chick-invoices.store') }}",
+                    url: "{{ route('admin.other-invoices.store') }}",
                     method: "POST",
                     data: formData,
                     success: function(response) {
