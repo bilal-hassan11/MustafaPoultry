@@ -196,12 +196,14 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Bags</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_feed_begs ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_feed_begs ?? 0 }}
+                                    </h4>
                                 </div>
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_feed_ammount ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_feed_ammount ?? 0 }}
+                                    </h4>
                                 </div>
 
                             </div>
@@ -220,7 +222,8 @@
                                 </span>
                                 Total Feed Purchase Return
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ $tot_purchase_return_feed_ammount ?? 0 }}
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">
+                                {{ $tot_purchase_return_feed_ammount ?? 0 }}
                             </h4>
                             <div class="progress h-1 mt-0 mb-2">
 
@@ -232,12 +235,14 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Qty</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_purchase_return_feed_begs ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_purchase_return_feed_begs ?? 0 }}
+                                    </h4>
                                 </div>
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_purchase_return_feed_ammount ?? 0 }}
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">
+                                        {{ $tot_purchase_return_feed_ammount ?? 0 }}
                                     </h4>
                                 </div>
                             </div>
@@ -260,7 +265,8 @@
                                 </span>
                                 Total Medicine Purchase
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_purchase_medicine_ammount ?? 0 }}</h4>
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_purchase_medicine_ammount ?? 0 }}
+                            </h4>
                             <div class="progress h-1 mt-0 mb-2">
 
                                 <div class="progress-bar progress-bar-striped bg-primary w-70" role="progressbar">
@@ -272,12 +278,14 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted"> Qty </span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_purchase_medicine_qty ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_purchase_medicine_qty ?? 0 }}
+                                    </h4>
                                 </div>
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font2">{{ @$tot_purchase_medicine_ammount ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font2">
+                                        {{ @$tot_purchase_medicine_ammount ?? 0 }}</h4>
                                 </div>
 
                             </div>
@@ -296,10 +304,12 @@
                                 </span>
                                 Total Medicine Sale
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_sale_medicine_ammount ?? 0 }}</h4>
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_sale_medicine_ammount ?? 0 }}
+                            </h4>
                             <div class="progress h-1 mt-0 mb-2">
 
-                                <div class="progress-bar progress-bar-striped  bg-secondary w-50" role="progressbar"></div>
+                                <div class="progress-bar progress-bar-striped  bg-secondary w-50" role="progressbar">
+                                </div>
                             </div>
                             <div class="row mt-4">
 
@@ -312,7 +322,8 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_medicine_ammount ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_medicine_ammount ?? 0 }}
+                                    </h4>
                                 </div>
                             </div>
                         </div>
@@ -330,7 +341,8 @@
                                 </span>
                                 Total Medicine Sale Return
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_sale_return_medicine_ammount ?? 0 }}</h4>
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">
+                                {{ @$tot_sale_return_medicine_ammount ?? 0 }}</h4>
 
                             <div class="progress h-1 mt-0 mb-2">
 
@@ -343,12 +355,14 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Qty</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_medicine_qty ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_medicine_qty ?? 0 }}
+                                    </h4>
                                 </div>
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_sale_return_medicine_ammount ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">
+                                        {{ @$tot_sale_return_medicine_ammount ?? 0 }}</h4>
                                 </div>
 
                             </div>
@@ -367,7 +381,8 @@
                                 </span>
                                 Total Medicine Purchase Return
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ $tot_purchase_return_medicine_ammount ?? 0 }}
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">
+                                {{ $tot_purchase_return_medicine_ammount ?? 0 }}
                             </h4>
                             <div class="progress h-1 mt-0 mb-2">
 
@@ -379,12 +394,14 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Qty</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_purchase_return_medicine_qty  ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">
+                                        {{ $tot_purchase_return_medicine_qty ?? 0 }}</h4>
                                 </div>
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_purchase_return_medicine_ammount ?? 0 }}
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">
+                                        {{ $tot_purchase_return_medicine_ammount ?? 0 }}
                                     </h4>
                                 </div>
                             </div>
@@ -407,7 +424,8 @@
                                 </span>
                                 Total chick Purchase
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_purchase_chick_ammount ?? 0 }}</h4>
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_purchase_chick_ammount ?? 0 }}
+                            </h4>
                             <div class="progress h-1 mt-0 mb-2">
 
                                 <div class="progress-bar progress-bar-striped bg-primary w-70" role="progressbar">
@@ -424,7 +442,8 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font2">{{ @$tot_purchase_chick_ammount ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font2">{{ @$tot_purchase_chick_ammount ?? 0 }}
+                                    </h4>
                                 </div>
 
                             </div>
@@ -446,7 +465,8 @@
                             <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_sale_chick_ammount ?? 0 }}</h4>
                             <div class="progress h-1 mt-0 mb-2">
 
-                                <div class="progress-bar progress-bar-striped  bg-secondary w-50" role="progressbar"></div>
+                                <div class="progress-bar progress-bar-striped  bg-secondary w-50" role="progressbar">
+                                </div>
                             </div>
                             <div class="row mt-4">
 
@@ -478,7 +498,8 @@
                                 </span>
                                 Total Murghi Purchase
                             </h6>
-                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_purchase_murghi_ammount ?? 0 }}</h4>
+                            <h4 class="text-dark counter mt-0 mb-3 number-font">{{ @$tot_purchase_murghi_ammount ?? 0 }}
+                            </h4>
 
                             <div class="progress h-1 mt-0 mb-2">
 
@@ -496,7 +517,8 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Ammount</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_purchase_murghi_ammount ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ @$tot_purchase_murghi_ammount ?? 0 }}
+                                    </h4>
                                 </div>
 
                             </div>
@@ -526,7 +548,7 @@
                                 <div class="col text-center">
 
                                     <span class="text-muted">Weight</span>
-                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_sale_murghi_qty  ?? 0 }}</h4>
+                                    <h4 class="fw-normal mt-2 mb-0 number-font1">{{ $tot_sale_murghi_qty ?? 0 }}</h4>
                                 </div>
                                 <div class="col text-center">
 
@@ -548,7 +570,7 @@
                             <h3 class="card-title">Total Credit</h3>
                         </div>
                         <div class="card-body pt-0">
-                            <h3 class="d-inline-block mb-2">{{ @$tot_credit  ?? 0 }}</h3>
+                            <h3 class="d-inline-block mb-2">{{ @$tot_credit ?? 0 }}</h3>
                             <div class="progress h-2 mt-2 mb-2">
                                 <div class="progress-bar bg-primary w-50" role="progressbar"></div>
                             </div>
@@ -568,7 +590,7 @@
                             <h3 class="card-title">Total Debit</h3>
                         </div>
                         <div class="card-body pt-0">
-                            <h3 class="d-inline-block mb-2">{{ @$tot_debit  ?? 0 }}</h3>
+                            <h3 class="d-inline-block mb-2">{{ @$tot_debit ?? 0 }}</h3>
                             <div class="progress h-2 mt-2 mb-2">
                                 <div class="progress-bar bg-success w-50" role="progressbar"></div>
                             </div>
@@ -588,7 +610,7 @@
                             <h3 class="card-title">Total Expense</h3>
                         </div>
                         <div class="card-body pt-0">
-                            <h3 class="d-inline-block mb-2">{{ @$tot_expense  ?? 0 }}</h3>
+                            <h3 class="d-inline-block mb-2">{{ @$tot_expense ?? 0 }}</h3>
                             <div class="progress h-2 mt-2 mb-2">
                                 <div class="progress-bar bg-warning w-50" role="progressbar"></div>
                             </div>
@@ -608,7 +630,7 @@
                             <h3 class="card-title">Cash In Hand</h3>
                         </div>
                         <div class="card-body pt-0">
-                            <h3 class="d-inline-block mb-2">{{ @$tot_cash_in_hand  ?? 0 }}</h3>
+                            <h3 class="d-inline-block mb-2">{{ @$tot_cash_in_hand ?? 0 }}</h3>
                             <div class="progress h-2 mt-2 mb-2">
                                 <div class="progress-bar bg-danger w-50" role="progressbar"></div>
                             </div>
@@ -632,17 +654,19 @@
                                 <table class="table table-bordered table-fit datatable" id="sellingTable">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>#</th>
                                             <th>Item</th>
-                                            <th>Total Quantity Sold</th>
+                                            <th>Expiry</th>
+                                            <th>Available Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($lowStockAlertProducts as $item)
+                                        @foreach ($lowStockAlertProducts as $index => $item)
                                             <tr>
-                                                <td>{{ $item->id ?? 0 }}</td>
+                                                <td>{{ $index + 1 }}</td>
                                                 <td>{{ $item->name ?? 0 }}</td>
-                                                <td>{{ $item->total_quantity_sold ?? 0 }}</td>
+                                                <td>{{ $item->expiry_date ?? '' }}</td>
+                                                <td style="text-align: right">{{ $item->quantity ?? 0 }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -663,7 +687,8 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Item</th>
-                                            <th>Total Quantity Sold</th>
+                                            <th>Expiry</th>
+                                            <th>Available Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -671,7 +696,8 @@
                                             <tr>
                                                 <td>{{ $item->id ?? 0 }}</td>
                                                 <td>{{ $item->name ?? 0 }}</td>
-                                                <td>{{ $item->total_quantity_sold ?? 0 }}</td>
+                                                <td>{{ $item->expiry_date ?? '' }}</td>
+                                                <td style="text-align: right">{{ $item->total_quantity ?? 0 }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -681,7 +707,64 @@
                     </div>
                 </div>
 
-
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5>Max Sold Products</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fit datatable" id="sellingTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($maxSellingProducts as $index => $item)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $item->item->name ?? 0 }}</td>
+                                                <td style="text-align: right">{{ abs($item->total_quantity) ?? 0 }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5>Low Selling Products</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fit datatable" id="sellingTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($lowSellingProducts as $index => $item)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $item->item->name ?? 0 }}</td>
+                                                <td style="text-align: right">{{ abs($item->total_quantity) ?? 0 }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12 col-xl-4">
                         <div class="card custom-card">
@@ -781,30 +864,23 @@
                 </div>
                 <!-- <div id="hightChart">
 
-                                                                                                                                    </div>
-                                                                                                                                    <div id="consumption_chart">
+                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                            <div id="consumption_chart">
 
-                                                                                                                                    </div>
+                                                                                                                                                                                                            </div>
 
-                                                                                                                                    <br />
-                                                                                                                                    <div id="sale_chart" class="chart"></div>
+                                                                                                                                                                                                            <br />
+                                                                                                                                                                                                            <div id="sale_chart" class="chart"></div>
 
-                                                                                                                                    <div class="map_canvas">
-                                                                                                                                    
-                                                                                                                                                <canvas id="myChart" width="auto" height="100"></canvas>
-                                                                                                                                    </div> -->
+                                                                                                                                                                                                            <div class="map_canvas">
+                                                                                                                                                                                                            
+                                                                                                                                                                                                                        <canvas id="myChart" width="auto" height="100"></canvas>
+                                                                                                                                                                                                            </div> -->
                 <!-- CONTAINER END -->
             </div>
         </div>
     @endsection
     @section('page-scripts')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js"></script>
-        <!-- Show Graph Data -->
-        <script src="https://cdnjs.com/libraries/Chart.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
-
-
-
         <script>
             $(document).ready(function() {
                 $('#sale_category').change(function() {

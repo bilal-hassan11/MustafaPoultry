@@ -23,13 +23,17 @@ trait GeneratePdfTrait
         $mpdf->WriteHTML($htmlContent);
 
         $fileName = $fileNamePrefix . '_' . time() . '.pdf';
-        $filePath = public_path('pdf/' . $fileName);
+        $directory = public_path('pdf');
+        $filePath = $directory . '/' . $fileName;
 
-        if (!File::exists(public_path('pdf'))) {
-            File::makeDirectory(public_path('pdf'), 0755, true);
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
         }
 
         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-        return $filePath;
+
+        $fileUrl = url('pdf/' . $fileName);
+
+        return $fileUrl;
     }
 }

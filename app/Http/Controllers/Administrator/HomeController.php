@@ -28,7 +28,7 @@ class HomeController extends AdminController
         //Purchase Feed
         $tot_purchase_feed_begs = FeedInvoice::where('type', 'Purchase')->whereMonth('date', $current_month)->sum('quantity');
         $tot_purchase_feed_ammount = FeedInvoice::where('type', 'Purchase')->whereMonth('date', $current_month)->sum('net_amount');
-        
+
         // Sale Return Feed
         $tot_sale_return_feed_begs = FeedInvoice::where('type', 'Sale Return')->whereMonth('date', $current_month)->sum('quantity');
         $tot_sale_return_feed_ammount = FeedInvoice::where('type', 'Sale Return')->whereMonth('date', $current_month)->sum('net_amount');
@@ -111,9 +111,27 @@ class HomeController extends AdminController
         //     $consumption_array[$month-1]     = $consumption->pluck('count')[$index];
         //     $consumption_qty[$month-1] = intVal($consumption->pluck('qty')[$index]);
         // }
+        $maxSellingProducts = MedicineInvoice::with('item')
+            ->where('type', 'Sale')
+            ->groupBy('item_id')
+            ->selectRaw('item_id, sum(quantity) as total_quantity')
+            ->orderByDesc('total_quantity')
+            ->take(10)
+            ->get();
 
-        $lowStockAlertProducts = ExpiryStock::with('item.category')->where('quantity', '<', 10);
-        $expired_items  =  ExpiryStock::with('item')->whereNotNull('expiry_date')->where('expiry_date', '<=', now()); // Assuming you're using Carbon for dates
+
+        $lowSellingProducts = MedicineInvoice::with('item')
+            ->where('type', 'Sale')
+            ->groupBy('item_id')
+            ->selectRaw('item_id, sum(quantity) as total_quantity')
+            ->orderBy('total_quantity')
+            ->take(10)
+            ->get();
+
+        $medicineInvoice = new MedicineInvoice();
+        $stockInfo = $medicineInvoice->getStockInfo();
+        $lowStockAlertProducts = $medicineInvoice->filterLowStock($stockInfo);
+        $expiredStock = $medicineInvoice->filterExpiredStock($stockInfo);
 
         $month = date('m');
         $data = array(
@@ -144,7 +162,7 @@ class HomeController extends AdminController
             'tot_sale_return_medicine_ammount' => $tot_sale_return_medicine_ammount,
             'tot_purchase_return_medicine_qty' => $tot_purchase_return_medicine_qty,
             'tot_purchase_return_medicine_ammount' => $tot_purchase_return_medicine_ammount,
-            
+
             'tot_sale_chick_qty' => $tot_sale_chick_qty,
             'tot_sale_chick_ammount' => $tot_sale_chick_ammount,
             'tot_purchase_chick_qty' => $tot_purchase_chick_qty,
@@ -156,7 +174,9 @@ class HomeController extends AdminController
             'tot_purchase_murghi_ammount' => $tot_purchase_murghi_ammount,
 
             'lowStockAlertProducts' => $lowStockAlertProducts,
-            'expired_items' => $expired_items,
+            'expired_items' => $expiredStock,
+            'maxSellingProducts' => $maxSellingProducts,
+            'lowSellingProducts' => $lowSellingProducts,
             // 'consumption' => $consumption_array,
             // 'consumption_qty' =>   $consumption_qty,
             // 'labels' => $labels,

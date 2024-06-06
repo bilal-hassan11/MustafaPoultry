@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -53,6 +54,35 @@ trait StockTrait
             $item->last_sale_price = $invoice->last_sale_price;
 
             return $item;
+        });
+    }
+
+    /**
+     * Filter expired stock from the stock information.
+     *
+     * @param \Illuminate\Support\Collection $stockInfo
+     * @return \Illuminate\Support\Collection
+     */
+    public function filterExpiredStock($stockInfo)
+    {
+        return $stockInfo->filter(function ($item) {
+            return $item->expiry_date !== null
+                && Carbon::parse($item->expiry_date)->isPast()
+                && $item->quantity > 0;
+        });
+    }
+
+    /**
+     * Filter products with low stock alert.
+     *
+     * @param \Illuminate\Support\Collection $stockInfo
+     * @param int $lowStockLimit
+     * @return \Illuminate\Support\Collection
+     */
+    public function filterLowStock($stockInfo, $lowStockLimit = 10)
+    {
+        return $stockInfo->filter(function ($item) use ($lowStockLimit) {
+            return $item->quantity < $lowStockLimit;
         });
     }
 }
