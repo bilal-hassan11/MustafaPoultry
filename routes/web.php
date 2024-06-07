@@ -134,6 +134,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_accounts');
+        Route::get('/show/{id}', 'show')->name('show');
     });
 
     //report routes
@@ -245,6 +246,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/low-stock-report', [StockController::class, 'lowStockReport'])->name('low_stock_report');
         Route::get('/max-selling-report', [StockController::class, 'maxSellingReport'])->name('max_selling_report');
         Route::get('low-selling-report', [StockController::class, 'lowSellingReport'])->name('low_selling_report');
+        Route::get('new-expiry-products', [StockController::class, 'nearExpiryProducts'])->name('near_expiry_products');
     });
 
 
@@ -300,8 +302,6 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });
-
-
 });
 
 

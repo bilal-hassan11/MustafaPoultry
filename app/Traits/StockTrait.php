@@ -57,18 +57,18 @@ trait StockTrait
         });
     }
 
-    /**
-     * Filter expired stock from the stock information.
-     *
-     * @param \Illuminate\Support\Collection $stockInfo
-     * @return \Illuminate\Support\Collection
-     */
-    public function filterExpiredStock($stockInfo)
+    public function filterNearExpiryStock($stockInfo, $months)
     {
-        return $stockInfo->filter(function ($item) {
-            return $item->expiry_date !== null
-                && Carbon::parse($item->expiry_date)->isPast()
-                && $item->quantity > 0;
+        return $stockInfo->filter(function ($item) use ($months) {
+            if ($item->expiry_date === null || $item->quantity <= 0) {
+                return false;
+            }
+
+            $expiryDate = Carbon::parse($item->expiry_date);
+            $currentDate = Carbon::now();
+            $endDate = $currentDate->copy()->addMonths($months);
+
+            return $expiryDate->between($currentDate, $endDate);
         });
     }
 

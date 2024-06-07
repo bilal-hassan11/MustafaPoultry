@@ -647,7 +647,7 @@
                 <div class="col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header">
-                            <h5>Low Stock Items</h5>
+                            <h5>Low Stock Products</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -677,8 +677,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h5>Expired Products</h5>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Near Expiry Products</h5>
+                            <select id="expiryDropdown" class="form-select" style="width: auto;" value="1">
+                                <option value="1">1 Month</option>
+                                <option value="2">2 Months</option>
+                                <option value="3">3 Months</option>
+                            </select>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive deals-table">
@@ -691,7 +696,7 @@
                                             <th>Available Quantity</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="expiredItemsTbody">
                                         @foreach ($expired_items as $item)
                                             <tr>
                                                 <td>{{ $item->id ?? 0 }}</td>
@@ -706,7 +711,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header">
@@ -864,18 +868,18 @@
                 </div>
                 <!-- <div id="hightChart">
 
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                            <div id="consumption_chart">
+                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                            <div id="consumption_chart">
 
-                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                            </div>
 
-                                                                                                                                                                                                            <br />
-                                                                                                                                                                                                            <div id="sale_chart" class="chart"></div>
+                                                                                                                                                                                                                                                                                                            <br />
+                                                                                                                                                                                                                                                                                                            <div id="sale_chart" class="chart"></div>
 
-                                                                                                                                                                                                            <div class="map_canvas">
-                                                                                                                                                                                                            
-                                                                                                                                                                                                                        <canvas id="myChart" width="auto" height="100"></canvas>
-                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                            <div class="map_canvas">
+                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                        <canvas id="myChart" width="auto" height="100"></canvas>
+                                                                                                                                                                                                                                                                                                            </div> -->
                 <!-- CONTAINER END -->
             </div>
         </div>
@@ -945,6 +949,37 @@
                     } else {
                         $('#latest-sale').html('');
                     }
+                });
+
+                function fetchNearExpiryProducts(months) {
+                    $.ajax({
+                        url: "{{ route('admin.stock.near_expiry_products') }}",
+                        type: 'GET',
+                        data: {
+                            months: months
+                        },
+                        success: function(data) {
+                            var tbody = $('#expiredItemsTbody');
+                            tbody.empty();
+                            $.each(data, function(index, item) {
+                                var row = `<tr>
+                                   <td>${item.id}</td>
+                                   <td>${item.name}</td>
+                                   <td>${item.expiry_date}</td>
+                                   <td style="text-align: right">${item.quantity}</td>
+                               </tr>`;
+                                tbody.append(row);
+                            });
+                        }
+                    });
+                }
+
+                var initialMonths = $('#expiryDropdown').val();
+                fetchNearExpiryProducts(initialMonths);
+
+                $('#expiryDropdown').on('change', function() {
+                    var months = $(this).val();
+                    fetchNearExpiryProducts(months);
                 });
             });
         </script>
