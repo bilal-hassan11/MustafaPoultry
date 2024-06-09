@@ -109,7 +109,7 @@
                   <div class="col-md-2">
                     <div class="form-group">
                       <label>Instrument No </label>
-                      <input class="form-control" type="text" name="bil_no" value="{{ @$edit_receipt->bil_no ?? 0 }}" required>
+                      <input class="form-control" name="bil_no" value="{{ @$edit_receipt->bil_no }}" required>
                     </div>
                   </div>
 
@@ -177,7 +177,7 @@
                   <div class="col-md-2">
                     <div class="form-group">
                       <label>Instrument No </label>
-                      <input class="form-control" type="text" name="bil_no" value="{{ @$edit_payment->bil_no ?? 0 }}" required>
+                      <input class="form-control" name="bil_no" value="{{ @$edit_payment->bil_no }}" required>
                     </div>
                   </div>
 
@@ -285,62 +285,54 @@
                     <h3 class="card-title mb-0">All Cash Detail</h3>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
-                    <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <table id="example" class="table table-bordered text-nowrap mb-0 dataTable no-footer" role="grid" aria-describedby="data-table_info">
-                            <thead>
-                              <tr class="text-dark">
-                                <th>S.No</th>
-                                <th>Date</th>
-                                <th>Inst #</th>
-                                <th> Account Name </th>
-                                <th>Narration</th>
-                                <th> Payment </th>
-                                <th> Receipt </th>
-                                <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <?php $total_receipt = 0; $total_payment = 0; ?>
-                              @foreach($cash AS $c)
-                                <tr class="text-dark">
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ date('d-M-Y', strtotime($c->entry_date)) }}</td>
-                                    <td>{{ $c->bil_no }}</td>
-                                    <td ><span class="waves-effect waves-light btn btn-primary-light">{{ @$c->account->name }}</span></td>
-                                    <td>{{ $c->narration }}</td>
-                                    <?php $total_receipt += $c->receipt_ammount; $total_payment +=$c->payment_ammount; ?>
-                                    <td>{{ $c->payment_ammount }}</td>
-                                    <td>{{ $c->receipt_ammount }}</td>
-                                    <td width="120">
-                                      <div class="btn-list"> 
-                                        <a  href="{{route('admin.cash.edit', $c->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
-                                      </div>
-                                      <!-- <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.cash.delete', $c->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
-                                          <i class="fas fa-trash"></i>
-                                      </button> -->
-                                  </td>
-                                </tr>
-                              @endforeach
-                            </tbody>
-                            <tfoot>
-                            <tr class="text-dark">
-                                  <td colspan="5">Total:</td>
-                                  <td><strong><?= @$total_payment ?></strong></td>
-                                  <td><strong><?= @$total_receipt ?></strong></td>
-                                  
-                                </tr>
-                            </tfoot>
-                        
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 
-                </div>
+                <table id="example54" class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100">
+                  <thead>
+                    <tr class="text-dark">
+                      <th>S.No</th>
+                      <th>Date</th>
+                      <th>Inst #</th>
+                      <th> Account Name </th>
+                      <th>Narration</th>
+                      <th> Payment </th>
+                      <th> Receipt </th>
+                      <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <?php $total_receipt = 0; $total_payment = 0; ?>
+                    @foreach($cash AS $c)
+                      <tr class="text-dark">
+                          <td>{{ $loop->iteration }}</td>
+                          <td>{{ date('d-M-Y', strtotime($c->entry_date)) }}</td>
+                          <td>{{ $c->bil_no }}</td>
+                          <td ><span class="waves-effect waves-light btn btn-primary-light">{{ @$c->account->name }}</span></td>
+                          <td>{{ $c->narration }}</td>
+                          <?php $total_receipt += $c->receipt_ammount; $total_payment +=$c->payment_ammount; ?>
+                          <td>{{ $c->payment_ammount }}</td>
+                          <td>{{ $c->receipt_ammount }}</td>
+                          <td width="120">
+                            <div class="btn-list"> 
+                              <a  href="{{route('admin.cash.edit', $c->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                            </div>
+                            <!-- <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.cash.delete', $c->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
+                                <i class="fas fa-trash"></i>
+                            </button> -->
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                  <tfoot>
+                  <tr class="text-dark">
+                        <td colspan="5">Total:</td>
+                        <td><strong><?= @$total_payment ?></strong></td>
+                        <td><strong><?= @$total_receipt ?></strong></td>
+                        
+                      </tr>
+                  </tfoot>
+            	
+				        </table>
+            </div>
               </div>
           </div>
           <!-- COL END --> 
@@ -353,3 +345,19 @@
 
 @endsection
 
+@section('page-scripts')
+@include('admin.partials.datatable')
+<script>
+  $('#grand_parent_id').change(function(){
+    var id    = $(this).val();
+    var route = "{{ route('admin.cash.get_parent_accounts', ':id') }}";
+    route     = route.replace(':id', id);
+
+   if(id != ''){
+      getAjaxRequests(route, "", "GET", function(resp){
+        $('#parent_id').html(resp.html);
+      });
+    }
+  })
+</script>
+@endsection

@@ -12,7 +12,6 @@ use App\Models\MurghiInvoice;
 use App\Models\MedicineInvoice;
 use App\Models\CashBook;
 use App\Models\Expense;
-use App\Models\ExpiryStock;
 use Carbon\Carbon;
 
 class HomeController extends AdminController
@@ -79,38 +78,6 @@ class HomeController extends AdminController
         $newDateTime = Carbon::now()->addMonth(2);
         $d = $newDateTime->toDateString();
 
-        // $Item  = Item::where('status','1')->latest()->get();
-        // foreach($Item as $i){
-        //     $available_item[] = $i['name'];
-        //     $available_stock[] = $i['stock_qty'];
-        // }
-        // $labels = [$available_item];
-        // $price = [$available_stock];
-        //dd($available_item);
-
-        // //return view('showMap',['labels' => $label, 'prices' => $price]);
-        // $get = Consumption::with(['item'])->select(DB::raw("SUM(qunantity) as qty"))
-        //         ->groupBy('item_id')
-        //        ->get();
-        //    ;
-        // //dd($get);
-
-
-        // $sale_array     = [0,0,0,0,0,0,0,0,0,0,0,0];
-        // $sale_bag_array = [0,0,0,0,0,0,0,0,0,0,0,0];
-        // $consumption_array     = [0,0,0,0,0,0,0,0,0,0,0,0];
-        // $consumption_qty = [0,0,0,0,0,0,0,0,0,0,0,0];
-
-
-        // foreach($sale->pluck('month') AS $index=>$month){
-        //     $sale_array[$month-1]     = $sale->pluck('count')[$index];
-        //     $sale_bag_array[$month-1] = intVal($sale->pluck('bag')[$index]);
-        // }
-
-        // foreach($consumption->pluck('month') AS $index=>$month){
-        //     $consumption_array[$month-1]     = $consumption->pluck('count')[$index];
-        //     $consumption_qty[$month-1] = intVal($consumption->pluck('qty')[$index]);
-        // }
         $maxSellingProducts = MedicineInvoice::with('item')
             ->where('type', 'Sale')
             ->groupBy('item_id')
@@ -131,7 +98,7 @@ class HomeController extends AdminController
         $medicineInvoice = new MedicineInvoice();
         $stockInfo = $medicineInvoice->getStockInfo();
         $lowStockAlertProducts = $medicineInvoice->filterLowStock($stockInfo);
-        $expiredStock = $medicineInvoice->filterExpiredStock($stockInfo);
+        $expiredStock = $medicineInvoice->filterNearExpiryStock($stockInfo, 3);
 
         $month = date('m');
         $data = array(

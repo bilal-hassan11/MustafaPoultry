@@ -183,4 +183,11 @@ class StockController extends Controller
 
         return view('admin.stock.low_selling_report');
     }
+
+    public function nearExpiryProducts(Request $request)
+    {
+        $medicineInvoice = new MedicineInvoice();
+        $stockInfo = $medicineInvoice->getStockInfo();
+        return $medicineInvoice->filterNearExpiryStock($stockInfo, $request->months);
+    }
 }
