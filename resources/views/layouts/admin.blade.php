@@ -611,14 +611,15 @@
                                 <li> <a class="side-menu__item" href="{{ route('admin.paymentbooks.index') }}"><i
                                             class="side-menu__icon fe fe-grid"></i><span
                                             class="side-menu__label">Payment Book</span></a> </li>
-                                            
+
                                 <li class="slide">
                                     <a class="side-menu__item " data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
                                             class="side-menu__label">ExpenseBook</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0);">ExpenseBook</a></li>
+                                        <li class="side-menu-label1"><a href="javascript:void(0);">ExpenseBook</a>
+                                        </li>
                                         <li><a href="{{ route('admin.expenses.index') }}" class="slide-item"> Add
                                                 Expense Category</a></li>
                                         <li><a href="{{ route('admin.expenses.expense') }}" class="slide-item"> Add
@@ -748,9 +749,9 @@
                                 <!-- Other -->
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/other-invoices/purchase') || request()->is('web_admin/other-invoices/sale') ? 'active' : '' }}"
-                                        data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file-text"
-                                            aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
-                                            class="side-menu__label">Others Items</span><i
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i
+                                            class="side-menu__icon fe fe-file-text" aria-hidden="true"></i>
+                                        &nbsp&nbsp&nbsp<span class="side-menu__label">Others Items</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
@@ -764,6 +765,10 @@
 
                                     </ul>
                                 </li>
+                                <li> <a class="side-menu__item"
+                                        href="{{ route('admin.medicine-invoices.adjustment') }}"><i
+                                            class="side-menu__icon fe fe-grid"></i><span
+                                            class="side-menu__label">Adjust Stock</span></a> </li>
                                 <li> <a class="side-menu__item" href="{{ route('admin.stock.index') }}"><i
                                             class="side-menu__icon fe fe-grid"></i><span
                                             class="side-menu__label">Available Stock</span></a> </li>
@@ -919,7 +924,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                
+
                                 <a class="dropdown-item d-flex border-bottom" href="editprofile.html">
                                     <div class="d-flex">
                                         <i class="fe fe-settings me-3 tx-20 text-muted"></i>
@@ -929,10 +934,12 @@
                                         </div>
                                     </div>
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    style="display: none;">
                                     {{ csrf_field() }}
                                 </form>
-                                <a class="dropdown-item d-flex border-bottom" href="{{ route('logout') }}" onclick="logout(event)">
+                                <a class="dropdown-item d-flex border-bottom" href="{{ route('logout') }}"
+                                    onclick="logout(event)">
                                     <div class="d-flex">
                                         <i class="fe fe-power me-3 tx-20 text-muted"></i>
                                         <div class="pt-1">

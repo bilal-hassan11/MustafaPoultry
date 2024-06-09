@@ -230,11 +230,13 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/sale', 'createSale')->name('sale');
         Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/adjustment', 'createAdjustment')->name('adjustment');
         Route::get('/purchase/edit/{invoice_no}', 'editPurchase')->name('edit.purchase');
         Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
         Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::get('/sale/edit/{invoice_no}', 'editSale')->name('edit.sale');
         Route::post('/store', 'store')->name('store');
+        Route::post('/storeAdjsutment', 'storeAdjsutment')->name('store_adjustment');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });
@@ -304,7 +306,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/return', 'singleReturn')->name('single-return');
     });
 
-    Route::controller(ExpenseController::class)->prefix('expense')->name('expenses.')->group(function(){
+    Route::controller(ExpenseController::class)->prefix('expense')->name('expenses.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -314,9 +316,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/expensestore', 'expensestore')->name('expensestore');
         Route::get('/expenseedit/{id}', 'expenseedit')->name('expenseedit');
         Route::get('/expensedelete/{id}', 'expensedelete')->name('expensedelete');
-        
     });
-    
 });
 
 

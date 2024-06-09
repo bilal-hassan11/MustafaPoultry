@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('invoice_no');
-            $table->unsignedBigInteger('account_id');
+            $table->unsignedBigInteger('account_id')->nullable();
             $table->string('ref_no')->nullable();
             $table->string('description')->nullable();
             $table->unsignedBigInteger('item_id');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('total_cost')->default(0);
             $table->decimal('net_amount')->default(0);
             $table->date('expiry_date')->nullable();
-            $table->enum('type', ['Purchase', 'Sale', 'Purchase Return', 'Sale Return', 'Adjust In', 'Adjust Out'])->nullable();
+            $table->enum('type', ['Purchase', 'Sale', 'Purchase Return', 'Sale Return', 'Adjust Stock'])->nullable();
             $table->enum('stock_type', ['In', 'Out'])->default('In');
             $table->enum('is_draft', [1, 0])->default(0);
             $table->enum('whatsapp_status', ['Sent', 'Not Sent'])->default('Sent');

@@ -64,6 +64,35 @@ class MedicineInvoiceController extends Controller
 
         return view('admin.medicine.purchase_medicine', compact(['title', 'pending_medicine', 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
     }
+    public function createAdjustment(Request $req)
+    {
+        $title = "Adjust In";
+        $invoice_no = generateUniqueID(new MedicineInvoice, 'Adjust In', 'invoice_no');
+
+        $products = Item::orderBy('name')->get();
+
+        $warehouseId = $req->warehouse_id;
+        $supplierId = $req->supplier_id;
+        $referenceNo = $req->reference_no;
+        $fromDate = $req->from_date;
+        $toDate = $req->to_date;
+
+        $purchase_medicine = MedicineInvoice::with('account', 'item')
+            ->where('type', 'Adjust In')
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
+            ->latest()
+            ->get();
+
+        return view('admin.medicine.adjustment', compact(['title',  'invoice_no', 'products', 'purchase_medicine']));
+    }
 
     public function editPurchase($invoice_no)
     {
@@ -241,6 +270,73 @@ class MedicineInvoiceController extends Controller
                 $pdfPath = $this->generatePdf($htmlContent, 'Sale-' . $medicineInvoice[0]->invoice_no);
                 $result = $this->sendWhatsAppMessage($medicineInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
             }
+            DB::commit();
+            return response()->json(['success' => true], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function storeAdjsutment(Request $request)
+    {
+        $validatedData = $request->validate([
+            'invoice_no' =>  'required',
+            'date' => 'required|date',
+            'stock_type' => 'required',
+            'ref_no' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'item_id.*' => 'required|exists:items,id',
+            'id.*' => 'nullable',
+            'purchase_price.*' => 'required|numeric',
+            'sale_price.*' => 'required|numeric',
+            'quantity.*' => 'required|numeric',
+            'amount.*' => 'required|numeric',
+            'expiry_date.*' => 'nullable|date',
+            'whatsapp_status' => 'nullable|boolean',
+        ]);
+
+        $date = $request->input('date');
+        if ($request->stock_type == 'Out') {
+            $stockErrors = $this->validateStockQuantities($validatedData);
+
+            if (!empty($stockErrors)) {
+                return response()->json(['errors' => $stockErrors], 422);
+            }
+        }
+
+        DB::beginTransaction();
+
+        $invoiceNumber = generateUniqueID(new MedicineInvoice, $request->type, 'invoice_no');
+        try {
+
+            $items = $validatedData['item_id'];
+            foreach ($items as $index => $itemId) {
+
+                $price = $validatedData['purchase_price'][$index];
+                $netAmount = $price * $validatedData['quantity'][$index];
+
+                $medicineInvoice = MedicineInvoice::create([
+                    'date' => $date,
+                    'ref_no' => $validatedData['ref_no'],
+                    'description' => $validatedData['description'],
+                    'invoice_no' => $invoiceNumber,
+                    'type' => $request->type,
+                    'stock_type' => $request->stock_type,
+                    'item_id' => $itemId,
+                    'purchase_price' => $validatedData['purchase_price'][$index],
+                    'sale_price' => $validatedData['sale_price'][$index],
+                    'quantity' => $request->stock_type == 'Out' ? -$validatedData['quantity'][$index] : $validatedData['quantity'][$index],
+                    'amount' => $validatedData['amount'][$index],
+                    'discount_in_rs' => 0,
+                    'discount_in_percent' => 0,
+                    'total_cost' =>  $request->stock_type == 'Out'  ? -$netAmount : $netAmount,
+                    'net_amount' => $netAmount,
+                    'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
+                    'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
+                ]);
+            }
+
             DB::commit();
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
