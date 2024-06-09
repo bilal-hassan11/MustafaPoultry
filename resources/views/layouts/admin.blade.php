@@ -611,7 +611,20 @@
                                 <li> <a class="side-menu__item" href="{{ route('admin.paymentbooks.index') }}"><i
                                             class="side-menu__icon fe fe-grid"></i><span
                                             class="side-menu__label">Payment Book</span></a> </li>
-
+                                            
+                                <li class="slide">
+                                    <a class="side-menu__item " data-bs-toggle="slide" href="javascript:void(0);"><i
+                                            class="side-menu__icon fe fe-file"></i><span
+                                            class="side-menu__label">ExpenseBook</span><i
+                                            class="angle fa fa-angle-right"></i></a>
+                                    <ul class="slide-menu">
+                                        <li class="side-menu-label1"><a href="javascript:void(0);">ExpenseBook</a></li>
+                                        <li><a href="{{ route('admin.expenses.index') }}" class="slide-item"> Add
+                                                Expense Category</a></li>
+                                        <li><a href="{{ route('admin.expenses.expense') }}" class="slide-item"> Add
+                                                Expenses</a></li>
+                                    </ul>
+                                </li>
                                 <li class="sub-category">
                                     <h3>Inventory Items</h3>
                                 </li>

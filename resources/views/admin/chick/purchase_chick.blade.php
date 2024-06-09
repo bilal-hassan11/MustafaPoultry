@@ -224,77 +224,86 @@
                             <h3 class="card-title mb-0">All Purchase Chick Detail</h3>
                         </div>
                         <div class="card-body">
-                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
-                                <thead>
-                                    <tr class="text-dark">
-                                        <th>S.No</th>
-                                        <th>Date</th>
-                                        <th>Invoice No</th>
-                                        <th>Account Name</th>
-                                        <th>Item</th>
-                                        <th>Rate</th>
-                                        <th>Quantity</th>
-                                        <th>Net Ammount</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $tot_q = 0;
-                                    $tot_amt = 0; ?>
-                                    @foreach ($purchase_Chick as $purcahse)
-                                        <tr class="text-dark">
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
-                                            <td>{{ $purcahse->invoice_no }}</td>
-                                            <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? '' }}</span>
-                                            </td>
+                            <div class="table-responsive">
+                                <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr class="text-dark">
+                                                        <th>S.No</th>
+                                                        <th>Date</th>
+                                                        <th>Invoice No</th>
+                                                        <th>Account Name</th>
+                                                        <th>Item</th>
+                                                        <th>Rate</th>
+                                                        <th>Quantity</th>
+                                                        <th>Net Ammount</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php $tot_q = 0;
+                                                    $tot_amt = 0; ?>
+                                                    @foreach ($purchase_Chick as $purcahse)
+                                                        <tr class="text-dark">
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ date('d-M-Y', strtotime($purcahse->date)) }}</td>
+                                                            <td>{{ $purcahse->invoice_no }}</td>
+                                                            <td><span
+                                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $purcahse->account->name ?? '' }}</span>
+                                                            </td>
 
-                                            <td><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
-                                            </td>
-                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
-                                            <?php $tot_q += $purcahse->quantity; ?>
-                                            <td>{{ $purcahse->quantity }}</td>
-                                            <?php $tot_amt += $purcahse->net_amount; ?>
-                                            <td>{{ $purcahse->net_amount }}</td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
-                                                        href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
-                                                        title="View">
-                                                        <i class="ri-eye-line"></i>
-                                                    </a>
-                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                        href="{{ route('admin.chick-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
-                                                        title="Edit">
-                                                        <i class="ri-edit-line"></i>
-                                                    </a>
-                                                    <a href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
-                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
-                                                        title="Download">
-                                                        <i class="ri-download-2-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr class="text-dark">
-                                        <th>Total</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>{{ $tot_q }}</th>
-                                        <th>{{ $tot_amt }}</th>
-                                        <th>-</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                                            <td><span
+                                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
+                                                            </td>
+                                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
+                                                            <?php $tot_q += $purcahse->quantity; ?>
+                                                            <td>{{ $purcahse->quantity }}</td>
+                                                            <?php $tot_amt += $purcahse->net_amount; ?>
+                                                            <td>{{ $purcahse->net_amount }}</td>
+                                                            <td>
+                                                                <div class="btn-group" role="group">
+                                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
+                                                                        href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                                        title="View">
+                                                                        <i class="ri-eye-line"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
+                                                                        href="{{ route('admin.chick-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
+                                                                        title="Edit">
+                                                                        <i class="ri-edit-line"></i>
+                                                                    </a>
+                                                                    <a href="{{ route('admin.chick-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
+                                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
+                                                                        title="Download">
+                                                                        <i class="ri-download-2-line"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="text-dark">
+                                                        <th>Total</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>{{ $tot_q }}</th>
+                                                        <th>{{ $tot_amt }}</th>
+                                                        <th>-</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

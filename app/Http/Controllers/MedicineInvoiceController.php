@@ -32,6 +32,13 @@ class MedicineInvoiceController extends Controller
 
         $products = Item::where('category_id', 4)->get();
 
+
+        $warehouseId = $request->warehouse_id;
+        $supplierId = $request->supplier_id;
+        $referenceNo = $request->reference_no;
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        
         $purchase_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Purchase')
             ->when(isset($req->account_id), function ($query) use ($req) {

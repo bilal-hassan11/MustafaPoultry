@@ -28,6 +28,7 @@ use App\Http\Controllers\MurghiInvoiceController;
 use App\Http\Controllers\OtherInvoiceController;
 
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\ExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -301,6 +302,19 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/return', 'singleReturn')->name('single-return');
     });
 
+
+    Route::controller(ExpenseController::class)->prefix('expense')->name('expenses.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::get('/delete/{id}', 'delete')->name('delete');
+
+        Route::get('/expense', 'expense')->name('expense');
+        Route::post('/expensestore', 'expensestore')->name('expensestore');
+        Route::get('/expenseedit/{id}', 'expenseedit')->name('expenseedit');
+        Route::get('/expensedelete/{id}', 'expensedelete')->name('expensedelete');
+        
+    });
 
 });
 
