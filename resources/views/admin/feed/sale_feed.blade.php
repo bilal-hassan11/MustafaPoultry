@@ -223,76 +223,87 @@
                             <h3 class="card-title mb-0">All Sale Feed Detail</h3>
                         </div>
                         <div class="card-body">
-                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
-                                <thead>
-                                    <tr class="text-dark">
-                                        <th>S.No</th>
-                                        <th>Date</th>
-                                        <th>Inv #</th>
-                                        <th>Account</th>
-                                        <th>Item</th>
-                                        <th>Rate</th>
-                                        <th>Quantity</th>
-                                        <th>Amount</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $tot_q = 0;
-                                    $tot_amt = 0; ?>
-                                    @foreach ($sale_Feed as $sale)
-                                        <tr class="text-dark">
-                                            <td style="width: 5%; !important">{{ $loop->iteration }}</td>
-                                            <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($sale->date)) }}
-                                            </td>
-                                            <td style="width: 10%; !important">{{ $sale->invoice_no }}</td>
-                                            <td style="width: 15%; !important"><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $sale->account->name ?? '' }}</span>
-                                            </td>
 
-                                            <td style="width: 10%; !important"><span
-                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
-                                            </td>
-                                            <td style="width: 10%; !important">
-                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}</td>
-                                            <?php $tot_q += $sale->quantity; ?>
-                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}</td>
-                                            <?php $tot_amt += $sale->net_amount; ?>
-                                            <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
-                                            <td style="width: 20%; !important">
-                                                <a
-                                                    href="{{ route('admin.feed-invoices.sale.show', ['invoice_no' => $sale->invoice_no]) }}"><button
-                                                        class="btn btn-outline-info  rounded-pill btn-wave"
-                                                        type="button">
-                                                        <i class="ri-eye-line"></i></a>
-                                                </button>
-                                                <a href="{{ route('admin.feed-invoices.edit.sale', ['invoice_no' => $sale->invoice_no]) }}"
-                                                    title="Edit"><button
-                                                        class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
-                                                            class="ri-edit-line"></i></button>
-                                                </a>
-                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
-                                                    type="button">
-                                                    <i class="ri-download-2-line"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr class="text-dark">
-                                        <th>Total</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>{{ abs($tot_q) }}</th>
-                                        <th>{{ $tot_amt }}</th>
-                                        <th>-</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                            <div class="table-responsive">
+                                <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr class="text-dark">
+                                                        <th>S.No</th>
+                                                        <th>Date</th>
+                                                        <th>Inv #</th>
+                                                        <th>Account</th>
+                                                        <th>Item</th>
+                                                        <th>Rate</th>
+                                                        <th>Quantity</th>
+                                                        <th>Amount</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php $tot_q = 0;
+                                                    $tot_amt = 0; ?>
+                                                    @foreach ($sale_Feed as $sale)
+                                                        <tr class="text-dark">
+                                                            <td style="width: 5%; !important">{{ $loop->iteration }}</td>
+                                                            <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($sale->date)) }}
+                                                            </td>
+                                                            <td style="width: 10%; !important">{{ $sale->invoice_no }}</td>
+                                                            <td style="width: 15%; !important"><span
+                                                                    class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $sale->account->name ?? '' }}</span>
+                                                            </td>
+
+                                                            <td style="width: 10%; !important"><span
+                                                                    class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
+                                                            </td>
+                                                            <td style="width: 10%; !important">
+                                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}</td>
+                                                            <?php $tot_q += $sale->quantity; ?>
+                                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}</td>
+                                                            <?php $tot_amt += $sale->net_amount; ?>
+                                                            <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
+                                                            <td style="width: 20%; !important">
+                                                                <a
+                                                                    href="{{ route('admin.feed-invoices.sale.show', ['invoice_no' => $sale->invoice_no]) }}"><button
+                                                                        class="btn btn-outline-info  rounded-pill btn-wave"
+                                                                        type="button">
+                                                                        <i class="ri-eye-line"></i></a>
+                                                                </button>
+                                                                <a href="{{ route('admin.feed-invoices.edit.sale', ['invoice_no' => $sale->invoice_no]) }}"
+                                                                    title="Edit"><button
+                                                                        class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                                            class="ri-edit-line"></i></button>
+                                                                </a>
+                                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
+                                                                    type="button">
+                                                                    <i class="ri-download-2-line"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="text-dark">
+                                                        <th>Total</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                        <th>{{ abs($tot_q) }}</th>
+                                                        <th>{{ $tot_amt }}</th>
+                                                        <th>-</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
 
                         </div>
                     </div>

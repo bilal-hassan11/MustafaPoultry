@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('entry_date');
             $table->integer('account_id');
             $table->text('narration');
-            $table->integer('bil_no');
+            $table->text('bil_no');
             $table->integer('payment_ammount')->nullable();
             $table->integer('receipt_ammount')->nullable();
             $table->enum('status', ['payment','receipt']);

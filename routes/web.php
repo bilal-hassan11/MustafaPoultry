@@ -28,6 +28,7 @@ use App\Http\Controllers\MurghiInvoiceController;
 use App\Http\Controllers\OtherInvoiceController;
 
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\ExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -302,6 +303,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });
+
 });
 
 
