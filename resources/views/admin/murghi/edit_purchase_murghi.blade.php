@@ -52,11 +52,10 @@
                             <thead>
                                 <tr>
                                     <th style="width: 30%;">Item</th>
-                                    <th style="width: 10%;">Quantity</th>
+                                    <th style="width: 10%;">Weight</th>
+                                    <th style="width: 10%;">Weight Detection</th>
+                                    <th style="width: 10%;">Final Weight</th>
                                     <th style="width: 12%;">Rate</th>
-                                    <th style="width: auto;">Expiry</th>
-                                    <th style="width: auto;">Dis In (Rs)</th>
-                                    <th style="width: auto;">Dis In (%)</th>
                                     <th style="width: auto;">Amount</th>
                                 </tr>
                             </thead>
@@ -65,7 +64,7 @@
                             </tbody>
                             <tfoot>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <label>Subtotal</label>
                                     </td>
                                     <td>
@@ -78,7 +77,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6" style="text-align: right;">
+                                    <td colspan="5" style="text-align: right;">
                                         Discount
                                     </td>
                                     <td>
@@ -87,7 +86,7 @@
                                     </td>
                                 </tr>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <label>Net Amount</label>
                                     </td>
                                     <td>
@@ -132,6 +131,12 @@
                             @endforeach
                         </select>
                     </td>
+                               <td class="weight_col">
+                        <input type="number" name="weight[]" class="form-control weight text-right" min="1" value="${item.weight || 1}" step="any" style="text-align: right;" required>
+                    </td>
+                    <td class="weight_detection_col">
+                        <input type="number" name="weight_detection[]" class="form-control weight_detection text-right" min="1" value="${item.weight_detection || 1}" step="any" style="text-align: right;" required>
+                    </td>
                     <td class="quantity_col">
                         <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="${item.quantity || 1}" step="any" style="text-align: right;" required>
                     </td>
@@ -139,16 +144,11 @@
                         <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="${item.purchase_price || 1}" step="any" style="text-align: right;" required>
                         <input type="hidden" name="sale_price[]" class="form-control saleRate text-right" value="0" step="any" style="text-align: right;" required>
                     </td>
-                    <td class="expiry_date">
-                        <input type="date" name="expiry_date[]" class="form-control text-right" value="${item.expiry_date || ''}">
-                    </td>
                     <input type="hidden" name="amount[]" class="form-control amount text-right" value="${item.amount || 0}" step="any" style="text-align: right;">
-                    <td class="dis_in_rs_col">
-                        <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="${item.discount_in_rs || 0}" step="any" style="text-align: right;">
-                    </td>
-                    <td class="dis_in_percentage_col">
-                        <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="${item.discount_in_percent || 0}"  step="any" style="text-align: right;">
-                    </td>
+                    <input type="hidden" name="expiry_date[]" class="form-control text-right">
+                    <input type="hidden" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
+                    <input type="hidden" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
+                
                     <td class="net_amount_col">
                         <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="${item.net_amount || 0}" step="any" style="text-align: right;" readonly required>
                     </td>
@@ -233,7 +233,7 @@
                 Calculation();
             });
 
-            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate,.dis_in_rs",
+            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .weight, .weight_detection",
                 function() {
                     Calculation();
                 });
@@ -245,7 +245,9 @@
 
                 $("tr.rows").each(function() {
                     let $row = $(this);
-                    let qty = parseFloat($row.find(".quantity").val()) || 0;
+                    let weight = parseFloat($row.find(".weight").val()) || 0;
+                    let weight_detection = parseFloat($row.find(".weight_detection").val()) || 0;
+                    let qty = weight - weight_detection;
                     let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
                     let amount = qty * rate;
 
@@ -257,6 +259,7 @@
 
                     $row.find(".amount").val(amount.toFixed(2));
                     $row.find(".net_amount").val(finalAmount.toFixed(2));
+                    $row.find(".quantity").val(qty.toFixed(2));
 
                     subtotal += amount;
                     totalDiscount += discountInRs;

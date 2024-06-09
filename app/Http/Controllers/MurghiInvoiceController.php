@@ -49,11 +49,11 @@ class MurghiInvoiceController extends Controller
 
         $pending_Murghi = MurghiInvoice::with('account', 'item')
             ->where('type', 'Purchase')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get();     
+            ->get();
 
-        return view('admin.murghi.purchase_murghi', compact(['title','pending_Murghi' , 'invoice_no', 'accounts', 'products', 'purchase_Murghi']));
+        return view('admin.murghi.purchase_murghi', compact(['title', 'pending_Murghi', 'invoice_no', 'accounts', 'products', 'purchase_Murghi']));
     }
 
     public function editPurchase($invoice_no)
@@ -72,18 +72,23 @@ class MurghiInvoiceController extends Controller
     {
         $title = "Edit Sale Murghi";
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
-        $products = $this->MurghiInvoice->getStockInfo();
+        $stock = $this->MurghiInvoice->getStockInfo();
+
+        $products = $stock->filter(function ($product) {
+            return $product->category_id == 8;
+        });
+
         $MurghiInvoice = MurghiInvoice::where('invoice_no', $invoice_no)
             ->where('type', 'Sale')
             ->get();
 
         $pending_Murghi = MurghiInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
+            ->get();
 
-        return view('admin.murghi.edit_sale_murghi', compact(['title','pending_Murghi', 'accounts', 'products', 'MurghiInvoice']));
+        return view('admin.murghi.edit_sale_murghi', compact(['title', 'pending_Murghi', 'accounts', 'products', 'MurghiInvoice']));
     }
 
     public function createSale(Request $req)
@@ -95,8 +100,12 @@ class MurghiInvoiceController extends Controller
 
         $MurghiInvoice = new MurghiInvoice();
 
-        $products = $MurghiInvoice->getStockInfo();
-        // dd($products);
+        $stock = $this->MurghiInvoice->getStockInfo();
+
+        $products = $stock->filter(function ($product) {
+            return $product->category_id == 8;
+        });
+
         $sale_Murghi = $MurghiInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
@@ -116,11 +125,11 @@ class MurghiInvoiceController extends Controller
 
         $pending_Murghi = $MurghiInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
-            
-        return view('admin.murghi.sale_murghi', compact(['title','pending_Murghi', 'sale_Murghi', 'invoice_no', 'accounts', 'products']));
+            ->get();
+
+        return view('admin.murghi.sale_murghi', compact(['title', 'pending_Murghi', 'sale_Murghi', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -140,6 +149,8 @@ class MurghiInvoiceController extends Controller
             'id.*' => 'nullable',
             'purchase_price.*' => 'required|numeric',
             'sale_price.*' => 'required|numeric',
+            'weight.*' => 'required|numeric',
+            'weight_detection.*' => 'required|numeric',
             'quantity.*' => 'required|numeric',
             'amount.*' => 'required|numeric',
             'discount_in_rs.*' => 'nullable|numeric',
@@ -193,6 +204,8 @@ class MurghiInvoiceController extends Controller
                     'item_id' => $itemId,
                     'purchase_price' => $validatedData['purchase_price'][$index],
                     'sale_price' => $validatedData['sale_price'][$index],
+                    'weight' => $validatedData['weight'][$index],
+                    'weight_detection' => $validatedData['weight_detection'][$index],
                     'quantity' => in_array($request->type, ['Sale', 'Adjust Out']) ? -$validatedData['quantity'][$index] : $validatedData['quantity'][$index],
                     'amount' => $validatedData['amount'][$index],
                     'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
@@ -309,6 +322,8 @@ class MurghiInvoiceController extends Controller
                 'item_id' => $originalInvoice->item_id,
                 'purchase_price' => $originalInvoice->purchase_price,
                 'sale_price' =>  $originalInvoice->sale_price,
+                'weight' =>  $originalInvoice->weight,
+                'weight_detection' =>  $originalInvoice->weight_detection,
                 'quantity' => ($type == 'Purchase Return') ?  -$validatedData['quantity'] : $validatedData['quantity'],
                 'amount' => $amount,
                 'discount_in_rs' => $originalInvoice->discount_in_rs,

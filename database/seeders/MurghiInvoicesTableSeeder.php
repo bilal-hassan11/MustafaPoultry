@@ -38,11 +38,11 @@ class MurghiInvoicesTableSeeder extends Seeder
                 'quantity' => $quantity,
                 'amount' => $amount,
                 'weight_detection' => $weightDetection,
-                'final_weight' => $finalWeight,
+                'weight' => $finalWeight,
                 'net_amount' => $netAmount,
                 'type' => ['Purchase', 'Sale', 'Purchase Return', 'Sale Return', 'Adjust In', 'Adjust Out'][array_rand(['Purchase', 'Sale', 'Purchase Return', 'Sale Return', 'Adjust In', 'Adjust Out'])],
                 'stock_type' => ['In', 'Out'][array_rand(['In', 'Out'])],
-                
+
                 'whatsapp_status' => ['Sent', 'Not Sent'][array_rand(['Sent', 'Not Sent'])],
                 'remarks' => 'Remarks for invoice ' . $i,
                 'created_at' => now(),

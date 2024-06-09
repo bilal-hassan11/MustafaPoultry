@@ -112,10 +112,10 @@
                     <tr>
                         <th class="text-center" style="width:5%">#</th>
                         <th class="text-center">Item</th>
-                        <th class="text-center" style="width:10%">Qty</th>
+                        <th class="text-center" style="width:10%">Weight</th>
+                        <th class="text-center" style="width:10%">Weight Detection</th>
+                        <th class="text-center" style="width:10%">Final Weight</th>
                         <th class="text-center" style="width:10%">Price</th>
-                        <th class="text-center" style="width:12%">Discount (Rs)</th>
-                        <th class="text-center" style="width:12%">Discount (%)</th>
                         <th class="text-center" style="width:15%">Amount</th>
                     </tr>
                 </thead>
@@ -127,16 +127,13 @@
                     @foreach ($MurghiInvoice as $index => $item)
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
-                            <td class="text-center">
-                                {{ $item->item->name }}{{ $item->expiry_date ? ' - ' . $item->expiry_date : '' }}
-                            </td>
-
+                            <td>{{ $item->item->name }}</td>
+                            <td class="text-right">{{ abs($item->weight) }}</td>
+                            <td class="text-right">{{ abs($item->weight_detection) }}</td>
                             <td class="text-right">{{ abs($item->quantity) }}</td>
                             <td class="text-right">Rs
                                 {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                             </td>
-                            <td class="text-right">Rs {{ number_format($item->discount_in_rs, 2) }}</td>
-                            <td class="text-right">{{ number_format($item->discount_in_percent, 2) }}%</td>
                             <td class="text-right">Rs {{ number_format($item->net_amount, 2) }}</td>
                         </tr>
                         @php

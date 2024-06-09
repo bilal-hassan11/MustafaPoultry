@@ -28,11 +28,10 @@
                                 <tr>
                                     <th>Sr.No</th>
                                     <th>Item</th>
-                                    <th>Quantity</th>
+                                    <th>Weight</th>
+                                    <th>Weight Detection</th>
+                                    <th>Final Weight</th>
                                     <th>{{ $type }} Price</th>
-                                    <th>Expiry</th>
-                                    <th>Discount (Rs)</th>
-                                    <th>Discount (%)</th>
                                     <th>Total Returned</th>
                                     <th>Net Amount</th>
                                     <th>Action</th>
@@ -47,14 +46,11 @@
                                     <tr>
                                         <td style="text-align: center;">{{ $index + 1 }}</td>
                                         <td>{{ $item->item->name }}</td>
+                                        <td style="text-align: right;">{{ abs($item->weight) }}</td>
+                                        <td style="text-align: right;">{{ abs($item->weight_detection) }}</td>
                                         <td style="text-align: right;">{{ abs($item->quantity) }}</td>
                                         <td style="text-align: right;">Rs
                                             {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
-                                        </td>
-                                        <td>{{ $item->expiry_date ?? '' }}</td>
-                                        <td style="text-align: right;">Rs {{ number_format($item->discount_in_rs, 2) }}
-                                        </td>
-                                        <td style="text-align: right;">{{ number_format($item->discount_in_percent, 2) }}%
                                         </td>
                                         <td style="text-align: right;">
                                             {{ $item->total_returned ?? 0 }}
@@ -78,15 +74,15 @@
                             </tbody>
                             <tfoot style="text-align: right;">
                                 <tr>
-                                    <th colspan="8">Subtotal</th>
+                                    <th colspan="7">Subtotal</th>
                                     <th>Rs {{ number_format($MurghiInvoice->sum('amount'), 2) }}</th>
                                 </tr>
                                 <tr>
-                                    <th colspan="8">Total Discount</th>
+                                    <th colspan="7">Total Discount</th>
                                     <th>Rs {{ number_format($MurghiInvoice->sum('discount_in_rs'), 2) }}</th>
                                 </tr>
                                 <tr>
-                                    <th colspan="8">Net Amount</th>
+                                    <th colspan="7">Net Amount</th>
                                     <th>Rs {{ number_format($MurghiInvoice->sum('net_amount'), 2) }}</th>
                                 </tr>
                             </tfoot>

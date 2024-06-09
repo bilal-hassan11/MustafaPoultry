@@ -47,11 +47,10 @@
                             <thead>
                                 <tr>
                                     <th style="width: 30%;">Item</th>
-                                    <th style="width: 10%;">Quantity</th>
+                                    <th style="width: 10%;">Weight</th>
+                                    <th style="width: 10%;">Weight Detection</th>
+                                    <th style="width: 10%;">Final Weight</th>
                                     <th style="width: 12%;">Rate</th>
-                                    <th style="width: auto;">Expiry</th>
-                                    <th style="width: auto;">Dis In (Rs)</th>
-                                    <th style="width: auto;">Dis In (%)</th>
                                     <th style="width: auto;">Amount</th>
                                 </tr>
                             </thead>
@@ -59,7 +58,7 @@
                             </tbody>
                             <tfoot>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <label>Subtotal</label>
                                     </td>
                                     <td>
@@ -72,7 +71,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6" style="text-align: right;">
+                                    <td colspan="5" style="text-align: right;">
                                         Discount
                                     </td>
                                     <td>
@@ -81,7 +80,7 @@
                                     </td>
                                 </tr>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <label>Net Amount</label>
                                     </td>
                                     <td>
@@ -148,67 +147,65 @@
                 <!-- COL END -->
             </div>
             <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                <div class="ms-auto pageheader-btn"> 
-                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Purchases</a>
-                </div> 
+                <div class="ms-auto pageheader-btn">
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper"
+                        data-bs-toggle="modal" href="#modaldemo8">Pending Purchases</a>
+                </div>
             </div>
             <div class="row">
                 <div class="col-xl-12">
-                    
-                    
+
+
                     <div class="card-body">
-                        
+
                         <div class="modal fade" id="modaldemo8" style="display: none" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered text-center" role="document">
                                 <div class="modal-content modal-content-demo">
                                     <div class="modal-header">
                                         <h6 class="modal-title">Pending Purchases</h6>
-                                        <button
-                                        aria-label="Close"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        ></button>
+                                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body text-start">
-                                    <table id="example54" class="text-fade table table-bordered" >
-                                        <thead>
-                                            <tr class="text-dark">
-                                                <th>Account</th>
-                                                <th>Item</th>
-                                                <th>Qty</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pending_Murghi as $pending)
+                                        <table id="example54" class="text-fade table table-bordered">
+                                            <thead>
                                                 <tr class="text-dark">
-                                                    
-                                                    <td style="width: 15%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
-                                                    </td>
-
-                                                    <td style="width: 10%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
-                                                    </td>
-                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
-                                                    <td style="width: 20%; !important">
-                                                        
-                                                        <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                            href="{{ route('admin.murghi-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
-                                                            title="Edit">
-                                                            <i class="ri-edit-line"></i>
-                                                        </a>
-                                                        
-                                                    </td>
+                                                    <th>Account</th>
+                                                    <th>Item</th>
+                                                    <th>Qty</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                        
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($pending_Murghi as $pending)
+                                                    <tr class="text-dark">
+
+                                                        <td style="width: 15%; !important"><span
+                                                                class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                        </td>
+
+                                                        <td style="width: 10%; !important"><span
+                                                                class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
+                                                        </td>
+                                                        <td style="width: 10%; !important">{{ abs($pending->quantity) }}
+                                                        </td>
+                                                        <td style="width: 20%; !important">
+
+                                                            <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
+                                                                href="{{ route('admin.murghi-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
+                                                                title="Edit">
+                                                                <i class="ri-edit-line"></i>
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+
+                                        </table>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-light" data-bs-dismiss="modal">
-                                        Close
+                                            Close
                                         </button>
                                     </div>
                                 </div>
@@ -228,7 +225,8 @@
                                 <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                            <table id="example54" class="text-fade table table-bordered"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr class="text-dark">
                                                         <th>S.No</th>
@@ -237,7 +235,7 @@
                                                         <th>Account Name</th>
                                                         <th>Item</th>
                                                         <th>Rate</th>
-                                                        <th>Quantity</th>
+                                                        <th>Final Weight</th>
                                                         <th>Net Ammount</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -257,7 +255,8 @@
                                                             <td><span
                                                                     class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
                                                             </td>
-                                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
+                                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}
+                                                            </td>
                                                             <?php $tot_q += $purcahse->quantity; ?>
                                                             <td>{{ $purcahse->quantity }}</td>
                                                             <?php $tot_amt += $purcahse->net_amount; ?>
@@ -275,8 +274,8 @@
                                                                         <i class="ri-edit-line"></i>
                                                                     </a>
                                                                     <a href="{{ route('admin.murghi-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
-                                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
-                                                                        title="Download">
+                                                                        class="btn btn-outline-info rounded-pill btn-wave"
+                                                                        target="_blank" title="Download">
                                                                         <i class="ri-download-2-line"></i>
                                                                     </a>
                                                                 </div>
@@ -342,23 +341,24 @@
                         </select>
                         @endif
                     </td>
+                    <td class="weight_col">
+                        <input type="number" name="weight[]" class="form-control weight text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                    </td>
+                    <td class="weight_detection_col">
+                        <input type="number" name="weight_detection[]" class="form-control weight_detection text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                    </td>
                     <td class="quantity_col">
-                        <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                        <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" readonly required>
                     </td>
                     <td class="purchase_rate_col">
                         <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="1"  step="any" style="text-align: right;" required>
                         <input type="hidden" name="sale_price[]" class="form-control saleRate text-right" value="0" step="any" style="text-align: right;" required>
                     </td>
-                    <td class="expiry_date">
-                        <input type="date" name="expiry_date[]" class="form-control text-right">
-                    </td>
+                    <input type="hidden" name="expiry_date[]" class="form-control text-right">
                     <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
-                    <td class="dis_in_rs_col">
-                        <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
-                    </td>
-                    <td class="dis_in_percentage_col">
-                        <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
-                    </td>
+                    <input type="hidden" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
+                    <input type="hidden" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
+                
                     <td class="net_amount_col">
                         <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
                     </td>
@@ -433,7 +433,7 @@
                 Calculation();
             });
 
-            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .dis_in_percentage",
+            $("body").on("input keyup blur", ".product_val, .quantity, .purchaseRate, .weight, .weight_detection",
                 function() {
                     Calculation();
                 });
@@ -445,8 +445,12 @@
 
                 $("tr.rows").each(function() {
                     let $row = $(this);
-                    let qty = parseFloat($row.find(".quantity").val()) || 0;
+                    let weight = parseFloat($row.find(".weight").val()) || 0;
+                    let weight_detection = parseFloat($row.find(".weight_detection").val()) || 0;
+                    let qty = weight - weight_detection;
                     let rate = parseFloat($row.find(".purchaseRate").val()) || 0;
+
+
                     let amount = qty * rate;
                     let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
 
@@ -462,6 +466,7 @@
                     let finalAmount = amount - parseFloat($row.find(".dis_in_rs").val()) || 0;
                     $row.find(".amount").val(amount.toFixed(2));
                     $row.find(".net_amount").val(finalAmount.toFixed(2));
+                    $row.find(".quantity").val(qty.toFixed(2));
 
                     subtotal += amount;
                     totalDiscount += parseFloat($row.find(".dis_in_rs").val()) || 0;

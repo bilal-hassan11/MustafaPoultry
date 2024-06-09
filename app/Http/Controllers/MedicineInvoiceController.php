@@ -33,12 +33,12 @@ class MedicineInvoiceController extends Controller
         $products = Item::where('category_id', 4)->get();
 
 
-        $warehouseId = $request->warehouse_id;
-        $supplierId = $request->supplier_id;
-        $referenceNo = $request->reference_no;
-        $fromDate = $request->from_date;
-        $toDate = $request->to_date;
-        
+        $warehouseId = $req->warehouse_id;
+        $supplierId = $req->supplier_id;
+        $referenceNo = $req->reference_no;
+        $fromDate = $req->from_date;
+        $toDate = $req->to_date;
+
         $purchase_medicine = MedicineInvoice::with('account', 'item')
             ->where('type', 'Purchase')
             ->when(isset($req->account_id), function ($query) use ($req) {
@@ -81,7 +81,11 @@ class MedicineInvoiceController extends Controller
     {
         $title = "Edit Sale Medicine";
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
-        $products = $this->medicineInvoice->getStockInfo();
+        $stock = $this->medicineInvoice->getStockInfo();
+
+        $products = $stock->filter(function ($product) {
+            return $product->category_id == 4;
+        });
         $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
             ->where('type', 'Sale')
             ->get();
@@ -104,8 +108,12 @@ class MedicineInvoiceController extends Controller
 
         $medicineInvoice = new MedicineInvoice();
 
-        $products = $medicineInvoice->getStockInfo();
-        // dd($products);
+        $stock = $this->medicineInvoice->getStockInfo();
+
+        $products = $stock->filter(function ($product) {
+            return $product->category_id == 4;
+        });
+
         $sale_medicine = $medicineInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {

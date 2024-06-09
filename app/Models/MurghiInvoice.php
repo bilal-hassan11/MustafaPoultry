@@ -20,10 +20,10 @@ class MurghiInvoice extends Model
         'item_id',
         'purchase_price',
         'sale_price',
-        'quantity', // Quantity is weight
-        'amount',
+        'weight',
         'weight_detection',
-        'final_weight',
+        'quantity', // Quantity is final weight
+        'amount',
         'net_amount',
         'expiry_date',
         'type',
