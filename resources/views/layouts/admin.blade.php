@@ -754,28 +754,43 @@
                                         &nbsp&nbsp&nbsp<span class="side-menu__label">Others Items</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
-
                                         <li><a href="{{ route('admin.other-invoices.purchase') }}"
                                                 class="slide-item {{ request()->is('web_admin/other-invoices/purchase') ? 'active open' : '' }}">
                                                 Purchase Other</a></li>
                                         <li><a href="{{ route('admin.other-invoices.sale') }}"
                                                 class="slide-item {{ request()->is('web_admin/other-invoices/sale') ? 'active open' : '' }}">
                                                 Sale Other</a></li>
-
-
                                     </ul>
                                 </li>
-                                <li> <a class="side-menu__item"
-                                        href="{{ route('admin.medicine-invoices.adjustment') }}"><i
-                                            class="side-menu__icon fe fe-grid"></i><span
-                                            class="side-menu__label">Adjust Stock</span></a> </li>
-                                <li> <a class="side-menu__item" href="{{ route('admin.stock.index') }}"><i
-                                            class="side-menu__icon fe fe-grid"></i><span
-                                            class="side-menu__label">Available Stock</span></a> </li>
+
+                                <!-- Adjust Stock -->
+                                <li class="slide">
+                                    <a class="side-menu__item {{ request()->is('medicine-invoices/adjust-in') || request()->is('medicine-invoices/adjust-out') ? 'active' : '' }}"
+                                        data-bs-toggle="slide" href="javascript:void(0);"><i
+                                            class="side-menu__icon fe fe-file-text" aria-hidden="true"></i>
+                                        &nbsp&nbsp&nbsp<span class="side-menu__label">Adjust Stock</span><i
+                                            class="angle fa fa-angle-right"></i></a>
+                                    <ul class="slide-menu">
+                                        <li><a href="{{ route('admin.medicine-invoices.adjust_in') }}"
+                                                class="slide-item {{ request()->is('medicine-invoices/adjust-in') ? 'active open' : '' }}">
+                                                Adjust Stock In</a></li>
+                                        <li><a href="{{ route('admin.medicine-invoices.adjust_out') }}"
+                                                class="slide-item {{ request()->is('medicine-invoices/adjust-out') ? 'active open' : '' }}">
+                                                Adjust Out</a></li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a class="side-menu__item" href="{{ route('admin.stock.index') }}">
+                                        <i class="side-menu__icon fe fe-grid"></i>
+                                        <span class="side-menu__label">Available Stock</span>
+                                    </a>
+                                </li>
 
                                 <li class="sub-category">
                                     <h3>Reports</h3>
                                 </li>
+
 
                                 <!-- Feed -->
                                 <li class="slide">

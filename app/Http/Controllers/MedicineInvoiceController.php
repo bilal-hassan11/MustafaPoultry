@@ -64,21 +64,15 @@ class MedicineInvoiceController extends Controller
 
         return view('admin.medicine.purchase_medicine', compact(['title', 'pending_medicine', 'invoice_no', 'accounts', 'products', 'purchase_medicine']));
     }
-    public function createAdjustment(Request $req)
+    public function createAdjustmentIn(Request $req)
     {
         $title = "Adjust In";
-        $invoice_no = generateUniqueID(new MedicineInvoice, 'Adjust In', 'invoice_no');
+        $invoice_no = generateUniqueID(new MedicineInvoice, 'Adjust Stock', 'invoice_no');
 
-        $products = Item::orderBy('name')->get();
-
-        $warehouseId = $req->warehouse_id;
-        $supplierId = $req->supplier_id;
-        $referenceNo = $req->reference_no;
-        $fromDate = $req->from_date;
-        $toDate = $req->to_date;
+        $products = Item::where('category_id', 4)->get();
 
         $purchase_medicine = MedicineInvoice::with('account', 'item')
-            ->where('type', 'Adjust In')
+            ->where('type', 'Adjust Stock')
             ->when(isset($req->invoice_no), function ($query) use ($req) {
                 $query->where('invoice_no', $req->invoice_no);
             })
@@ -91,7 +85,36 @@ class MedicineInvoiceController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.medicine.adjustment', compact(['title',  'invoice_no', 'products', 'purchase_medicine']));
+        return view('admin.medicine.adjust_stock_in', compact(['title',  'invoice_no', 'products', 'purchase_medicine']));
+    }
+
+    public function createAdjustmentOut(Request $req)
+    {
+        $title = "Adjust In";
+        $invoice_no = generateUniqueID(new MedicineInvoice, 'Adjust Stock', 'invoice_no');
+        $medicineInvoice = new MedicineInvoice();
+
+        $stock = $this->medicineInvoice->getStockInfo();
+
+        $products = $stock->filter(function ($product) {
+            return $product->category_id == 4;
+        });
+
+        $purchase_medicine = MedicineInvoice::with('account', 'item')
+            ->where('type', 'Adjust Stock')
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
+            ->latest()
+            ->get();
+
+        return view('admin.medicine.adjust_stock_out', compact(['title',  'invoice_no', 'products', 'purchase_medicine']));
     }
 
     public function editPurchase($invoice_no)
@@ -196,7 +219,7 @@ class MedicineInvoiceController extends Controller
 
         $date = $request->input('date');
 
-        if ($request->type == 'Sale' || $request->type == 'Adjust Out') {
+        if ($request->type == 'Sale' || $request->stockType == 'Out') {
             $stockErrors = $this->validateStockQuantities($validatedData);
 
             if (!empty($stockErrors)) {

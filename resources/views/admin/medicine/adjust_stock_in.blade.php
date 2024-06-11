@@ -4,7 +4,7 @@
         <div class="side-app">
             <div class="card">
                 <div class="card-header">
-                    <h4>Adjust Stock</h4>
+                    <h4>Adjust Stock In</h4>
                 </div>
                 <form id="formData">
                     @csrf
@@ -28,13 +28,7 @@
                                 <label for="description" class="required">Description</label>
                                 <input type="text" name="description" class="form-control" placeholder="Description">
                             </div>
-                            <div class="col-md-4 form-group">
-                                <label for="">Stock Type</label>
-                                <select class="form-control" name="stock_type" id="stock_type">
-                                    <option value="In">IN</option>
-                                    <option value="Out">OUT</option>
-                                </select>
-                            </div>
+                            <input type="hidden" name="stock_type" value="In">
                         </div>
                     </div>
                     <div class="card-body" style="width: 100%; overflow-x: auto">
@@ -95,7 +89,7 @@
                             <h3 class="card-title mb-0"> Purchase Medicine Filters</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('admin.medicine-invoices.adjustment') }}" method="GET">
+                            <form action="{{ route('admin.medicine-invoices.adjust_in') }}" method="GET">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-2">
@@ -154,7 +148,6 @@
                                                         <th>Rate</th>
                                                         <th>Quantity</th>
                                                         <th>Ammount</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -177,25 +170,6 @@
                                                             <td>{{ $purcahse->quantity }}</td>
                                                             <?php $tot_amt += $purcahse->net_amount; ?>
                                                             <td>{{ $purcahse->net_amount }}</td>
-                                                            <td>
-                                                                <div class="btn-group" role="group">
-                                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-3"
-                                                                        href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no]) }}"
-                                                                        title="View">
-                                                                        <i class="ri-eye-line"></i>
-                                                                    </a>
-                                                                    <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                                        href="{{ route('admin.medicine-invoices.edit.purchase', ['invoice_no' => $purcahse->invoice_no]) }}"
-                                                                        title="Edit">
-                                                                        <i class="ri-edit-line"></i>
-                                                                    </a>
-                                                                    <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
-                                                                        class="btn btn-outline-info rounded-pill btn-wave"
-                                                                        target="_blank" title="Download">
-                                                                        <i class="ri-download-2-line"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -228,7 +202,6 @@
 @endsection
 @section('page-scripts')
     <script type="text/javascript">
-        let productDetailsArray = {!! json_encode($products->keyBy('id')->toArray()) !!};
         $(document).ready(function() {
 
             $('select.product_val').select2({
@@ -256,7 +229,6 @@
                             @endforeach
                         </select>
                         @endif
-                        <input type="hidden" name="item_id[]" class="item_id">
                     </td>
                     <td class="quantity_col">
                         <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>

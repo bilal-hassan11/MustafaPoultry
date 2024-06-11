@@ -230,13 +230,14 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/sale', 'createSale')->name('sale');
         Route::get('/purchase', 'createPurchase')->name('purchase');
-        Route::get('/adjustment', 'createAdjustment')->name('adjustment');
+        Route::get('/adjust-in', 'createAdjustmentIn')->name('adjust_in');
+        Route::get('/adjust-out', 'createAdjustmentOut')->name('adjust_out');
         Route::get('/purchase/edit/{invoice_no}', 'editPurchase')->name('edit.purchase');
         Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
         Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::get('/sale/edit/{invoice_no}', 'editSale')->name('edit.sale');
         Route::post('/store', 'store')->name('store');
-        Route::post('/storeAdjsutment', 'storeAdjsutment')->name('store_adjustment');
+        Route::post('/adjust-stock', 'storeAdjsutment')->name('store_adjustment');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });
