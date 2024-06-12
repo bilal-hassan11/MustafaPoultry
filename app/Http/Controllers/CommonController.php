@@ -13,7 +13,8 @@ use App\Models\OtherInvoice;
 
 class CommonController extends Controller
 {
-    public function getParentAccounts($id){
+    public function getParentAccounts($id)
+    {
         $accounts = AccountType::where('parent_id', hashids_decode($id))->get();
         $html     = view('admin.common.parent_accounts', compact('accounts'))->render();
 
@@ -24,7 +25,6 @@ class CommonController extends Controller
 
     public function getLatestSale($category)
     {
-        //dd($category);
         $data = null;
 
         switch ($category) {
@@ -45,12 +45,11 @@ class CommonController extends Controller
                 break;
         }
 
-        
+
         if ($data) {
             return response()->json(['success' => true, 'data' => $data]);
         } else {
             return response()->json(['success' => false, 'message' => 'No data available']);
         }
     }
-
 }

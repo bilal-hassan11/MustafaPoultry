@@ -183,7 +183,6 @@
                                                         <th>-</th>
                                                         <th>{{ $tot_q }}</th>
                                                         <th>{{ $tot_amt }}</th>
-                                                        <th>-</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>

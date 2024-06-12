@@ -12,7 +12,7 @@ use App\Http\Controllers\Administrator\HomeController;
 use App\Http\Controllers\Administrator\StaffController;
 use App\Http\Controllers\Administrator\ItemController;
 use App\Http\Controllers\Administrator\PermissionController;
-use App\Http\Controllers\Administrator\ReportController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ArtisanController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CronJobController;
@@ -317,6 +317,10 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/expensestore', 'expensestore')->name('expensestore');
         Route::get('/expenseedit/{id}', 'expenseedit')->name('expenseedit');
         Route::get('/expensedelete/{id}', 'expensedelete')->name('expensedelete');
+    });
+
+    Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {
+        Route::get('income-report', 'getIncomeReport')->name('income-report');
     });
 });
 

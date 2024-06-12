@@ -16,7 +16,7 @@ trait StockTrait
      */
     public function getStockInfo()
     {
-        $table = $this->getTable();  // Get the table name dynamically
+        $table = $this->getTable();
         $invoices = $this->select(
             'item_id',
             'expiry_date',
@@ -84,5 +84,35 @@ trait StockTrait
         return $stockInfo->filter(function ($item) use ($lowStockLimit) {
             return $item->quantity < $lowStockLimit;
         });
+    }
+
+    /**
+     * Get the closing stock value for a given date.
+     *
+     * @param string $table
+     * @param string $date
+     * @param int|null $itemId
+     * @return float
+     */
+    public function getClosingStockInfo($model, $date, $itemId = null): float
+    {
+        $dateFormatted = Carbon::parse($date)->format('Y-m-d');
+        $query = $model->select(
+            'item_id',
+            'expiry_date',
+            DB::raw('SUM(quantity) as total_quantity'),
+            DB::raw('SUM(total_cost) as total_cost'),
+            DB::raw('CASE WHEN SUM(quantity) != 0 THEN SUM(total_cost) / SUM(quantity) ELSE 0 END as average_price')
+        )
+            ->where('date', '<', $dateFormatted)
+            ->groupBy('item_id', 'expiry_date');
+
+        if ($itemId) {
+            $query->where('item_id', $itemId);
+        }
+
+        $totalStockValue = $query->sum('total_cost');
+
+        return $totalStockValue;
     }
 }
