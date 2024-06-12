@@ -6,7 +6,7 @@ use App\Models\MedicineInvoice;
 use App\Services\FinancialReportService;
 use Illuminate\Http\Request;
 
-class ReportController extends Controller
+class ReportingController extends Controller
 {
     protected $financialReportService;
 
