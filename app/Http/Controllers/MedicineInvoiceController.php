@@ -215,6 +215,11 @@ class MedicineInvoiceController extends Controller
             'discount_in_percent.*' => 'nullable|numeric',
             'expiry_date.*' => 'nullable|date',
             'whatsapp_status' => 'nullable|boolean',
+            'transport_name' => 'nullable|string|max:255',
+            'vehicle_no' => 'nullable|string|max:255',
+            'driver_name' => 'nullable|string|max:255',
+            'contact_no' => 'nullable|string|max:255',
+            'builty_no' => 'nullable|string|max:255',
         ]);
 
         $date = $request->input('date');
@@ -270,6 +275,11 @@ class MedicineInvoiceController extends Controller
                     'net_amount' => $netAmount,
                     'expiry_date' => $validatedData['expiry_date'][$index] ?? null,
                     'whatsapp_status' => $validatedData['whatsapp_status'] ?? 'Not Sent',
+                    'transport_name' => $validatedData['transport_name'] ?? null,
+                    'vehicle_no' => $validatedData['vehicle_no'] ?? null,
+                    'driver_name' => $validatedData['driver_name'] ?? null,
+                    'contact_no' => $validatedData['contact_no'] ?? null,
+                    'builty_no' => $validatedData['builty_no'] ?? null,
                 ]);
                 $item = Item::find($itemId);
 
@@ -516,6 +526,8 @@ class MedicineInvoiceController extends Controller
         $medicineInvoiceIds = $medicineInvoice->pluck('id');
         $returnType = $type . ' Return';
 
+        $previous_balance = $medicineInvoice[0]->account->getBalance($medicineInvoice[0]->date);
+
         $returnedQuantities = MedicineInvoice::whereIn('ref_no', $medicineInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
@@ -528,7 +540,7 @@ class MedicineInvoiceController extends Controller
         });
 
         if (request()->has('generate_pdf')) {
-            $html = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'type'))->render();
+            $html = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'type', 'previous_balance'))->render();
             $mpdf = new Mpdf([
                 'format' => 'A4-P', 'margin_top' => 10,
                 'margin_bottom' => 2,

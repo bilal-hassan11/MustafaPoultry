@@ -12,11 +12,33 @@ class Account extends Model
 
     protected $table = 'accounts';
 
-    public function grand_parent(){
+    public function grand_parent()
+    {
         return $this->belongsTo(AccountType::class, 'grand_parent_id', 'id');
     }
 
-    public function parent(){
+    public function parent()
+    {
         return $this->belongsTo(AccountType::class, 'parent_id', 'id');
+    }
+
+    public function accountLedgers()
+    {
+        return $this->hasMany(AccountLedger::class, 'account_id');
+    }
+
+    public function getBalance($date)
+    {
+        $sumDebit = $this->accountLedgers()
+            ->where('account_id', $this->id)
+            ->whereDate('date', '<', $date)
+            ->sum('debit');
+
+        $sumCredit = $this->accountLedgers()
+            ->where('account_id', $this->id)
+            ->whereDate('date', '<', $date)
+            ->sum('credit');
+
+        return $sumDebit - $sumCredit;
     }
 }

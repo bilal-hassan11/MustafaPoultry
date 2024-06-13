@@ -39,7 +39,29 @@
                                     @endforeach
                                 </select>
                             </div>
-
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="transport_name">Transport Name</label>
+                                <input type="text" name="transport_name" class="form-control"
+                                    placeholder="Transport Name">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="vehicle_no">Vehicle No</label>
+                                <input type="text" name="vehicle_no" class="form-control" placeholder="Vehicle No">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="driver_name">Driver Name</label>
+                                <input type="text" name="driver_name" class="form-control" placeholder="Driver Name">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="contact_no">Contact No</label>
+                                <input type="text" name="contact_no" class="form-control" placeholder="Contact No">
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <label for="builty_no">Builty No</label>
+                                <input type="text" name="builty_no" class="form-control" placeholder="Builty No">
+                            </div>
                         </div>
                     </div>
                     <div class="card-body" style="width: 100%; overflow-x: auto">
@@ -85,8 +107,8 @@
                                         <label>Net Amount</label>
                                     </td>
                                     <td>
-                                        <input type="text" name="net_bill" class="form-control text-right" value="0"
-                                            style="text-align: right;" readonly>
+                                        <input type="text" name="net_bill" class="form-control text-right"
+                                            value="0" style="text-align: right;" readonly>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -148,68 +170,66 @@
                 <!-- COL END -->
             </div>
             <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                <div class="ms-auto pageheader-btn"> 
-                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Purchases</a>
-                </div> 
+                <div class="ms-auto pageheader-btn">
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper"
+                        data-bs-toggle="modal" href="#modaldemo8">Pending Purchases</a>
+                </div>
             </div>
             <div class="row">
                 <div class="col-xl-12">
-                    
-                    
+
+
                     <div class="card-body">
-                        
+
                         <div class="modal fade" id="modaldemo8" style="display: none" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered text-center" role="document">
                                 <div class="modal-content modal-content-demo">
                                     <div class="modal-header">
                                         <h6 class="modal-title">Pending Purchases</h6>
-                                        <button
-                                        aria-label="Close"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        ></button>
+                                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body text-start">
-                                    
-                                    <table id="example54" class="text-fade table table-bordered" >
-                                        <thead>
-                                            <tr class="text-dark">
-                                                <th>Account</th>
-                                                <th>Item</th>
-                                                <th>Qty</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pending_medicine as $pending)
-                                                <tr class="text-dark">
-                                                    
-                                                    <td style="width: 15%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
-                                                    </td>
 
-                                                    <td style="width: 10%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
-                                                    </td>
-                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
-                                                    <td style="width: 20%; !important">
-                                                        
-                                                        <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
-                                                            href="{{ route('admin.medicine-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
-                                                            title="Edit">
-                                                            <i class="ri-edit-line"></i>
-                                                        </a>
-                                                        
-                                                    </td>
+                                        <table id="example54" class="text-fade table table-bordered">
+                                            <thead>
+                                                <tr class="text-dark">
+                                                    <th>Account</th>
+                                                    <th>Item</th>
+                                                    <th>Qty</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                        
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($pending_medicine as $pending)
+                                                    <tr class="text-dark">
+
+                                                        <td style="width: 15%; !important"><span
+                                                                class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                        </td>
+
+                                                        <td style="width: 10%; !important"><span
+                                                                class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
+                                                        </td>
+                                                        <td style="width: 10%; !important">{{ abs($pending->quantity) }}
+                                                        </td>
+                                                        <td style="width: 20%; !important">
+
+                                                            <a class="btn btn-outline-info rounded-pill btn-wave mr-2"
+                                                                href="{{ route('admin.medicine-invoices.edit.purchase', ['invoice_no' => $pending->invoice_no]) }}"
+                                                                title="Edit">
+                                                                <i class="ri-edit-line"></i>
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+
+                                        </table>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-light" data-bs-dismiss="modal">
-                                        Close
+                                            Close
                                         </button>
                                     </div>
                                 </div>
@@ -225,12 +245,13 @@
                             <h3 class="card-title mb-0">All Purchase Medicine Detail</h3>
                         </div>
                         <div class="card-body">
-                            
+
                             <div class="table-responsive">
                                 <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                            <table id="example54" class="text-fade table table-bordered"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr class="text-dark">
                                                         <th>S.No</th>
@@ -259,7 +280,8 @@
                                                             <td><span
                                                                     class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $purcahse->item->name ?? '' }}</span>
                                                             </td>
-                                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}</td>
+                                                            <td>{{ number_format(@$purcahse->net_amount / @$purcahse->quantity, 2) }}
+                                                            </td>
                                                             <?php $tot_q += $purcahse->quantity; ?>
                                                             <td>{{ $purcahse->quantity }}</td>
                                                             <?php $tot_amt += $purcahse->net_amount; ?>
@@ -277,8 +299,8 @@
                                                                         <i class="ri-edit-line"></i>
                                                                     </a>
                                                                     <a href="{{ route('admin.medicine-invoices.purchase.show', ['invoice_no' => $purcahse->invoice_no, 'generate_pdf' => 1]) }}"
-                                                                        class="btn btn-outline-info rounded-pill btn-wave" target="_blank"
-                                                                        title="Download">
+                                                                        class="btn btn-outline-info rounded-pill btn-wave"
+                                                                        target="_blank" title="Download">
                                                                         <i class="ri-download-2-line"></i>
                                                                     </a>
                                                                 </div>

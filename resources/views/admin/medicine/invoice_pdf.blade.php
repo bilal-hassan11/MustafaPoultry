@@ -41,7 +41,7 @@
             padding: 8px;
             text-align: left;
             border: 1px solid #ddd;
-            background-color: white
+            background-color: white;
         }
 
         .text-center {
@@ -104,6 +104,26 @@
                         <th>Address</th>
                         <td colspan="3">{{ $medicineInvoice[0]->account->address }}</td>
                     </tr>
+                    <tr>
+                        <th>Transport Name</th>
+                        <td>{{ $medicineInvoice[0]->transport_name ?? '' }}</td>
+                        <th>Vehicle No.</th>
+                        <td>{{ $medicineInvoice[0]->vehicle_no ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Driver Name</th>
+                        <td>{{ $medicineInvoice[0]->driver_name ?? '' }}</td>
+                        <th>Contact No.</th>
+                        <td>{{ $medicineInvoice[0]->contact_no ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Builty No.</th>
+                        <td colspan="3">{{ $medicineInvoice[0]->builty_no ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" style="text-align: right">Previous Balance</th>
+                        <td style="text-align: right">Rs {{ number_format($previous_balance, 2) }}</td>
+                    </tr>
                 </tbody>
             </table>
             <br>
@@ -148,8 +168,7 @@
                     @endforeach
 
                     <tr style="border: none;">
-                        <td colspan="6">
-                        </td>
+                        <td colspan="7"></td>
                     </tr>
                     <tr>
                         <td style="text-align: center;" colspan="4">
@@ -162,7 +181,7 @@
                         <td class="text-right">Rs {{ number_format($subtotal, 2) }}</td>
                     </tr>
                     <tr>
-                        <td rowspan="2" colspan="4">
+                        <td rowspan="3" colspan="4">
                             {{ $data->additional_notes ?? '' }}
                         </td>
                         <td class="text-right" colspan="2">
@@ -176,10 +195,17 @@
                         </td>
                         <td class="text-right">Rs {{ number_format($subtotal - $totalDiscountRs, 2) }}</td>
                     </tr>
-                    <tr style="border: none;">
-                        <td colspan="6"></td>
+                    <tr>
+                        <td class="text-right" colspan="2">
+                            <h4>Closing Balance :</h4>
+                        </td>
+                        <td class="text-right">Rs
+                            {{ number_format($previous_balance + ($subtotal - $totalDiscountRs), 2) }}</td>
                     </tr>
-                <tbody>
+                    <tr style="border: none;">
+                        <td colspan="7"></td>
+                    </tr>
+                </tbody>
             </table>
 
             <div class="terms-conditions">

@@ -10,6 +10,7 @@ use App\Traits\StockTrait;
 class MedicineInvoice extends Model
 {
     use HasFactory, SoftDeletes, StockTrait;
+
     protected $table = "medicine_invoices";
 
     protected $fillable = [
@@ -33,6 +34,11 @@ class MedicineInvoice extends Model
         'is_draft',
         'whatsapp_status',
         'remarks',
+        'transport_name',
+        'vehicle_no',
+        'driver_name',
+        'contact_no',
+        'builty_no',
     ];
 
     /**

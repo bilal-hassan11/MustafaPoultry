@@ -23,6 +23,43 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="transport_name">Transport Name:</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $medicineInvoice[0]->transport_name ?? '' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="vehicle_no">Vehicle No:</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $medicineInvoice[0]->vehicle_no ?? '' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="driver_name">Driver Name:</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $medicineInvoice[0]->driver_name ?? '' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="contact_no">Contact No:</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $medicineInvoice[0]->contact_no ?? '' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="builty_no">Builty No:</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $medicineInvoice[0]->builty_no ?? '' }}" readonly>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table table-bordered">
                             <thead class="thead-light">
                                 <tr>
