@@ -132,7 +132,39 @@ class MurghiInvoiceController extends Controller
         return view('admin.murghi.sale_murghi', compact(['title', 'pending_Murghi', 'sale_Murghi', 'invoice_no', 'accounts', 'products']));
     }
 
+    public function createPurchaseSale(Request $req)
+    {
+        $title = "Purchase Murghi";
+        $invoice_no = generateUniqueID(new MurghiInvoice, 'Purchase', 'invoice_no');
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
 
+        $products = Item::where('category_id', 8)->get();
+
+        $purchase_Murghi = MurghiInvoice::with('account', 'item')
+            ->where('type', 'Purchase')
+            ->when(isset($req->account_id), function ($query) use ($req) {
+                $query->where('account_id', hashids_decode($req->account_id));
+            })
+            ->when(isset($req->invoice_no), function ($query) use ($req) {
+                $query->where('invoice_no', $req->invoice_no);
+            })
+            ->when(isset($req->item_id), function ($query) use ($req) {
+                $query->where('item_id', hashids_decode($req->item_id));
+            })
+            ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
+                $query->whereBetween('date', [$req->from_date, $req->to_date]);
+            })
+            ->latest()
+            ->get();
+
+        $pending_Murghi = MurghiInvoice::with('account', 'item')
+            ->where('type', 'Purchase')
+            ->where('net_amount', 0)
+            ->latest()
+            ->get();
+
+        return view('admin.murghi.purchase_sale', compact(['title', 'invoice_no', 'accounts', 'products', 'purchase_Murghi']));
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -233,6 +265,108 @@ class MurghiInvoiceController extends Controller
             return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
             info($e);
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function storePurchaseSale(Request $request)
+    {
+        $validatedData = $request->validate([
+            'invoice_no' => 'required',
+            'date' => 'required|date',
+            'account' => 'required|exists:accounts,id',
+            'ref_no' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'weight' => 'required|numeric',
+            'weight_detection' => 'required|numeric',
+            'final_weight' => 'required|numeric',
+            'rate' => 'required|numeric',
+            'amount' => 'required|numeric',
+            'sale_account.*' => 'required|exists:accounts,id',
+            'sale_weight.*' => 'required|numeric',
+            'sale_weight_detection.*' => 'required|numeric',
+            'sale_final_weight.*' => 'required|numeric',
+            'sale_rate.*' => 'required|numeric',
+            'sale_amount.*' => 'required|numeric',
+        ]);
+
+        $date = $request->input('date');
+
+        DB::beginTransaction();
+        try {
+            // Handle Purchase
+            $invoiceNumber = $request->invoice_no;
+            $purchaseNetAmount = $validatedData['amount'];
+
+            $MurghiInvoice = MurghiInvoice::create([
+                'date' => $date,
+                'account_id' => $validatedData['account'],
+                'ref_no' => $validatedData['ref_no'],
+                'description' => $validatedData['description'],
+                'invoice_no' => $invoiceNumber,
+                'type' => 'Purchase',
+                'stock_type' => 'In',
+                'item_id' => 101,
+                'weight' => $validatedData['weight'],
+                'weight_detection' => $validatedData['weight_detection'],
+                'quantity' => $validatedData['final_weight'],
+                'purchase_price' => $validatedData['rate'],
+                'amount' => $validatedData['amount'],
+                'net_amount' => $purchaseNetAmount,
+            ]);
+
+            AccountLedger::create([
+                'murghi_invoice_id' => $MurghiInvoice->id,
+                'type' => 'Purchase',
+                'date' => $date,
+                'account_id' => $validatedData['account'],
+                'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Weight: ' . $validatedData['final_weight'] . ', Rate: ' . $validatedData['rate'],
+                'debit' => 0,
+                'credit' => $purchaseNetAmount,
+            ]);
+
+            // Handle Sale
+            $saleAccounts = $validatedData['sale_account'];
+            foreach ($saleAccounts as $index => $saleAccountId) {
+                $saleWeight = $validatedData['sale_weight'][$index];
+                $saleWeightDetection = $validatedData['sale_weight_detection'][$index];
+                $saleFinalWeight = $validatedData['sale_final_weight'][$index];
+                $saleRate = $validatedData['sale_rate'][$index];
+                $saleAmount = $validatedData['sale_amount'][$index];
+                $saleNetAmount = $saleAmount; // Adjust this if there are any discounts or additional calculations
+
+                $MurghiInvoiceSale = MurghiInvoice::create([
+                    'date' => $date,
+                    'account_id' => $saleAccountId,
+                    'ref_no' => $validatedData['ref_no'],
+                    'description' => $validatedData['description'],
+                    'invoice_no' => $invoiceNumber,
+                    'type' => 'Sale',
+                    'stock_type' => 'Out',
+                    'item_id' => 101,
+                    'weight' => $saleWeight,
+                    'weight_detection' => $saleWeightDetection,
+                    'quantity' => -$saleFinalWeight,
+                    'sale_price' => $saleRate,
+                    'amount' => $saleAmount,
+                    'net_amount' => $saleNetAmount,
+                ]);
+
+                AccountLedger::create([
+                    'murghi_invoice_id' => $MurghiInvoiceSale->id,
+                    'type' => 'Sale',
+                    'date' => $date,
+                    'account_id' => $saleAccountId,
+                    'description' => 'Invoice #: ' . $invoiceNumber . ', ' . 'Weight: ' . $saleFinalWeight . ', Rate: ' . $saleRate,
+                    'debit' => $saleNetAmount,
+                    'credit' => 0,
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['success' => true], 201);
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }

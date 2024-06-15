@@ -286,11 +286,13 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/sale', 'createSale')->name('sale');
         Route::get('/purchase', 'createPurchase')->name('purchase');
+        Route::get('/purchase-sale', 'createPurchaseSale')->name('purchase_sale');
         Route::get('/purchase/edit/{invoice_no}', 'editPurchase')->name('edit.purchase');
         Route::get('/purchase/{invoice_no}', 'show')->name('purchase.show');
         Route::get('/sale/{invoice_no}', 'show')->name('sale.show');
         Route::get('/sale/edit/{invoice_no}', 'editSale')->name('edit.sale');
         Route::post('/store', 'store')->name('store');
+        Route::post('/purchase-sale', 'storePurchaseSale')->name('store.purchase_sale');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
     });

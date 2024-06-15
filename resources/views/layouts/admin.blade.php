@@ -741,6 +741,9 @@
                                         <li><a href="{{ route('admin.murghi-invoices.sale') }}"
                                                 class="slide-item {{ request()->is('web_admin/murghi-invoices/sale  ') ? 'active open' : '' }}">
                                                 Sale Murghi</a></li>
+                                        <li><a href="{{ route('admin.murghi-invoices.purchase_sale') }}"
+                                                class="slide-item {{ request()->is('web_admin/murghi-invoices/purchase-sale  ') ? 'active open' : '' }}">
+                                                Purchase/Sale Murghi</a></li>
                                         <!-- <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_murghi']) }}" class="slide-item"> Purchase Murghi Report</a></li>
                               <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}" class="slide-item"> Sale Murghi Report</a></li> -->
 
