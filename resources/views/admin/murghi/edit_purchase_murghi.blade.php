@@ -137,6 +137,9 @@
                     <td class="weight_detection_col">
                         <input type="number" name="weight_detection[]" class="form-control weight_detection text-right" min="1" value="${item.weight_detection || 1}" step="any" style="text-align: right;" required>
                     </td>
+                    <td class="quantity_col">
+                        <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="${item.quantity || 1}" step="any" style="text-align: right;" readonly required>
+                    </td>
                     <td class="purchase_rate_col">
                         <input type="number" name="purchase_price[]" class="form-control purchaseRate text-right" value="${item.purchase_price || 1}" step="any" style="text-align: right;" required>
                         <input type="hidden" name="sale_price[]" class="form-control saleRate text-right" value="0" step="any" style="text-align: right;" required>

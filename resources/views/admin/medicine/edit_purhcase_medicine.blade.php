@@ -74,62 +74,61 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-body" style="width: 100%; overflow-x: auto">
+                        <table class="table table-bordered text-center" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%;">Item</th>
+                                    <th style="width: 10%;">Quantity</th>
+                                    <th style="width: 12%;">Rate</th>
+                                    <th style="width: auto;">Expiry</th>
+                                    <th style="width: auto;">Dis In (Rs)</th>
+                                    <th style="width: auto;">Dis In (%)</th>
+                                    <th style="width: auto;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="row">
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                            <tfoot>
+                                <tr style="text-align: right;">
+                                    <td colspan="6">
+                                        <label>Subtotal</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="subtotal" class="form-control text-right"
+                                            style="text-align: right;" readonly>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-info fa fa-plus add-row"
+                                            title="Add Row"></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="text-align: right;">
+                                        Discount
+                                    </td>
+                                    <td>
+                                        <input type="text" name="total_discount" class="form-control text-right"
+                                            style="text-align: right;" readonly>
+                                    </td>
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="6">
+                                        <label>Net Amount</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="net_bill" class="form-control text-right"
+                                            style="text-align: right;" readonly>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <button type="submit" id="saveButton" class="btn btn-primary mt-2">Update</button>
+                    </div>
+                </form>
             </div>
-            <div class="card-body" style="width: 100%; overflow-x: auto">
-                <table class="table table-bordered text-center" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th style="width: 30%;">Item</th>
-                            <th style="width: 10%;">Quantity</th>
-                            <th style="width: 12%;">Rate</th>
-                            <th style="width: auto;">Expiry</th>
-                            <th style="width: auto;">Dis In (Rs)</th>
-                            <th style="width: auto;">Dis In (%)</th>
-                            <th style="width: auto;">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="row">
-                        <!-- Rows will be dynamically added here -->
-                    </tbody>
-                    <tfoot>
-                        <tr style="text-align: right;">
-                            <td colspan="6">
-                                <label>Subtotal</label>
-                            </td>
-                            <td>
-                                <input type="text" name="subtotal" class="form-control text-right"
-                                    style="text-align: right;" readonly>
-                            </td>
-                            <td>
-                                <button type="button" class="btn-sm btn-info fa fa-plus add-row"
-                                    title="Add Row"></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="6" style="text-align: right;">
-                                Discount
-                            </td>
-                            <td>
-                                <input type="text" name="total_discount" class="form-control text-right"
-                                    style="text-align: right;" readonly>
-                            </td>
-                        </tr>
-                        <tr style="text-align: right;">
-                            <td colspan="6">
-                                <label>Net Amount</label>
-                            </td>
-                            <td>
-                                <input type="text" name="net_bill" class="form-control text-right"
-                                    style="text-align: right;" readonly>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <button type="submit" id="saveButton" class="btn btn-primary mt-2">Update</button>
-            </div>
-            </form>
         </div>
-    </div>
     </div>
 @endsection
 
