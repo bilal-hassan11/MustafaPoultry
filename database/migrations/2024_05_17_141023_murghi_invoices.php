@@ -21,14 +21,14 @@ return new class extends Migration
             $table->string('ref_no')->nullable();
             $table->string('description')->nullable();
             $table->unsignedBigInteger('item_id');
-            $table->decimal('purchase_price', 10, 2)->default(0.00);
-            $table->decimal('sale_price', 10, 2)->default(0.00);
-            $table->decimal('weight', 10, 2);
-            $table->decimal('weight_detection', 10, 2);
-            $table->decimal('quantity', 10, 2)->default(0.00); //Quanitty is weight
-            $table->decimal('amount', 10, 2)->default(0.00);
-            $table->decimal('total_cost')->default(0);
-            $table->decimal('net_amount', 10, 2)->default(0.00);
+            $table->decimal('purchase_price', 16, 2)->default(0.00);
+            $table->decimal('sale_price', 16, 2)->default(0.00);
+            $table->decimal('weight', 16, 2);
+            $table->decimal('weight_detection', 16, 2);
+            $table->decimal('quantity', 16, 2)->default(0.00); //Quanitty is weight
+            $table->decimal('amount', 16, 2)->default(0.00);
+            $table->decimal('total_cost', 16, 2)->default(0);
+            $table->decimal('net_amount', 16, 2)->default(0.00);
             $table->date('expiry_date')->nullable();
             $table->enum('type', ['Purchase', 'Sale', 'Purchase Return', 'Sale Return', 'Adjust In', 'Adjust Out'])->nullable();
             $table->enum('stock_type', ['In', 'Out'])->default('In');

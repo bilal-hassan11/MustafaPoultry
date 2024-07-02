@@ -8,24 +8,9 @@ use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\PurchaseBook;
 use App\Models\AccountLedger;
-use App\Models\OutwardDetail;
-use App\Models\PurchaseMedicine;
-use App\Models\SaleMedicine;
-use App\Models\ReturnMedicine;
-use App\Models\ExpireMedicine;
-use App\Models\PurchaseFeed;
-use App\Models\SaleFeed;
-use App\Models\ReturnFeed;
-use App\Models\PurchaseChick;
-use App\Models\SaleChick;
-use App\Models\PurchaseMurghi;
-use App\Models\SaleMurghi;
 use App\Models\Expense;
-use App\Models\SaleBook;
 use App\Models\CashBook;
 use App\Models\AccountType;
-use App\Models\Inward;
-use App\Models\Outward;
 use Mpdf\Mpdf;
 use App\Models\FeedInvoice;
 use App\Models\ChickInvoice;
@@ -337,11 +322,7 @@ class ReportController extends Controller
 
     public function DayBookReport(Request $req){
         
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
+      
 
         if(isset($req->from_date)){
             
@@ -379,7 +360,7 @@ class ReportController extends Controller
                                                             
             $data = array(
                 'title' => 'DayBook Report',
-                'expire_medicine'   => $expire_medicine,
+                
                 'account_opening' => $c_net_c,
                 'account_closing' => $ov,
                 'expense' => $ex,
@@ -474,7 +455,7 @@ class ReportController extends Controller
                 'debit'  => $net_debit,
                 'cashbook'  => $c,
                 'date'      => $current_month,
-                'expire_medicine'   => $expire_medicine,
+                
                 'purchase_medicine'  => $tot_purchase_medicine,
                 'sale_medicine'     =>  $tot_sale_medicine,   
                 'return_medicine'     =>  $tot_return_medicine,   
@@ -496,12 +477,6 @@ class ReportController extends Controller
     
     public function DayBookPdf(Request $req){
         
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-
         if(isset($req->from_date)){
             
             //get Opening
@@ -536,7 +511,7 @@ class ReportController extends Controller
                                                             
             $data = array(
                 'title' => 'DayBook Report',
-                'expire_medicine'   => $expire_medicine,
+                
                 'account_opening' => $c_net_c,
                 'account_closing' => $ov,
                 'expense' => $ex,
@@ -631,7 +606,7 @@ class ReportController extends Controller
                 'debit'  => $net_debit,
                 'cashbook'  => $c,
                 'date'      => $current_month,
-                'expire_medicine'   => $expire_medicine,
+                
                 'purchase_medicine'  => $tot_purchase_medicine,
                 'sale_medicine'     =>  $tot_sale_medicine,   
                 'return_medicine'     =>  $tot_return_medicine,   
@@ -654,12 +629,6 @@ class ReportController extends Controller
 
     public function cashflowReport(Request $req){
         
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-        
         
         if(isset($req->to_date)){
             
@@ -707,7 +676,7 @@ class ReportController extends Controller
                 'credit' => $net_credit,
                 'debit'  => $net_debit,
                 
-                'expire_medicine'   => $expire_medicine,
+                
                 'to_date' => $req->to_date ,
                 'cashbook'  => $c
             );
@@ -717,7 +686,7 @@ class ReportController extends Controller
             
             $data = array(
                 'title' => 'CashFlow Report',
-                'expire_medicine'   => $expire_medicine,
+                
             
             );
         }
@@ -727,12 +696,6 @@ class ReportController extends Controller
     
     public function cashflowReportPdf(Request $req){
             
-         $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-        
         
         if(isset($req->to_date)){
             
@@ -780,7 +743,7 @@ class ReportController extends Controller
                 'credit' => $net_credit,
                 'debit'  => $net_debit,
                 
-                'expire_medicine'   => $expire_medicine,
+                
                 'to_date' => $req->to_date ,
                 'cashbook'  => $c
             );
@@ -790,7 +753,7 @@ class ReportController extends Controller
             
             $data = array(
                 'title' => 'CashFlow Report',
-                'expire_medicine'   => $expire_medicine,
+                
             
             );
         }
@@ -802,13 +765,7 @@ class ReportController extends Controller
 
     public function accounts_head_report(Request $req){
      
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-
-
+       
         if(isset($req->from_date) ){
             
             
@@ -849,7 +806,7 @@ class ReportController extends Controller
             //dd($accounts);
             $data = array(
                 'title' => 'All Accounts Ledger',
-                'expire_medicine'   => $expire_medicine,
+                
                 'Item' => Item::where('category_id',3)->latest()->get(),
                 'acounts' => Account::latest()->get(),
                 'ac' => $accounts ,
@@ -896,7 +853,7 @@ class ReportController extends Controller
             //dd($accounts);
             $data = array(
                 'title' => 'All Accounts Ledger',
-                'expire_medicine'   => $expire_medicine,
+                
                 'Item' => Item::where('category_id',3)->latest()->get(),
                 'acounts' => Account::latest()->get(),
                 'ac' => $accounts ,
