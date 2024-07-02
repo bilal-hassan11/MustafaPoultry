@@ -298,8 +298,8 @@ class MedicineInvoiceController extends Controller
                     ->where('type', $request->type)
                     ->with('account', 'item')
                     ->get();
-                // dd($medicineInvoice[0]->account->phone_no);
-                $htmlContent = view('admin.medicine.invoice_pdf', compact('medicineInvoice'))->render();
+                $previous_balance = $medicineInvoice[0]->account->getBalance($medicineInvoice[0]->date);
+                $htmlContent = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'previous_balance'))->render();
                 $pdfPath = $this->generatePdf($htmlContent, 'Sale-' . $medicineInvoice[0]->invoice_no);
                 $result = $this->sendWhatsAppMessage($medicineInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
             }
