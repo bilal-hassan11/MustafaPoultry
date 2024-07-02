@@ -147,67 +147,65 @@
                 <!-- COL END -->
             </div>
             <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                <div class="ms-auto pageheader-btn"> 
-                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
-                </div> 
+                <div class="ms-auto pageheader-btn">
+                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper"
+                        data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
+                </div>
             </div>
             <div class="row">
                 <div class="col-xl-12">
-                    
-                    
+
+
                     <div class="card-body">
-                        
+
                         <div class="modal fade" id="modaldemo8" style="display: none" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered text-center" role="document">
                                 <div class="modal-content modal-content-demo">
                                     <div class="modal-header">
                                         <h6 class="modal-title">Pending Sales</h6>
-                                        <button
-                                        aria-label="Close"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        ></button>
+                                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body text-start">
-                                    <table id="example54" class="text-fade table table-bordered" >
-                                        <thead>
-                                            <tr class="text-dark">
-                                                <th>Account</th>
-                                                <th>Item</th>
-                                                <th>Qty</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pending_Feed as $pending)
+                                        <table id="example54" class="text-fade table table-bordered">
+                                            <thead>
                                                 <tr class="text-dark">
-                                                    
-                                                    <td style="width: 15%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
-                                                    </td>
-
-                                                    <td style="width: 10%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
-                                                    </td>
-                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
-                                                    <td style="width: 20%; !important">
-                                                        
-                                                        <a href="{{ route('admin.feed-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"
-                                                            title="Edit"><button
-                                                                class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
-                                                                    class="ri-edit-line"></i></button>
-                                                        </a>
-                                                        
-                                                    </td>
+                                                    <th>Account</th>
+                                                    <th>Item</th>
+                                                    <th>Qty</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                        
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($pending_Feed as $pending)
+                                                    <tr class="text-dark">
+
+                                                        <td style="width: 15%; !important"><span
+                                                                class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                        </td>
+
+                                                        <td style="width: 10%; !important"><span
+                                                                class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
+                                                        </td>
+                                                        <td style="width: 10%; !important">{{ abs($pending->quantity) }}
+                                                        </td>
+                                                        <td style="width: 20%; !important">
+
+                                                            <a href="{{ route('admin.feed-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"
+                                                                title="Edit"><button
+                                                                    class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
+                                                                        class="ri-edit-line"></i></button>
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+
+                                        </table>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-light" data-bs-dismiss="modal">
-                                        Close
+                                            Close
                                         </button>
                                     </div>
                                 </div>
@@ -228,7 +226,8 @@
                                 <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table id="example54" class="text-fade table table-bordered" style="width:100%">
+                                            <table id="example54" class="text-fade table table-bordered"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr class="text-dark">
                                                         <th>S.No</th>
@@ -248,9 +247,11 @@
                                                     @foreach ($sale_Feed as $sale)
                                                         <tr class="text-dark">
                                                             <td style="width: 5%; !important">{{ $loop->iteration }}</td>
-                                                            <td style="width: 15%; !important">{{ date('d-M-Y', strtotime($sale->date)) }}
+                                                            <td style="width: 15%; !important">
+                                                                {{ date('d-M-Y', strtotime($sale->date)) }}
                                                             </td>
-                                                            <td style="width: 10%; !important">{{ $sale->invoice_no }}</td>
+                                                            <td style="width: 10%; !important">{{ $sale->invoice_no }}
+                                                            </td>
                                                             <td style="width: 15%; !important"><span
                                                                     class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $sale->account->name ?? '' }}</span>
                                                             </td>
@@ -259,11 +260,14 @@
                                                                     class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
                                                             </td>
                                                             <td style="width: 10%; !important">
-                                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}</td>
+                                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}
+                                                            </td>
                                                             <?php $tot_q += $sale->quantity; ?>
-                                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}</td>
+                                                            <td style="width: 10%; !important">{{ abs($sale->quantity) }}
+                                                            </td>
                                                             <?php $tot_amt += $sale->net_amount; ?>
-                                                            <td style="width: 10%; !important">{{ $sale->net_amount }}</td>
+                                                            <td style="width: 10%; !important">{{ $sale->net_amount }}
+                                                            </td>
                                                             <td style="width: 20%; !important">
                                                                 <a
                                                                     href="{{ route('admin.feed-invoices.sale.show', ['invoice_no' => $sale->invoice_no]) }}"><button
@@ -276,10 +280,11 @@
                                                                         class="btn btn-outline-info rounded-pill btn-wave mr-2"><i
                                                                             class="ri-edit-line"></i></button>
                                                                 </a>
-                                                                <button class="btn btn-outline-info  rounded-pill btn-wave"
-                                                                    type="button">
+                                                                <a href="{{ route('admin.feed-invoices.sale.show', ['invoice_no' => $sale->invoice_no, 'generate_pdf' => 1]) }}"
+                                                                    class="btn btn-outline-info rounded-pill btn-wave"
+                                                                    target="_blank" title="Download">
                                                                     <i class="ri-download-2-line"></i>
-                                                                </button>
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -303,7 +308,7 @@
                                 </div>
                             </div>
 
-                            
+
 
                         </div>
                     </div>

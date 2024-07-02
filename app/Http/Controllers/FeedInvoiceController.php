@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use App\Models\AccountLedger;
+use App\Traits\GeneratePdfTrait;
 use Illuminate\Http\Request;
 use App\Traits\SendsWhatsAppMessages;
 use Mpdf\Mpdf;
@@ -15,6 +16,7 @@ class FeedInvoiceController extends Controller
 {
 
     use SendsWhatsAppMessages;
+    use GeneratePdfTrait;
     protected $FeedInvoice;
 
     public function __construct(FeedInvoice $FeedInvoice)
@@ -49,11 +51,11 @@ class FeedInvoiceController extends Controller
 
         $pending_Feed = FeedInvoice::with('account', 'item')
             ->where('type', 'Purchase')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get();     
+            ->get();
 
-        return view('admin.feed.purchase_feed', compact(['title','pending_Feed' , 'invoice_no', 'accounts', 'products', 'purchase_Feed']));
+        return view('admin.feed.purchase_feed', compact(['title', 'pending_Feed', 'invoice_no', 'accounts', 'products', 'purchase_Feed']));
     }
 
     public function editPurchase($invoice_no)
@@ -66,7 +68,7 @@ class FeedInvoiceController extends Controller
             ->with('account', 'item')
             ->get();
 
-          
+
 
         return view('admin.feed.edit_purchase_feed', compact(['title', 'accounts', 'products', 'FeedInvoice']));
     }
@@ -81,11 +83,11 @@ class FeedInvoiceController extends Controller
 
         $pending_Feed = FeedInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
+            ->get();
 
-        return view('admin.feed.edit_sale_feed', compact(['title','pending_Feed', 'accounts', 'products', 'FeedInvoice']));
+        return view('admin.feed.edit_sale_feed', compact(['title', 'pending_Feed', 'accounts', 'products', 'FeedInvoice']));
     }
 
     public function createSale(Request $req)
@@ -118,11 +120,11 @@ class FeedInvoiceController extends Controller
 
         $pending_Feed = $FeedInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
-            
-        return view('admin.feed.sale_feed', compact(['title','pending_Feed', 'sale_Feed', 'invoice_no', 'accounts', 'products']));
+            ->get();
+
+        return view('admin.feed.sale_feed', compact(['title', 'pending_Feed', 'sale_Feed', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -215,6 +217,17 @@ class FeedInvoiceController extends Controller
                     'debit' => in_array($request->type, ['Sale', 'Adjust Out']) ? $netAmount : 0,
                     'credit' => in_array($request->type, ['Purchase', 'Adjust In']) ? $netAmount : 0,
                 ]);
+
+                if ($request->type == 'Sale') {
+                    $medicineInvoice = FeedInvoice::where('invoice_no', $FeedInvoice->invoice_no)
+                        ->where('type', $request->type)
+                        ->with('account', 'item')
+                        ->get();
+                    $previous_balance = $FeedInvoice[0]->account->getBalance($FeedInvoice[0]->date);
+                    $htmlContent = view('admin.feed.invoice_pdf', compact('FeedInvoice', 'previous_balance'))->render();
+                    $pdfPath = $this->generatePdf($htmlContent, 'FeedSale-' . $FeedInvoice[0]->invoice_no);
+                    $result = $this->sendWhatsAppMessage($FeedInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
+                }
             }
 
             DB::commit();
@@ -373,6 +386,8 @@ class FeedInvoiceController extends Controller
         $FeedInvoiceIds = $FeedInvoice->pluck('id');
         $returnType = $type . ' Return';
 
+        $previous_balance = $FeedInvoice[0]->account->getBalance($FeedInvoice[0]->date);
+
         $returnedQuantities = FeedInvoice::whereIn('ref_no', $FeedInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
@@ -385,7 +400,7 @@ class FeedInvoiceController extends Controller
         });
 
         if (request()->has('generate_pdf')) {
-            $html = view('admin.feed.invoice_pdf', compact('FeedInvoice', 'type'))->render();
+            $html = view('admin.feed.invoice_pdf', compact('FeedInvoice', 'type', 'previous_balance'))->render();
             $mpdf = new Mpdf([
                 'format' => 'A4-P', 'margin_top' => 10,
                 'margin_bottom' => 2,

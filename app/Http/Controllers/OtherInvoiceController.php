@@ -49,11 +49,11 @@ class OtherInvoiceController extends Controller
 
         $pending_Other = OtherInvoice::with('account', 'item')
             ->where('type', 'Purchase')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get();     
+            ->get();
 
-        return view('admin.other.purchase_other', compact(['title','pending_Other' , 'invoice_no', 'accounts', 'products', 'purchase_Other']));
+        return view('admin.other.purchase_other', compact(['title', 'pending_Other', 'invoice_no', 'accounts', 'products', 'purchase_Other']));
     }
 
     public function editPurchase($invoice_no)
@@ -79,11 +79,11 @@ class OtherInvoiceController extends Controller
 
         $pending_Other = OtherInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
+            ->get();
 
-        return view('admin.other.edit_sale_other', compact(['title','pending_Other', 'accounts', 'products', 'OtherInvoice']));
+        return view('admin.other.edit_sale_other', compact(['title', 'pending_Other', 'accounts', 'products', 'OtherInvoice']));
     }
 
     public function createSale(Request $req)
@@ -116,11 +116,11 @@ class OtherInvoiceController extends Controller
 
         $pending_Other = $OtherInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
-            
-        return view('admin.other.sale_other', compact(['title','pending_Other', 'sale_Other', 'invoice_no', 'accounts', 'products']));
+            ->get();
+
+        return view('admin.other.sale_other', compact(['title', 'pending_Other', 'sale_Other', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -338,7 +338,16 @@ class OtherInvoiceController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
             ]);
-
+            if ($request->type == 'Sale') {
+                $OtherInvoice = OtherInvoice::where('invoice_no', $OtherInvoice->invoice_no)
+                    ->where('type', $request->type)
+                    ->with('account', 'item')
+                    ->get();
+                $previous_balance = $OtherInvoice[0]->account->getBalance($OtherInvoice[0]->date);
+                $htmlContent = view('admin.medicine.invoice_pdf', compact('OtherInvoice', 'previous_balance'))->render();
+                $pdfPath = $this->generatePdf($htmlContent, 'OtherSale-' . $OtherInvoice[0]->invoice_no);
+                $result = $this->sendWhatsAppMessage($OtherInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
+            }
             DB::commit();
 
             return response()->json(['success' => true], 201);
@@ -373,10 +382,12 @@ class OtherInvoiceController extends Controller
         $OtherInvoiceIds = $OtherInvoice->pluck('id');
         $returnType = $type . ' Return';
 
+        $previous_balance = $OtherInvoice[0]->account->getBalance($OtherInvoice[0]->date);
+
         $returnedQuantities = OtherInvoice::whereIn('ref_no', $OtherInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
-            ->select('ref_no', DB::raw('SUM(quantity) as total_returned'))
+            ->select('ref_no', DB::raw('SUM(quantity) as total_returned', 'previous_balance'))
             ->pluck('total_returned', 'ref_no');
 
         $OtherInvoice = $OtherInvoice->map(function ($item) use ($returnedQuantities) {

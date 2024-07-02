@@ -363,6 +363,16 @@ class MurghiInvoiceController extends Controller
                     'credit' => 0,
                 ]);
             }
+            if ($request->type == 'Sale') {
+                $MurghiInvoice = MurghiInvoice::where('invoice_no', $MurghiInvoice->invoice_no)
+                    ->where('type', $request->type)
+                    ->with('account', 'item')
+                    ->get();
+                $previous_balance = $MurghiInvoice[0]->account->getBalance($MurghiInvoice[0]->date);
+                $htmlContent = view('admin.medicine.invoice_pdf', compact('MurghiInvoice', 'previous_balance'))->render();
+                $pdfPath = $this->generatePdf($htmlContent, 'Sale-' . $MurghiInvoice[0]->invoice_no);
+                $result = $this->sendWhatsAppMessage($MurghiInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
+            }
 
             DB::commit();
             return response()->json(['success' => true], 201);
@@ -486,8 +496,18 @@ class MurghiInvoiceController extends Controller
                 'description' => 'Return #: ' . $invoiceNumber . ', ' . 'Item: ' . $items->name . ', Qty: ' . $validatedData['quantity'] . ', Rate: ' . $price,
                 'debit' => $debit,
                 'credit' => $credit,
-            ]);
 
+            ]);
+            if ($request->type == 'Sale') {
+                $MurghiInvoice = MurghiInvoice::where('invoice_no', $MurghiInvoice->invoice_no)
+                    ->where('type', $request->type)
+                    ->with('account', 'item')
+                    ->get();
+                $previous_balance = $MurghiInvoice[0]->account->getBalance($MurghiInvoice[0]->date);
+                $htmlContent = view('admin.medicine.invoice_pdf', compact('MurghiInvoice', 'previous_balance'))->render();
+                $pdfPath = $this->generatePdf($htmlContent, 'MurghiSale-' . $MurghiInvoice[0]->invoice_no);
+                $result = $this->sendWhatsAppMessage($MurghiInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
+            }
             DB::commit();
 
             return response()->json(['success' => true], 201);
@@ -522,6 +542,8 @@ class MurghiInvoiceController extends Controller
         $MurghiInvoiceIds = $MurghiInvoice->pluck('id');
         $returnType = $type . ' Return';
 
+        $previous_balance = $MurghiInvoice[0]->account->getBalance($MurghiInvoice[0]->date);
+
         $returnedQuantities = MurghiInvoice::whereIn('ref_no', $MurghiInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
@@ -534,7 +556,7 @@ class MurghiInvoiceController extends Controller
         });
 
         if (request()->has('generate_pdf')) {
-            $html = view('admin.murghi.invoice_pdf', compact('MurghiInvoice', 'type'))->render();
+            $html = view('admin.murghi.invoice_pdf', compact('MurghiInvoice', 'type', 'previous_balance'))->render();
             $mpdf = new Mpdf([
                 'format' => 'A4-P', 'margin_top' => 10,
                 'margin_bottom' => 2,

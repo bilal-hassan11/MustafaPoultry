@@ -49,11 +49,11 @@ class ChickInvoiceController extends Controller
 
         $pending_Chick = ChickInvoice::with('account', 'item')
             ->where('type', 'Purchase')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get();     
+            ->get();
 
-        return view('admin.chick.purchase_chick', compact(['title','pending_Chick' , 'invoice_no', 'accounts', 'products', 'purchase_Chick']));
+        return view('admin.chick.purchase_chick', compact(['title', 'pending_Chick', 'invoice_no', 'accounts', 'products', 'purchase_Chick']));
     }
 
     public function editPurchase($invoice_no)
@@ -79,11 +79,11 @@ class ChickInvoiceController extends Controller
 
         $pending_Chick = ChickInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
+            ->get();
 
-        return view('admin.chick.edit_sale_chick', compact(['title','pending_Chick', 'accounts', 'products', 'ChickInvoice']));
+        return view('admin.chick.edit_sale_chick', compact(['title', 'pending_Chick', 'accounts', 'products', 'ChickInvoice']));
     }
 
     public function createSale(Request $req)
@@ -116,11 +116,11 @@ class ChickInvoiceController extends Controller
 
         $pending_Chick = $ChickInvoice::with('account', 'item')
             ->where('type', 'Sale')
-            ->where('net_amount',0)
+            ->where('net_amount', 0)
             ->latest()
-            ->get(); 
-            
-        return view('admin.chick.sale_chick', compact(['title','pending_Chick', 'sale_Chick', 'invoice_no', 'accounts', 'products']));
+            ->get();
+
+        return view('admin.chick.sale_chick', compact(['title', 'pending_Chick', 'sale_Chick', 'invoice_no', 'accounts', 'products']));
     }
 
 
@@ -339,6 +339,17 @@ class ChickInvoiceController extends Controller
                 'credit' => $credit,
             ]);
 
+            if ($request->type == 'Sale') {
+                $ChickInvoice = ChickInvoice::where('invoice_no', $ChickInvoice->invoice_no)
+                    ->where('type', $request->type)
+                    ->with('account', 'item')
+                    ->get();
+                $previous_balance = $ChickInvoice[0]->account->getBalance($ChickInvoice[0]->date);
+                $htmlContent = view('admin.medicine.invoice_pdf', compact('ChickInvoice', 'previous_balance'))->render();
+                $pdfPath = $this->generatePdf($htmlContent, 'ChickSale-' . $ChickInvoice[0]->invoice_no);
+                $result = $this->sendWhatsAppMessage($ChickInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
+            }
+
             DB::commit();
 
             return response()->json(['success' => true], 201);
@@ -373,6 +384,8 @@ class ChickInvoiceController extends Controller
         $ChickInvoiceIds = $ChickInvoice->pluck('id');
         $returnType = $type . ' Return';
 
+        $previous_balance = $ChickInvoice[0]->account->getBalance($ChickInvoice[0]->date);
+
         $returnedQuantities = ChickInvoice::whereIn('ref_no', $ChickInvoiceIds)
             ->where('type', $returnType)
             ->groupBy('ref_no')
@@ -385,7 +398,7 @@ class ChickInvoiceController extends Controller
         });
 
         if (request()->has('generate_pdf')) {
-            $html = view('admin.chick.invoice_pdf', compact('ChickInvoice', 'type'))->render();
+            $html = view('admin.chick.invoice_pdf', compact('ChickInvoice', 'type', 'previous_balance'))->render();
             $mpdf = new Mpdf([
                 'format' => 'A4-P', 'margin_top' => 10,
                 'margin_bottom' => 2,

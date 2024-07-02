@@ -360,7 +360,7 @@
                             @php
                                 $qty = $product->quantity;
                                 $expiry_date = $product->expiry_date;
-                                //    dd($product);
+                                // dd($product);
                             @endphp    
                             <option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
                                 {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
