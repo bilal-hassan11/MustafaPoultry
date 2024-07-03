@@ -300,7 +300,7 @@ class MedicineInvoiceController extends Controller
                     ->get();
                 $previous_balance = $medicineInvoice[0]->account->getBalance($medicineInvoice[0]->date);
                 $htmlContent = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'previous_balance'))->render();
-                $pdfPath = $this->generatePdf($htmlContent, 'Sale-' . $medicineInvoice[0]->invoice_no);
+                $pdfPath = $this->generatePdf($htmlContent, 'MedicineSale-' . $medicineInvoice[0]->invoice_no);
                 $result = $this->sendWhatsAppMessage($medicineInvoice[0]->account->phone_no, 'Sale Invoice', $pdfPath);
             }
             DB::commit();

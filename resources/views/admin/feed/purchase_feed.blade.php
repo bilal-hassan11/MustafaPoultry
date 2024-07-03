@@ -329,8 +329,9 @@
                             <option value="">Select Items</option>
                             @foreach ($products as $product)
                                  @php
-                                     $purchasePrice = $product->latestFeedInvoice->purchase_price ? $product->latestFeedInvoice->purchase_price : 1;
+                                     $purchasePrice = $product->latestFeedInvoice ? $product->latestFeedInvoice->purchase_price : 1;
                                  @endphp
+
                                 <option value="{{ $product->id }}" data-price="{{ $purchasePrice }}">
                                     {{ $product->name ?? '' }}
                                 </option>

@@ -89,20 +89,24 @@
                             <h2>{{ strtoupper($type) }} INVOICE</h2>
                         </td>
                         <td class="text-center">
-                            <h2>#{{ $FeedInvoice[0]->invoice_no }}</h2>
+                            <h2>#{{ $FeedInvoice[0]->invoice_no ?? '' }}</h2>
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th style="width: 20%;">Invoice To :</th>
-                        <td> {{ $FeedInvoice[0]->account->name }}</td>
+                        <td> {{ $FeedInvoice[0]->account->name ?? '' }}</td>
                         <th style="width: 20%;">Date: </th>
                         <td class="text-center"> {{ date('d-M-Y', strtotime($FeedInvoice[0]->date)) }}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td colspan="3">{{ $FeedInvoice[0]->account->address }}</td>
+                        <td colspan="3">{{ $FeedInvoice[0]->account->address ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" style="text-align: right">Previous Balance</th>
+                        <td style="text-align: right">Rs {{ number_format($previous_balance, 2) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -133,7 +137,7 @@
 
                             <td class="text-right">{{ abs($item->quantity) }}</td>
                             <td class="text-right">Rs
-                                {{ number_format($type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
+                                {{ number_format($FeedInvoice[0]->type == 'Purchase' ? $item->purchase_price : $item->sale_price, 2) }}
                             </td>
                             <td class="text-right">Rs {{ number_format($item->discount_in_rs, 2) }}</td>
                             <td class="text-right">{{ number_format($item->discount_in_percent, 2) }}%</td>
@@ -142,14 +146,13 @@
                         @php
                             $subtotal +=
                                 abs($item->quantity) *
-                                ($type == 'Purchase' ? $item->purchase_price : $item->sale_price);
+                                ($FeedInvoice[0]->type == 'Purchase' ? $item->purchase_price : $item->sale_price);
                             $totalDiscountRs += $item->discount_in_rs;
                         @endphp
                     @endforeach
 
                     <tr style="border: none;">
-                        <td colspan="6">
-                        </td>
+                        <td colspan="7"></td>
                     </tr>
                     <tr>
                         <td style="text-align: center;" colspan="4">
@@ -162,7 +165,7 @@
                         <td class="text-right">Rs {{ number_format($subtotal, 2) }}</td>
                     </tr>
                     <tr>
-                        <td rowspan="2" colspan="4">
+                        <td rowspan="3" colspan="4">
                             {{ $data->additional_notes ?? '' }}
                         </td>
                         <td class="text-right" colspan="2">
@@ -176,10 +179,17 @@
                         </td>
                         <td class="text-right">Rs {{ number_format($subtotal - $totalDiscountRs, 2) }}</td>
                     </tr>
-                    <tr style="border: none;">
-                        <td colspan="6"></td>
+                    <tr>
+                        <td class="text-right" colspan="2">
+                            <h4>Closing Balance :</h4>
+                        </td>
+                        <td class="text-right">Rs
+                            {{ number_format($previous_balance + ($subtotal - $totalDiscountRs), 2) }}</td>
                     </tr>
-                <tbody>
+                    <tr style="border: none;">
+                        <td colspan="7"></td>
+                    </tr>
+                </tbody>
             </table>
 
             <div class="terms-conditions">

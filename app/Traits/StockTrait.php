@@ -23,8 +23,8 @@ trait StockTrait
             DB::raw('SUM(quantity) as total_quantity'),
             DB::raw('SUM(total_cost) as total_cost'),
             DB::raw('CASE WHEN SUM(quantity) != 0 THEN SUM(total_cost) / SUM(quantity) ELSE 0 END as average_price'),
-            DB::raw("(SELECT purchase_price FROM {$table} AS mi2 WHERE mi2.item_id = {$table}.item_id ORDER BY mi2.date DESC LIMIT 1) AS last_purchase_price"),
-            DB::raw("(SELECT sale_price FROM {$table} AS mi2 WHERE mi2.item_id = {$table}.item_id ORDER BY mi2.date DESC LIMIT 1) AS last_sale_price")
+            DB::raw("(SELECT purchase_price FROM {$table} AS mi2 WHERE mi2.item_id = {$table}.item_id AND type = 'Purchase' ORDER BY mi2.date DESC LIMIT 1) AS last_purchase_price"),
+            DB::raw("(SELECT sale_price FROM {$table} AS mi2 WHERE mi2.item_id = {$table}.item_id AND type = 'Sale' ORDER BY mi2.date DESC LIMIT 1) AS last_sale_price")
         )
             ->groupBy('item_id', 'expiry_date')
             ->with(['item:id,name,category_id', 'item.category:id,name'])

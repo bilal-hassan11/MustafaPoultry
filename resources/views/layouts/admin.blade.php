@@ -464,12 +464,12 @@
                             <div class="responsive-logo"> <a href="index.html" class="header-logo"> <img
                                         src="{{ asset('assets') }}/images/brand/logo-3.png"
                                         class="mobile-logo logo-1" alt="logo"> <img
-                                        src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                        src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                         class="mobile-logo dark-logo-1" alt="logo"> </a> </div>
                             <!-- sidebar-toggle--> <a class="logo-horizontal " href="index.html"> <img
                                     src="{{ asset('assets') }}/images/brand/logo.png"
                                     class="header-brand-img desktop-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img light-logo1" alt="logo"> </a> <!-- LOGO -->
                             <div class="main-header-center ms-3 d-none d-lg-block"> <input class="form-control"
                                     placeholder="Search for anything..." type="search"> <button class="btn"><i
@@ -535,11 +535,11 @@
                             <a class="header-brand1" href="index.html"> <img
                                     src="{{ asset('assets') }}/images/brand/logo.png"
                                     class="header-brand-img desktop-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img toggle-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img light-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img light-logo1" alt="logo"> </a> <!-- LOGO -->
                         </div>
                         <div class="main-sidemenu is-expanded">
