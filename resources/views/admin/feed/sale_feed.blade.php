@@ -98,7 +98,11 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title mb-0"> Sale Feed Filters</h3>
+                            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                                <div class="ms-auto pageheader-btn"> 
+                                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
+                                </div> 
+                            </div>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('admin.feed-invoices.sale') }}" method="GET">
@@ -146,11 +150,7 @@
                 </div>
                 <!-- COL END -->
             </div>
-            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                <div class="ms-auto pageheader-btn"> 
-                    <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper" data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
-                </div> 
-            </div>
+            
             <div class="row">
                 <div class="col-xl-12">
                     
@@ -172,9 +172,7 @@
                                     <table id="example54" class="text-fade table table-bordered" >
                                         <thead>
                                             <tr class="text-dark">
-                                                <th>Account</th>
-                                                <th>Item</th>
-                                                <th>Qty</th>
+                                                <th>Description</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -183,13 +181,8 @@
                                                 <tr class="text-dark">
                                                     
                                                     <td style="width: 15%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' }}</span>
+                                                            class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' , $pending->item->name ?? '' , abs($pending->quantity)   }}</span>
                                                     </td>
-
-                                                    <td style="width: 10%; !important"><span
-                                                            class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $pending->item->name ?? '' }}</span>
-                                                    </td>
-                                                    <td style="width: 10%; !important">{{ abs($pending->quantity) }}</td>
                                                     <td style="width: 20%; !important">
                                                         
                                                         <a href="{{ route('admin.feed-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"

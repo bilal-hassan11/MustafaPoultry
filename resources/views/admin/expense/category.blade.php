@@ -73,7 +73,7 @@
                                                 <td><span class="waves-effect waves-light btn btn-info-light">{{ @$category->name }}</span></td>
                                                 <td width="120">
                                                     <div class="btn-list"> 
-                                                        <a  href="{{route('admin.categories.edit', $category->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                                        <a  href="{{route('admin.expenses.edit', $category->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
                                                         
                                                     </div>
                                                    

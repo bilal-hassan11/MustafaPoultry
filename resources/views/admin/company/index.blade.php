@@ -46,7 +46,7 @@
                           <div class="col-md-3">
                             <div class="form-group">
                               <label>Phone No</label>
-                              <input class="form-control" name="phone_no" value="{{ @$edit_company->phone_no }}" required>
+                              <input class="form-control" name="phone_no" value="{{ @$edit_company->phone_no }}" >
                             </div>
                           </div>
                           <div class="col-md-3">
@@ -112,7 +112,7 @@
                                       @foreach($companies AS $c)
                                       <tr>
                                           <td class="text-dark">{{ $c->category->name }}</td>
-                                          <td>{{ $c->name }}</td>
+                                          <td><span class="waves-effect waves-light btn btn-success-light">{{ $c->name }}</span></td>
                                           <td>{{ $c->phone_no }}</td>
                                           <td>{{ $c->status }}</td>
                                           <td>{{ $c->address }}</td>

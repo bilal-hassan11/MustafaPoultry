@@ -11,7 +11,7 @@
     <meta name="keywords"
         content="admin, dashboard, dashboard ui, admin dashboard template, admin panel dashboard, admin panel html, admin panel html template, admin panel template, admin ui templates, administrative templates, best admin dashboard, best admin templates, bootstrap 4 admin template, bootstrap admin dashboard, bootstrap admin panel, html css admin templates, html5 admin template, premium bootstrap templates, responsive admin template, template admin bootstrap 4, themeforest html">
     <!-- FAVICON -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_assets') }}/images/mustafa-poultry.jpeg" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_assets') }}/images/tawakal-poultry.png" />
     <!-- TITLE -->
     <title>{{ $title ?? 'Dashboard' }} - {{ config('app.name') }}</title>
     <!-- BOOTSTRAP CSS -->
@@ -816,9 +816,9 @@
                                         <li><a href="{{ route('admin.reports.accounts_head_report') }}"
                                                 class="slide-item">Accounts Head Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'Purchase_murghi']) }}"
-                                                class="slide-item"> Purchase Feed Report</a></li>
+                                                class="slide-item"> Purchase Murghi Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}"
-                                                class="slide-item"> Sale Feed Report</a></li>
+                                                class="slide-item"> Sale Murghi Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
                                                 class="slide-item"> Purchase Chick Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_chick']) }}"
@@ -830,7 +830,7 @@
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_return_feed']) }}"
                                                 class="slide-item">Sale Return Feed Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_return_feed']) }}"
-                                                class="slide-item"> Sale Return Feed Report</a></li>
+                                                class="slide-item"> Purchase Return Feed Report</a></li>
 
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_medicine']) }}"
                                                 class="slide-item"> Purchase Medicine Report</a></li>

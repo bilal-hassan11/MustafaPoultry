@@ -68,7 +68,7 @@ h5{
                     <tr style="border: none;">
                         <td style="border: none;"><span><img src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg" alt="" width="150" height=""></span></td>
                         <td style="border: none;">
-                            <h2 class="text-center"><u>Al Mustafa Poultry | Ledger Statement</u></h3><br />
+                            <h2 class="text-center"><u>Tawakkal Marketing Traders | Ledger Statement</u></h3><br />
                             <h5 class="text-center ac"><i class="bi bi-people-fill"></i>{{ $account_name->name }}</h5>
                           
                             <h5 class="text-center">From {{$from_date}} to {{$to_date}}</h5>

@@ -48,7 +48,7 @@ class PaymentController extends Controller
 
             $account = Account::findOrFail(hashids_decode($req->debtor_id));
             $account_name = $account->name;
-
+            $accountledger->date               = $req->date;
             $accountledger->account_id = hashids_decode($req->debtor_id);
             $accountledger->payment_id          = $paymentbook->id;
             $accountledger->debit            = $req->debtor_amount ;
@@ -62,7 +62,7 @@ class PaymentController extends Controller
            
             $account = Account::findOrFail(hashids_decode($req->creditor_id));
             $account_name = $account->name;
-
+            $accountledger->date               = $req->date;
             $accountledger->account_id = hashids_decode($req->creditor_id);
             $accountledger->payment_id          = $paymentbook->id;
             $accountledger->debit            = 0 ;
@@ -90,7 +90,7 @@ class PaymentController extends Controller
            
             $account = Account::findOrFail(hashids_decode($req->debtor_id));
             $account_name = $account->name;
-
+            $accountledger->date               = $req->date;
             $accountledger->account_id = hashids_decode($req->debtor_id);
             $accountledger->payment_id          = $paymentbook->id;
             $accountledger->debit            = $req->debtor_amount ;
@@ -103,7 +103,7 @@ class PaymentController extends Controller
            
             $account = Account::findOrFail(hashids_decode($req->creditor_id));
             $account_name = $account->name;
-
+            $accountledger->date               = $req->date;
             $accountledger->account_id = hashids_decode($req->creditor_id);
             $accountledger->payment_id          = $paymentbook->id;
             $accountledger->debit            = 0 ;

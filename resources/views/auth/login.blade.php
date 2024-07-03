@@ -34,12 +34,12 @@
 					<div class="col-lg-5 col-md-5 col-12">
 						<div class="bg-white rounded10 shadow-lg">
 							<div class="content-top-agile p-20 pb-0">
-								<h2 class="text-primary fw-600"> Al Mustafa Poultry System</h2>
-								<p class="mb-0 text-fade">Login in to continue to Al Mustafa Poultry .</p>							
+								<h2 class="text-primary fw-600"> Tawakkal Marketing Traders System</h2>
+								<p class="mb-0 text-fade">Login in to continue to Tawakkal Marketing Traders .</p>							
 							</div>
 							<div class="text-center w-100 m-auto">
                                  <a href="{{route('admin.home')}}">
-                                    <span><img src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg" alt="" width="300" height="300"></span>
+                                    <span><img src="{{ asset('new_assets') }}/images/tawakal-poultry.png" alt="" width="300" height="300"></span>
                                 </a>
                                 
                             </div>

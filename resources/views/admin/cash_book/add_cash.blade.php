@@ -73,14 +73,14 @@
               <div class="row">
                 <div class="col-md-2">
                   <div class="form-group">
-                    <label style="font-size:20px;">Cash In Hand</label>
+                    <label style="font-size:20px;">Cash In Hand </label>
                     <input class="form-control" type="number" name="open_balance" value="{{@$cash_in_hand}}" readonly>
                   </div>
                 </div>
 
               </div>
               <br />
-              <h3>Receipts</h3><br />
+              <h3>Receipts (آمد)</h3><br />
               <form class="ajaxForm" role="form" action="{{ route('admin.cash.store') }}" method="POST" novalidate>
               @csrf
                 <div class="row">
@@ -135,13 +135,13 @@
                       <input class="form-control" type="number" name="receipt_ammount" value="{{ @$edit_receipt->receipt_ammount }}" >
                     </div>
                   </div>
-                  <div class="col-md-1 mt-3">
+                  <div class="col-md-1 mt-6">
                     <div class="form-group">
                       <button type="reset" class="btn btn-danger "><i class="fa fa-repeat" aria-hidden="true"></i>&nbsp Reset</button>
                     </div>
                   </div>
                   <input type="hidden" name="cash_id" value="{{ @$edit_receipt->hashid }}">
-                  <div class="col-md-1 mt-3">
+                  <div class="col-md-1 mt-6">
                     <div class="form-group">
                       <button type="submit" value="{{ (@$is_update_receipt ? 'Update' : 'Add') }}" name="save_receipt" class="btn btn-success">&nbsp Save </button>
 
@@ -150,7 +150,7 @@
                 </div>
               </form>
               <br />
-              <h3>Payments</h3><br />
+              <h3>Payments (جامد)</h3><br />
               <form class="ajaxForm" role="form" action="{{ route('admin.cash.store') }}" method="POST" novalidate>
               @csrf
                 <div class="row">
@@ -204,13 +204,13 @@
                       <input class="form-control" name="payment_ammount" value="{{ @$edit_payment->payment_ammount }}" required>
                     </div>
                   </div>
-                  <div class="col-md-1 mt-3 ">
+                  <div class="col-md-1 mt-6 ">
                     <div class="form-group">
                       <button type="reset" class="btn btn-danger "><i class="fa fa-repeat" aria-hidden="true"></i>&nbsp Reset</button>
                     </div>
                   </div>
                   <input type="hidden" name="cash_id" value="{{ @$edit_payment->hashid }}">
-                  <div class="col-md-1 mt-3 ">
+                  <div class="col-md-1 mt-6 ">
                     <div class="form-group">
 
                       <button type="submit" value="{{ (isset($is_update_payment) ? 'Update' : 'Add') }}" name="save_payment" class="btn btn-success">&nbsp Save </button>
@@ -264,7 +264,7 @@
                     </div>
                     <div class="col-md-2">
                       <label for="">To</label>
-                      <input type="date" class="form-control" name="to-date" id="to-date">
+                      <input type="date" class="form-control" name="to_date" id="to_date">
                     </div>
                     <div class="col-md-2 mt-5">
                       <input type="submit" class="btn btn-primary" value="Search">

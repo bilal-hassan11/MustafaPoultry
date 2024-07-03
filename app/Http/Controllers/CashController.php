@@ -64,8 +64,8 @@ class CashController extends Controller
 
             'accounts'  => Account::latest()->get()->sortBy('name'),
             'cash' => CashBook::with(['account'])
-                ->when(isset($req->acc_id), function ($query) use ($req) {
-                    $query->where('account_id', hashids_decode($req->acc_id));
+                ->when(isset($req->parent_id), function ($query) use ($req) {
+                    $query->where('account_id', hashids_decode($req->parent_id));
                 })
                 ->when(isset($req->status), function ($query) use ($req) {
                     $query->where('status', $req->status);

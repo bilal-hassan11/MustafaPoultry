@@ -70,7 +70,7 @@ h5{
                         <td style="border: none;"><span><img src="{{ asset('new_assets') }}/images/main-logo.png" alt="" width="150" height=""></span></td>
                         
                         <td style="border: none;">
-                            <h3 class="text-center">Ghulam Hussain Poulttry |{{@$title}}</h3>
+                            <h3 class="text-center">Tawakkal Marketing Traders |{{@$title}}</h3>
                             @if(@$account_name != "")
                            <h5 class="text-center ac"><i class="bi bi-people-fill"></i>{{ $account_name[0]->name  }} </h5>
                            @endif

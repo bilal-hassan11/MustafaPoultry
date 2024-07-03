@@ -132,16 +132,21 @@
                                         <td >{{ @$ac->description }}</td>
                                         <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(abs(@$ac->debit),2) }}</span></td>
                                         <td><span class="waves-effect waves-light btn btn-success-light">{{  number_format(abs(@$ac->credit),2) }}</span></td>
-                                        
+                                        @if(@$account_opening[0]->account_nature == "credit")
                                         <?php $tot_balance += $ac->credit - $ac->debit ;?>
+                                        @endif
+                                        @if(@$account_opening[0]->account_nature == "debit")
+                                        <?php $tot_balance += $ac->debit - $ac->credit ;?>
+                                        @endif
+                                        
                                         <td><span class="waves-effect waves-light btn btn-primary-light">{{ number_format(abs($tot_balance),2) }}</span></td>
                                         
                                         @if($tot_balance > 0)
-                                        <td><span class="waves-effect waves-light btn btn-info-light">cr</span></td>
+                                        <td><span class="waves-effect waves-light btn btn-info-light">dr</span></td>
                                         <?php @$tot_bal += @$tot_balance; ?>
                                         @endif
                                         @if( @$tot_balance <= 0)
-                                        <td><span class="waves-effect waves-light btn btn-primary-light">dr</span></td>
+                                        <td><span class="waves-effect waves-light btn btn-primary-light">cr</span></td>
                                             <?php @$tot_bal += @$tot_balance; ?>
                                         @endif
                                     </tr>
