@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use App\Models\AccountLedger;
+use App\Traits\GeneratePdfTrait;
 use Illuminate\Http\Request;
 use App\Traits\SendsWhatsAppMessages;
 use Mpdf\Mpdf;
@@ -15,6 +16,7 @@ class OtherInvoiceController extends Controller
 {
 
     use SendsWhatsAppMessages;
+    use GeneratePdfTrait;
     protected $OtherInvoice;
 
     public function __construct(OtherInvoice $OtherInvoice)

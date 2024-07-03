@@ -804,6 +804,8 @@
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
 
+                                        <li><a href="{{ route('admin.reports.income-report') }}" class="slide-item">
+                                                Income Report</a></li>
                                         <li><a href="{{ route('admin.reports.daybook_report') }}" class="slide-item">
                                                 DayBook Report</a></li>
                                         <li><a href="{{ route('admin.reports.cashflowreport') }}" class="slide-item">
