@@ -91,7 +91,7 @@
                             <th> Rate </th>
                             <th> Quantity </th>
                             <th> Net Value </th>
-                            <th> Action </th>
+                            <!-- <th> Action </th> -->
 
                          </tr>
                     </thead>
@@ -105,14 +105,14 @@
                                   <td>{{    number_format(@$all->net_amount / @$all->quantity ,2) }}</td>
                                   <td>{{ @$all->quantity }}</td>
                                   <td ><span class="waves-effect waves-light btn btn-outline btn-success">{{ @$all->net_amount }}</span></td>
-                                  <td>
+                                  <!-- <td>
                                         <button class="btn btn-outline-info  rounded-pill btn-wave" type="button" >
                                             <i class="ri-eye-line"></i>
                                         </button>
                                         <button class="btn btn-outline-info  rounded-pill btn-wave" type="button" >
                                             <i class="ri-download-2-line"></i>
                                         </button>
-                                    </td>
+                                    </td> -->
 
                                 </tr>
                             @endforeach

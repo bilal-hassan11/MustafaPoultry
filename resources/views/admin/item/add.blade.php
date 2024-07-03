@@ -32,9 +32,10 @@
                         <div class="col-md-4 form-group">
                             <label for="">Companies</label>
                             <select class="form-control select2" name="company_id" id="company_id">
-                                    <option value="">Select Company</option>
-                                    <option value="1">Company1</option>
-                                    <option value="2">Company2</option>
+                                <option value="">Select Company</option>
+                                @foreach($companies AS $company)
+                                    <option value="{{ $company->hashid }}" @if(@$edit_item->company_id == $company->id) selected @endif>{{ $company->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-4 form-group">
@@ -47,7 +48,7 @@
 
                         <div class="col-md-3 form-group">
                             <label for="">Item Unit</label>
-                            <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->unit }}"  name="unit"  required>
+                            <input type="text" class="form-control" placeholder="Enter Unit" value="{{ @$edit_item->unit }}"  name="unit"  required>
 
                         </div>
                         <div class="col-md-3 form-group">

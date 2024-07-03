@@ -49,6 +49,7 @@ class ExpenseController extends Controller
 
     public function edit($id){
 
+        
         $data = array(
             'title'         => 'Category',
             'categories'    => ExpenseCategory::latest()->get(),

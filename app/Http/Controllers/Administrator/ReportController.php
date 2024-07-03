@@ -8,24 +8,9 @@ use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\PurchaseBook;
 use App\Models\AccountLedger;
-use App\Models\OutwardDetail;
-use App\Models\PurchaseMedicine;
-use App\Models\SaleMedicine;
-use App\Models\ReturnMedicine;
-use App\Models\ExpireMedicine;
-use App\Models\PurchaseFeed;
-use App\Models\SaleFeed;
-use App\Models\ReturnFeed;
-use App\Models\PurchaseChick;
-use App\Models\SaleChick;
-use App\Models\PurchaseMurghi;
-use App\Models\SaleMurghi;
 use App\Models\Expense;
-use App\Models\SaleBook;
 use App\Models\CashBook;
 use App\Models\AccountType;
-use App\Models\Inward;
-use App\Models\Outward;
 use Mpdf\Mpdf;
 use App\Models\FeedInvoice;
 use App\Models\ChickInvoice;
@@ -337,22 +322,18 @@ class ReportController extends Controller
 
     public function DayBookReport(Request $req){
         
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
+      
 
         if(isset($req->from_date)){
             
            
             
             //get Opening
-            $c_cash_credit  = CashBook::whereDate('date', '<', $req->from_date)->sum('receipt_ammount');
-            $c_cash_debit  = CashBook::whereDate('date', '<', $req->from_date)->sum('payment_ammount');
+            $c_cash_credit  = CashBook::whereDate('entry_date', '<', $req->from_date)->sum('receipt_ammount');
+            $c_cash_debit  = CashBook::whereDate('entry_date', '<', $req->from_date)->sum('payment_ammount');
             $c_ex  = Expense::whereDate('date', '<', $req->from_date)->sum('ammount');
             
-            $c_open = 2909858;
+            $c_open = 0;
             $ccc_net = $c_open + $c_cash_credit;
             
             $ex_cc = $c_ex + $c_cash_debit ;
@@ -361,12 +342,12 @@ class ReportController extends Controller
             
             //dd($c_net_c);
             //get Closing
-            $cash_credit  = CashBook::whereDate('date', '<=', $req->from_date)->sum('receipt_ammount');
-            $cash_debit  = CashBook::whereDate('date', '<=', $req->from_date)->sum('payment_ammount');
+            $cash_credit  = CashBook::whereDate('entry_date', '<=', $req->from_date)->sum('receipt_ammount');
+            $cash_debit  = CashBook::whereDate('entry_date', '<=', $req->from_date)->sum('payment_ammount');
             $ex  = Expense::whereDate('date', '<=', $req->from_date)->sum('ammount');
             $day_exp = Expense::whereDate('date', '=', $req->from_date)->sum('ammount');
             //get Cashbook
-            $c  = CashBook::whereDate('date', '=', $req->from_date)->latest()->get();
+            $c  = CashBook::whereDate('entry_date', '=', $req->from_date)->latest()->get();
             
             $next_open = $c_net_c;
             $net_credit = $cash_credit - $c_cash_credit;
@@ -379,7 +360,6 @@ class ReportController extends Controller
                                                             
             $data = array(
                 'title' => 'DayBook Report',
-                'expire_medicine'   => $expire_medicine,
                 'account_opening' => $c_net_c,
                 'account_closing' => $ov,
                 'expense' => $ex,
@@ -389,18 +369,18 @@ class ReportController extends Controller
                 'cashbook'  => $c,
                 'is_update' => true,
                 'from_date' => $req->from_date ,
-                'purchase_medicine'  => PurchaseMedicine::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'sale_medicine'     => SaleMedicine::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'return_medicine'   => ReturnMedicine::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),                 
-                'purchase_murghi'   => PurchaseMurghi::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'sale_murghi'       => SaleMurghi::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'purchase_chick'   => PurchaseChick::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'sale_chick'       => SaleChick::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'purchase_feed'   => PurchaseFeed::with(['item',                             'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'sale_feed'      => SaleFeed::with(['item',                                     'account'])->whereDate('date', $req                         ->from_date)->latest()->get(),
-                'return_feed' => ReturnFeed::with(['item', 'account']                           )->whereDate('date', $req->from_date                        )->latest()->get(),
+                'purchase_medicine'  => PurchaseMedicine::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'sale_medicine'     => SaleMedicine::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'return_medicine'   => ReturnMedicine::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),                 
+                'purchase_murghi'   => PurchaseMurghi::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'sale_murghi'       => SaleMurghi::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'purchase_chick'   => PurchaseChick::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'sale_chick'       => SaleChick::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'purchase_feed'   => PurchaseFeed::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'sale_feed'      => SaleFeed::with(['item','account'])->whereDate('date', $req->from_date)->latest()->get(),
+                'return_feed' => ReturnFeed::with(['item', 'account'])->whereDate('date', $req->from_date)->latest()->get(),
             
-                'cash'          => CashBook::with(['account'])->whereDate                   ('date', $req->from_date)->latest()->get(),
+                'cash'          => CashBook::with(['account'])->whereDate('entry_date', $req->from_date)->latest()->get(),
                          
                                             
             );
@@ -453,7 +433,7 @@ class ReportController extends Controller
             $day_exp = Expense::whereDate('date', '=', $current_month)->sum('ammount');
             
             //get Cashbook
-            $c  = CashBook::whereDate('date', '=', $current_month)->latest()->get();
+            $c  = CashBook::whereDate('entry_date', '=', $current_month)->latest()->get();
             
             $next_open = $c_net_c;
             $net_credit = $cash_credit - $c_cash_credit;
@@ -474,7 +454,7 @@ class ReportController extends Controller
                 'debit'  => $net_debit,
                 'cashbook'  => $c,
                 'date'      => $current_month,
-                'expire_medicine'   => $expire_medicine,
+                
                 'purchase_medicine'  => $tot_purchase_medicine,
                 'sale_medicine'     =>  $tot_sale_medicine,   
                 'return_medicine'     =>  $tot_return_medicine,   
@@ -496,12 +476,6 @@ class ReportController extends Controller
     
     public function DayBookPdf(Request $req){
         
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-
         if(isset($req->from_date)){
             
             //get Opening
@@ -536,7 +510,7 @@ class ReportController extends Controller
                                                             
             $data = array(
                 'title' => 'DayBook Report',
-                'expire_medicine'   => $expire_medicine,
+                
                 'account_opening' => $c_net_c,
                 'account_closing' => $ov,
                 'expense' => $ex,
@@ -631,7 +605,7 @@ class ReportController extends Controller
                 'debit'  => $net_debit,
                 'cashbook'  => $c,
                 'date'      => $current_month,
-                'expire_medicine'   => $expire_medicine,
+                
                 'purchase_medicine'  => $tot_purchase_medicine,
                 'sale_medicine'     =>  $tot_sale_medicine,   
                 'return_medicine'     =>  $tot_return_medicine,   
@@ -654,21 +628,15 @@ class ReportController extends Controller
 
     public function cashflowReport(Request $req){
         
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-        
         
         if(isset($req->to_date)){
             
             //get Opening
-            $c_cash_credit  = CashBook::whereDate('date', '<', $req->to_date)->sum('receipt_ammount');
-            $c_cash_debit  = CashBook::whereDate('date', '<', $req->to_date)->sum('payment_ammount');
+            $c_cash_credit  = CashBook::whereDate('entry_date', '<', $req->to_date)->sum('receipt_ammount');
+            $c_cash_debit  = CashBook::whereDate('entry_date', '<', $req->to_date)->sum('payment_ammount');
             $c_ex  = Expense::whereDate('date', '<', $req->to_date)->sum('ammount');
             
-            $c_open = 2909858;
+            $c_open = 0;
             $ccc_net = $c_open + $c_cash_credit;
             
             $ex_cc = $c_ex + $c_cash_debit ;
@@ -677,12 +645,12 @@ class ReportController extends Controller
             
             //dd($c_net_c);
             //get Closing
-            $cash_credit  = CashBook::whereDate('date', '<=', $req->to_date)->sum('receipt_ammount');
-            $cash_debit  = CashBook::whereDate('date', '<=', $req->to_date)->sum('payment_ammount');
+            $cash_credit  = CashBook::whereDate('entry_date', '<=', $req->to_date)->sum('receipt_ammount');
+            $cash_debit  = CashBook::whereDate('entry_date', '<=', $req->to_date)->sum('payment_ammount');
             $ex  = Expense::whereDate('date', '<=', $req->to_date)->sum('ammount');
             $day_exp = Expense::whereDate('date', '=', $req->to_date)->sum('ammount');
             //get Cashbook
-            $c  = CashBook::whereDate('date', '=', $req->to_date)->latest()->get();
+            $c  = CashBook::whereDate('entry_date', '=', $req->to_date)->latest()->get();
             
             $next_open = $c_net_c;
             $net_credit = $cash_credit - $c_cash_credit;
@@ -707,7 +675,7 @@ class ReportController extends Controller
                 'credit' => $net_credit,
                 'debit'  => $net_debit,
                 
-                'expire_medicine'   => $expire_medicine,
+                
                 'to_date' => $req->to_date ,
                 'cashbook'  => $c
             );
@@ -717,7 +685,7 @@ class ReportController extends Controller
             
             $data = array(
                 'title' => 'CashFlow Report',
-                'expire_medicine'   => $expire_medicine,
+                
             
             );
         }
@@ -727,21 +695,15 @@ class ReportController extends Controller
     
     public function cashflowReportPdf(Request $req){
             
-         $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-        
         
         if(isset($req->to_date)){
             
             //get Opening
-            $c_cash_credit  = CashBook::whereDate('date', '<', $req->to_date)->sum('receipt_ammount');
-            $c_cash_debit  = CashBook::whereDate('date', '<', $req->to_date)->sum('payment_ammount');
+            $c_cash_credit  = CashBook::whereDate('entry_date', '<', $req->to_date)->sum('receipt_ammount');
+            $c_cash_debit  = CashBook::whereDate('entry_date', '<', $req->to_date)->sum('payment_ammount');
             $c_ex  = Expense::whereDate('date', '<', $req->to_date)->sum('ammount');
             
-            $c_open = 2909858;
+            $c_open = 0;
             $ccc_net = $c_open + $c_cash_credit;
             
             $ex_cc = $c_ex + $c_cash_debit ;
@@ -750,12 +712,12 @@ class ReportController extends Controller
             
             //dd($c_net_c);
             //get Closing
-            $cash_credit  = CashBook::whereDate('date', '<=', $req->to_date)->sum('receipt_ammount');
-            $cash_debit  = CashBook::whereDate('date', '<=', $req->to_date)->sum('payment_ammount');
+            $cash_credit  = CashBook::whereDate('entry_date', '<=', $req->to_date)->sum('receipt_ammount');
+            $cash_debit  = CashBook::whereDate('entry_date', '<=', $req->to_date)->sum('payment_ammount');
             $ex  = Expense::whereDate('date', '<=', $req->to_date)->sum('ammount');
             $day_exp = Expense::whereDate('date', '=', $req->to_date)->sum('ammount');
             //get Cashbook
-            $c  = CashBook::whereDate('date', '=', $req->to_date)->latest()->get();
+            $c  = CashBook::whereDate('entry_date', '=', $req->to_date)->latest()->get();
             
             $next_open = $c_net_c;
             $net_credit = $cash_credit - $c_cash_credit;
@@ -780,7 +742,7 @@ class ReportController extends Controller
                 'credit' => $net_credit,
                 'debit'  => $net_debit,
                 
-                'expire_medicine'   => $expire_medicine,
+                
                 'to_date' => $req->to_date ,
                 'cashbook'  => $c
             );
@@ -790,7 +752,7 @@ class ReportController extends Controller
             
             $data = array(
                 'title' => 'CashFlow Report',
-                'expire_medicine'   => $expire_medicine,
+                
             
             );
         }
@@ -802,13 +764,7 @@ class ReportController extends Controller
 
     public function accounts_head_report(Request $req){
      
-        $newDateTime = Carbon::now()->addMonth(2);
-        $d = $newDateTime->toDateString();
-        
-        $expire_medicine = PurchaseMedicine::with(['item', 'account'])->where('expiry_date','<=', $d)->where('expiry_status','enable')->orderBy('created_at', 'desc')->latest()->get();
-        
-
-
+       
         if(isset($req->from_date) ){
             
             
@@ -849,7 +805,7 @@ class ReportController extends Controller
             //dd($accounts);
             $data = array(
                 'title' => 'All Accounts Ledger',
-                'expire_medicine'   => $expire_medicine,
+                
                 'Item' => Item::where('category_id',3)->latest()->get(),
                 'acounts' => Account::latest()->get(),
                 'ac' => $accounts ,
@@ -896,7 +852,7 @@ class ReportController extends Controller
             //dd($accounts);
             $data = array(
                 'title' => 'All Accounts Ledger',
-                'expire_medicine'   => $expire_medicine,
+                
                 'Item' => Item::where('category_id',3)->latest()->get(),
                 'acounts' => Account::latest()->get(),
                 'ac' => $accounts ,
@@ -1005,6 +961,7 @@ class ReportController extends Controller
     
     public function all_report($id){
         
+        //dd($id);
         if($id == "purchase_medicine"){
             
             $data = array(
@@ -1253,8 +1210,8 @@ class ReportController extends Controller
         }
 
         //Purchase Murghi
-        if($id == "purchase_murghi"){
-            
+        if($id == "Purchase_murghi"){
+           
             $data = array(
                 'title' => 'Purchase Murghi Report',
                 'acounts' => Account::latest()->get(),
@@ -4567,299 +4524,7 @@ class ReportController extends Controller
         return $pdf->setPaper('a4')->stream();
     }
 
-    public function DebtorReport(Request $req){
-     
-        
-            
-        $accounts = Account::with(['grand_parent'])->where('account_nature','debit')->latest()->get();
-        
-        for($i = 0; $i < count($accounts); $i++) {
-            
-            $arr = [];
-            $balance = $accounts[$i]->opening_balance;
-            $t_cr = AccountLedger::where('account_id',$accounts[$i]->id)->sum('credit');
-            $t_dr = AccountLedger::where('account_id',$accounts[$i]->id)->sum('debit');
-            
-            
-            if($accounts[$i]->account_nature == "credit"){
-                $t_cr += $balance;
-                
-            }else{
-
-                $t_dr +=  $balance;
-            }
-
-            $dues = $t_cr - $t_dr;
-
-            if($dues < 0){
-                $a_n = "debit";
-
-            }else{
-
-                $a_n = "credit";
-            }
-          
-            $accounts[$i]->opening_balance = $dues;
-            $accounts[$i]->account_nature = $a_n;
-            
-        }
-
-        $data = array(
-            'title' => 'Debtor Account Report',
-           
-            'accounts'  => $accounts,
-           
-            
-        );
-        //dd($data['party_name']);
-   
     
-        return view('admin.report.debtor_report')->with($data);
-    }
-
-    public function TrialBalanceReport(Request $req){
-     
-        
-            
-        $accounts = Account::with(['grand_parent'])->where('grand_parent_id',3)->latest()->get();
-        $tot_Assets = 0;
-
-        for($i = 0; $i < count($accounts); $i++) {
-            
-            $arr = [];
-            $balance = $accounts[$i]->opening_balance;
-            $t_cr = AccountLedger::where('account_id',$accounts[$i]->id)->sum('credit');
-            $t_dr = AccountLedger::where('account_id',$accounts[$i]->id)->sum('debit');
-            
-            
-            if($accounts[$i]->account_nature == "credit"){
-                $t_cr += $balance;
-                
-            }else{
-
-                $t_dr +=  $balance;
-            }
-
-            $dues = $t_cr - $t_dr;
-
-            if($dues < 0){
-                $a_n = "debit";
-
-            }else{
-
-                $a_n = "credit";
-            }
-          
-            $accounts[$i]->opening_balance = $dues;
-            $accounts[$i]->account_nature = $a_n;
-            $tot_Assets += $accounts[$i]->opening_balance;
-        }
-
-        $ex_accounts = Account::with(['grand_parent'])->where('grand_parent_id',4)->latest()->get();
-        $tot_Expense = 0;
-
-        for($i = 0; $i < count($ex_accounts); $i++) {
-            
-            $arr = [];
-            $ex_balance = $ex_accounts[$i]->opening_balance;
-            $ex_t_cr = AccountLedger::where('account_id',$ex_accounts[$i]->id)->sum('credit');
-            $ex_t_dr = AccountLedger::where('account_id',$ex_accounts[$i]->id)->sum('debit');
-            
-            
-            if($ex_accounts[$i]->account_nature == "credit"){
-                $ex_t_cr += $ex_balance;
-                
-            }else{
-
-                $ex_t_dr +=  $ex_balance;
-            }
-
-            $dues = $ex_t_cr - $ex_t_dr;
-
-            if($dues < 0){
-                $a_n = "debit";
-
-            }else{
-
-                $a_n = "credit";
-            }
-          
-            $ex_accounts[$i]->opening_balance = $dues;
-            $ex_accounts[$i]->account_nature = $a_n;
-            $tot_Expense += $ex_accounts[$i]->opening_balance;
-        }
-
-        $lia_accounts = Account::with(['grand_parent'])->where('grand_parent_id',5)->latest()->get();
-        $tot_liabilities = 0;
-
-        for($i = 0; $i < count($lia_accounts); $i++) {
-            
-            $arr = [];
-            $lia_balance = $lia_accounts[$i]->opening_balance;
-            $lia_t_cr = AccountLedger::where('account_id',$lia_accounts[$i]->id)->sum('credit');
-            $lia_t_dr = AccountLedger::where('account_id',$lia_accounts[$i]->id)->sum('debit');
-            
-            
-            if($lia_accounts[$i]->account_nature == "credit"){
-                $lia_t_cr += $lia_balance;
-                
-            }else{
-
-                $lia_t_dr +=  $lia_balance;
-            }
-
-            $dues = $lia_t_cr - $lia_t_dr;
-
-            if($dues < 0){
-                $a_n = "debit";
-
-            }else{
-
-                $a_n = "credit";
-            }
-          
-            $lia_accounts[$i]->opening_balance = $dues;
-            $lia_accounts[$i]->account_nature = $a_n;
-            $tot_liabilities += $lia_accounts[$i]->opening_balance;
-        }
-
-
-        $rev_accounts = Account::with(['grand_parent'])->where('grand_parent_id',6)->latest()->get();
-        $tot_revenue = 0;
-
-        for($i = 0; $i < count($rev_accounts); $i++) {
-            
-            $arr = [];
-            $rev_balance = $rev_accounts[$i]->opening_balance;
-            $$rev_t_cr = AccountLedger::where('account_id',$rev_accounts[$i]->id)->sum('credit');
-            $$rev_t_dr = AccountLedger::where('account_id',$rev_accounts[$i]->id)->sum('debit');
-            
-            
-            if($rev_accounts[$i]->account_nature == "credit"){
-                $$rev_t_cr += $rev_balance;
-                
-            }else{
-
-                $$rev_t_dr +=  $rev_balance;
-            }
-
-            $dues = $$rev_t_cr - $$rev_t_dr;
-
-            if($dues < 0){
-                $a_n = "debit";
-
-            }else{
-
-                $a_n = "credit";
-            }
-          
-            $rev_accounts[$i]->opening_balance = $dues;
-            $rev_accounts[$i]->account_nature = $a_n;
-            $tot_revenue += $rev_accounts[$i]->opening_balance;
-        }
-
-        $prop_accounts = Account::with(['grand_parent'])->where('grand_parent_id',7)->latest()->get();
-        $tot_propritorship = 0;
-
-        for($i = 0; $i < count($prop_accounts); $i++) {
-            
-            $arr = [];
-            $prop_balance = $prop_accounts[$i]->opening_balance;
-            $prop_t_cr = AccountLedger::where('account_id',$prop_accounts[$i]->id)->sum('credit');
-            $prop_t_dr = AccountLedger::where('account_id',$prop_accounts[$i]->id)->sum('debit');
-            
-            
-            if($prop_accounts[$i]->account_nature == "credit"){
-                $prop_t_cr += $prop_balance;
-                
-            }else{
-
-                $prop_t_dr +=  $prop_balance;
-            }
-
-            $dues = $prop_t_cr - $prop_t_dr;
-
-            if($dues < 0){
-                $a_n = "debit";
-
-            }else{
-
-                $a_n = "credit";
-            }
-          
-            $prop_accounts[$i]->opening_balance = $dues;
-            $prop_accounts[$i]->account_nature = $a_n;
-            $tot_propritorship += $prop_accounts[$i]->opening_balance;
-        }
-
-        $data = array(
-            'title' => 'Trail Balance Report',
-           
-           
-            'assets'  => $tot_Assets,
-            'expense' => $tot_Expense,
-            'liabilities' => $tot_liabilities,
-            'revenue' => $tot_revenue,
-            'propritorship' => $tot_propritorship,
-
-            
-        );
-        //dd($data['assets']);
-   
-    
-        return view('admin.report.trial_balance_report')->with($data);
-    }
-
-    public function CreditorReport(Request $req){
-     
-        
-            
-            $accounts = Account::with(['grand_parent'])->where('account_nature','credit')->latest()->get();
-            
-            for($i = 0; $i < count($accounts); $i++) {
-                
-                $arr = [];
-                $balance = $accounts[$i]->opening_balance;
-                $t_cr = AccountLedger::where('account_id',$accounts[$i]->id)->sum('credit');
-                $t_dr = AccountLedger::where('account_id',$accounts[$i]->id)->sum('debit');
-                
-                
-                if($accounts[$i]->account_nature == "credit"){
-                    $t_cr += $balance;
-                    
-                }else{
-
-                    $t_dr +=  $balance;
-                }
-
-                $dues = $t_cr - $t_dr;
-
-                if($dues < 0){
-                    $a_n = "debit";
-
-                }else{
-
-                    $a_n = "credit";
-                }
-              
-                $accounts[$i]->opening_balance = $dues;
-                $accounts[$i]->account_nature = $a_n;
-                
-            }
-
-            $data = array(
-                'title' => 'Creditor Account Report',
-               
-                'accounts'  => $accounts,
-               
-                
-            );
-            //dd($data['party_name']);
-       
-        
-        return view('admin.report.creditor_report')->with($data);
-    }
-
     public function accountReport(Request $req){
         
         
@@ -5147,287 +4812,5 @@ class ReportController extends Controller
         return view('admin.report.item_print')->with($data);
     }
 
-    public function inwardReport(Request $req){
-        $data = array(
-            'title' => 'Inward Ledger',
-            'items' => Item::latest()->get(),
-            'accounts'  => Account::latest()->get(),
-            'inward'  => Inward::when(isset($req->item_id), function($query) use ($req){
-                                            $query->where('item_id', hashids_decode($req->item_id));
-                                        })->when(isset($req->account_id), function($query) use ($req){
-                                            $query->where('account_id', hashids_decode($req->account_id));
-                                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                                        })->latest()->get()
-        );
-        return view('admin.report.inward_report')->with($data);
-    }
-
-    public function inwardReportPdf(Request $req){
-        
-          //dd($req->from_date);
-          $toDate = Carbon::parse($req->from_date);
-          $fromDate = Carbon::parse($req->to_date);
     
-          $days = $fromDate->diffInDays($toDate);
-  
-        $data = array(
-            'inward'  => Inward::when(isset($req->item_id), function($query) use ($req){
-                            $query->where('item_id', hashids_decode($req->item_id));
-                        })->when(isset($req->account_id), function($query) use ($req){
-                            $query->where('account_id', hashids_decode($req->account_id));
-                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                        })->latest()->get(),
-            'to_date' => $req->to_date,
-            'from_date' => $req->from_date,
-            'days' => $days,
-            'item_name' =>  Item::findOrFail(hashids_decode($req->item_id)),
-        );
-        $pdf = Pdf::loadView('admin.report.inward-pdf', $data);
-        return $pdf->download('inward_report.pdf');
-    }
-
-    public function inwardReportPrint(Request $req){
-        
-        $toDate = Carbon::parse($req->from_date);
-        $fromDate = Carbon::parse($req->to_date);
-  
-        $days = $fromDate->diffInDays($toDate);
-
-      $data = array(
-          'inward'  => Inward::when(isset($req->item_id), function($query) use ($req){
-                          $query->where('item_id', hashids_decode($req->item_id));
-                      })->when(isset($req->account_id), function($query) use ($req){
-                          $query->where('account_id', hashids_decode($req->account_id));
-                      })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                          $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                      })->latest()->get(),
-          'to_date' => $req->to_date,
-          'from_date' => $req->from_date,
-          'days' => $days,
-          'item_name' =>  Item::findOrFail(hashids_decode($req->item_id)),
-      );
-      //window.print(view('admin.report.inward_print')->with($data));
-      //$pdf = Pdf::loadView('admin.report.inward-print', $data);
-      return view('admin.report.inward_print')->with($data);
-  }
-
-    public function outwardReport(Request $req){
-        $data = array(
-            'title' => 'Outward Ledger',
-            'items' => Item::latest()->get(),
-            'outward'  => Outward::when(isset($req->item_id), function($query) use ($req){
-                                            $query->where('item_id', hashids_decode($req->item_id));
-                                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                                        })->latest()->get()
-        );
-        return view('admin.report.outward_report')->with($data);
-    }
-
-    public function outwardReportPdf(Request $req){
-        $data = array(
-            'outward'  => Outward::when(isset($req->item_id), function($query) use ($req){
-                                            $query->where('item_id', hashids_decode($req->item_id));
-                                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                                        })->latest()->get(),
-            'to_date' => $req->to_date,
-            'from_date' => $req->from_date,
-            'days' => $days,
-            'item_name' =>  Item::findOrFail(hashids_decode($req->item_id)),
-        );
-        $pdf = Pdf::loadView('admin.report.outward-pdf', $data);
-        return $pdf->download('outward_report.pdf');
-    }
-
-    public function outwardReportPrint(Request $req){
-        $data = array(
-            'outward'  => Outward::when(isset($req->item_id), function($query) use ($req){
-                                            $query->where('item_id', hashids_decode($req->item_id));
-                                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                                        })->latest()->get(),
-            'to_date' => $req->to_date,
-            'from_date' => $req->from_date,
-            'days' => @$days,
-            'item_name' =>  Item::findOrFail(hashids_decode($req->item_id)),
-        );
-        // $pdf = Pdf::loadView('admin.report.outward-pdf', $data);
-        // return $pdf->download('outward_report.pdf');
-        return view('admin.report.outward_print')->with($data);
-    }
-
-    public function PurchaseBookReport(Request $req){
-        if(isset($req->account_id)){
-            $data = array(  
-                'title' => 'Purchase Book Ledger',
-                'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                'acounts' => Account::latest()->get(),
-                'from_date' => $req->from_date ,
-                'to_date' => $req->to_date ,
-                'purchases'  => AccountLedger::when(isset($req->account_id), function($query) use ($req){
-                                                $query->where('account_id', hashids_decode($req->account_id));
-                                            })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                                $query->whereDate('created_at', '>=', $req->from_date)->whereDate('created_at', '<=', $req->to_date);
-                                            })->where('sale_id',"")->latest()->get(),
-            );
-            //dd($data['purchases']);
-        }else{
-            $data = array(
-                'title' => 'Purchase Book Ledger',
-                'acounts' => Account::latest()->get(),
-                'items' => Item::where('type','purchase')->latest()->get(),
-                'accounts'  => Account::latest()->get(),
-                'purchases' => "",
-                
-            
-            );
-        }
-        
-        
-        return view('admin.report.purchase_book')->with($data);
-    }
-
-    public function PurchaseReportPdf(Request $req){
-        //dd($req->from_date);
-        $toDate = Carbon::parse($req->from_date);
-        $fromDate = Carbon::parse($req->to_date);
-  
-        $days = $fromDate->diffInDays($toDate);
-
-        $data = array(
-                'title' => 'Purchase Book Ledger',
-                'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                'acounts' => Account::latest()->get(),
-                'from_date' => $req->from_date ,
-                'to_date' => $req->to_date ,
-                'purchases'  => AccountLedger::when(isset($req->account_id), function($query) use ($req){
-                                                $query->where('account_id', hashids_decode($req->account_id));
-                                            })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                                $query->whereDate('created_at', '>=', $req->from_date)->whereDate('created_at', '<=', $req->to_date);
-                                            })->where('sale_id',"")->latest()->get(),
-
-                                       
-        );
-        //dd($data['to_date']);
-        $pdf = Pdf::loadView('admin.report.purchase_pdf', $data);
-        return $pdf->download('purchase_book_report.pdf');
-    }
-
-    public function PurchasePrint(Request $req){
-
-        $toDate = Carbon::parse($req->from_date);
-        $fromDate = Carbon::parse($req->to_date);
-        $days = $fromDate->diffInDays($toDate);
-        
-        $data = array(
-                'title' => 'Purchase Book Ledger',
-                'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                'acounts' => Account::latest()->get(),
-                'from_date' => $req->from_date ,
-                'to_date' => $req->to_date ,
-                'days' => $days,
-                'purchases'  => AccountLedger::with(['account','item'])->when(isset($req->account_id), function($query) use ($req){
-                                                $query->where('account_id', hashids_decode($req->account_id));
-                                            })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                                $query->whereDate('created_at', '>=', $req->from_date)->whereDate('created_at', '<=', $req->to_date);
-                                            })->where('sale_id',"")->latest()->get(),
-                                       
-        );
-        //dd($data['account_name']);
-        return view('admin.report.purchase_print')->with($data);
-    }
-
-    public function saleBookReport(Request $req){
-
-
-        if(isset($req->account_id)){
-            $data = array(  
-                'title' => 'Sales Book Ledger',
-                'account_name' => Account::where('id',hashids_decode($req->account_id))->latest()->get(),
-                'acounts' => Account::latest()->get(),
-                'from_date' => $req->from_date ,
-                'to_date' => $req->to_date ,
-                'sales'  => AccountLedger::when(isset($req->account_id), function($query) use ($req){
-                                                $query->where('account_id', hashids_decode($req->account_id));
-                                            })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                                $query->whereDate('created_at', '>=', $req->from_date)->whereDate('created_at', '<=', $req->to_date);
-                                            })->where('purchase_id',"")->latest()->get(),
-            );
-            //dd($data['purchases']);
-        }else{
-            $data = array(
-                'title' => 'Sales Book Ledger',
-                'acounts' => Account::latest()->get(),
-                'items' => Item::where('type','purchase')->latest()->get(),
-                'accounts'  => Account::latest()->get(),
-                'sales' => "",
-                
-            
-            );
-        }
-        
-        
-
-        
-        return view('admin.report.sale_book_report')->with($data);
-    }
-
-    public function SaleReportPdf(Request $req){
-        //dd($req->all());
-        $toDate = Carbon::parse($req->from_date);
-        $fromDate = Carbon::parse($req->to_date);
-  
-        $days = $fromDate->diffInDays($toDate);
-
-        $data = array(
-            'sales'  => SaleBook::with(['item','account'])->when(isset($req->item_id), function($query) use ($req){
-                                            $query->where('item_id', hashids_decode($req->item_id));
-                                        })->when(isset($req->account_id), function($query) use ($req){
-                                            $query->where('account_id', hashids_decode($req->account_id));
-                                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                                        })->latest()->get(),
-            'to_date' => $req->to_date,
-            'from_date' => $req->from_date,
-            'days' => $days,
-            'item_name' =>  Item::findOrFail(hashids_decode($req->item_id)),
-            'account_name' =>  Account::findOrFail(hashids_decode($req->account_id)),
-
-                                       
-        );
-        //dd($data['sales']);
-        $pdf = Pdf::loadView('admin.report.sale_pdf', $data);
-        return $pdf->download('sale_book_report.pdf');
-    }
-
-    public function SaleReportPrint(Request $req){
-        //dd($req->from_date);
-        $toDate = Carbon::parse($req->from_date);
-        $fromDate = Carbon::parse($req->to_date);
-  
-        $days = $fromDate->diffInDays($toDate);
-
-        $data = array(
-            'purchases'  => SaleBook::when(isset($req->item_id), function($query) use ($req){
-                                            $query->where('item_id', hashids_decode($req->item_id));
-                                        })->when(isset($req->account_id), function($query) use ($req){
-                                            $query->where('account_id', hashids_decode($req->account_id));
-                                        })->when(isset($req->from_date) && isset($req->to_date), function($query) use ($req){
-                                            $query->whereDate('date', '>=', $req->from_date)->whereDate('date', '<=', $req->to_date);
-                                        })->latest()->get(),
-            'to_date' => $req->to_date,
-            'from_date' => $req->from_date,
-            'days' => $days,
-            'item_name' =>  Item::findOrFail(hashids_decode($req->item_id)),
-            'account_name' =>  Account::findOrFail(hashids_decode($req->account_id)),
-
-                                       
-        );
-        //dd($data['to_date']);
-        $pdf = Pdf::loadView('admin.report.sale_pdf', $data);
-        return $pdf->download('sale_book_report.pdf');
-    }
 }

@@ -97,7 +97,7 @@
                                     @foreach($cashbook AS $c)
                                         
                                         <tr class="text-dark">
-                                            <td> {{ date('d-M-Y', strtotime($c->date)) }}</td>
+                                            <td> {{ date('d-M-Y', strtotime($c->entry_date)) }}</td>
                                             <td >{{ @$c->narration }}</td>
                                             <?php $tot_payment += $c->payment_ammount ;?>
                                             <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(@$c->payment_ammount) }}</span></td>

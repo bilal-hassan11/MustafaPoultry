@@ -41,7 +41,7 @@ class CompanyController extends Controller
         
         $company->category_id      = hashids_decode($req->category);
         $company->name           = $req->name;
-        $company->phone_no         = $req->phone_no;//item id is outward id
+        $company->phone_no         = $req->phone_no ? $req->phone_no : 0 ;//item id is outward id
         $company->status           = $req->status;
         $company->address         = $req->address;
         $company->save();

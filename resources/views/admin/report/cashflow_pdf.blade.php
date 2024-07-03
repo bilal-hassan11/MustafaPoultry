@@ -69,7 +69,7 @@ h5{
                     <tr style="border: none;">
                         <td style="border: none;"><span><img src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg" alt="" width="150" height=""></span></td>
                         <td style="border: none;">
-                            <h2 class="text-center">Al Mustafa Poultry | CashFlow Statement</h2>
+                            <h2 class="text-center">Tawakkal Marketing Traders | CashFlow Statement</h2>
                             <h3 class="text-center ac"><i class="bi bi-people-fill"></i>CashFlow Report</h3>
                             
                         </td>
@@ -120,7 +120,7 @@ h5{
                                 @foreach($cashbook AS $c)
                                     
                                     <tr class="text-dark">
-                                        <td> {{ date('d-M-Y', strtotime($c->date)) }}</td>
+                                        <td> {{ date('d-M-Y', strtotime($c->entry_date)) }}</td>
                                         <td >{{ @$c->narration }}</td>
                                         <?php $tot_payment += $c->payment_ammount ;?>
                                         <td><span class="waves-effect waves-light btn btn-danger-light">{{ number_format(@$c->payment_ammount) }}</span></td>

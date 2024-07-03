@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ItemRequest;
 use App\Models\Category;
+use App\Models\Company;
+
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +51,8 @@ class ItemController extends Controller
         $data = array(
             'title' => 'Add item',
             'categories'    => Category::where('status', 1)->latest()->get(),
+            'companies'    => Company::where('status', 1)->latest()->get(),
+
         );
         return view('admin.item.add')->with($data);
     }
@@ -64,7 +68,7 @@ class ItemController extends Controller
         }
 
         $item->category_id    = hashids_decode($req->category_id);
-        $item->company_id     = $req->company_id;
+        $item->company_id     = hashids_decode($req->company_id);
         $item->name           = $req->name;
         $item->type           = 'purchase';
         $item->unit           = $req->unit;

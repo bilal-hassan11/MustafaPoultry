@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ledger</title>
+    <title>DayBook Report</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <style>
        .challan_details {
@@ -68,7 +68,7 @@ h5{
                     <tr style="border: none;">
                         <td style="border: none;"><span><img src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg" alt="" width="150" height=""></span></td>
                         <td style="border: none;">
-                            <h3 class="text-center">Al Mustafa Poultry | DayBook Report</h3>
+                            <h3 class="text-center">Tawakkal Marketing Traders | DayBook Report</h3>
                            
                             <h5 class="text-center">Date : {{@$from_date}}</h5>
         

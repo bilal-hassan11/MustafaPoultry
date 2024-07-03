@@ -87,7 +87,8 @@ class ChickInvoiceController extends Controller
     }
 
     public function createSale(Request $req)
-    {
+    {   
+        //dd($req->all());
 
         $title = "Sale Chick";
         $invoice_no = generateUniqueID(new ChickInvoice, 'Sale', 'invoice_no');
@@ -100,13 +101,13 @@ class ChickInvoiceController extends Controller
         $sale_Chick = $ChickInvoice::with('account', 'item')
             ->where('type', 'Sale')
             ->when(isset($req->account_id), function ($query) use ($req) {
-                $query->where('account_id', hashids_decode($req->account_id));
+                $query->where('account_id', $req->account_id);
             })
             ->when(isset($req->invoice_no), function ($query) use ($req) {
                 $query->where('invoice_no', $req->invoice_no);
             })
             ->when(isset($req->item_id), function ($query) use ($req) {
-                $query->where('item_id', hashids_decode($req->item_id));
+                $query->where('item_id', $req->item_id);
             })
             ->when(isset($req->from_date, $req->to_date), function ($query) use ($req) {
                 $query->whereBetween('date', [$req->from_date, $req->to_date]);

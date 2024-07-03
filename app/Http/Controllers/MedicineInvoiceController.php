@@ -409,8 +409,6 @@ class MedicineInvoiceController extends Controller
         return $stockErrors;
     }
 
-
-
     public function singleReturn(Request $request)
     {
         $validatedData = $request->validate([
@@ -501,7 +499,6 @@ class MedicineInvoiceController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
     /**
      * Display the specified resource.

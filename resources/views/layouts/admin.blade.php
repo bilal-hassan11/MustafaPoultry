@@ -11,7 +11,7 @@
     <meta name="keywords"
         content="admin, dashboard, dashboard ui, admin dashboard template, admin panel dashboard, admin panel html, admin panel html template, admin panel template, admin ui templates, administrative templates, best admin dashboard, best admin templates, bootstrap 4 admin template, bootstrap admin dashboard, bootstrap admin panel, html css admin templates, html5 admin template, premium bootstrap templates, responsive admin template, template admin bootstrap 4, themeforest html">
     <!-- FAVICON -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_assets') }}/images/mustafa-poultry.jpeg" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_assets') }}/images/tawakal-poultry.png" />
     <!-- TITLE -->
     <title>{{ $title ?? 'Dashboard' }} - {{ config('app.name') }}</title>
     <!-- BOOTSTRAP CSS -->
@@ -464,12 +464,12 @@
                             <div class="responsive-logo"> <a href="index.html" class="header-logo"> <img
                                         src="{{ asset('assets') }}/images/brand/logo-3.png"
                                         class="mobile-logo logo-1" alt="logo"> <img
-                                        src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                        src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                         class="mobile-logo dark-logo-1" alt="logo"> </a> </div>
                             <!-- sidebar-toggle--> <a class="logo-horizontal " href="index.html"> <img
                                     src="{{ asset('assets') }}/images/brand/logo.png"
                                     class="header-brand-img desktop-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img light-logo1" alt="logo"> </a> <!-- LOGO -->
                             <div class="main-header-center ms-3 d-none d-lg-block"> <input class="form-control"
                                     placeholder="Search for anything..." type="search"> <button class="btn"><i
@@ -535,11 +535,11 @@
                             <a class="header-brand1" href="index.html"> <img
                                     src="{{ asset('assets') }}/images/brand/logo.png"
                                     class="header-brand-img desktop-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img toggle-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img light-logo" alt="logo"> <img
-                                    src="{{ asset('new_assets') }}/images/mustafa-poultry.jpg"
+                                    src="{{ asset('new_assets') }}/images/tawakal-poultry.png"
                                     class="header-brand-img light-logo1" alt="logo"> </a> <!-- LOGO -->
                         </div>
                         <div class="main-sidemenu is-expanded">
@@ -816,9 +816,9 @@
                                         <li><a href="{{ route('admin.reports.accounts_head_report') }}"
                                                 class="slide-item">Accounts Head Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'Purchase_murghi']) }}"
-                                                class="slide-item"> Purchase Feed Report</a></li>
+                                                class="slide-item"> Purchase Murghi Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}"
-                                                class="slide-item"> Sale Feed Report</a></li>
+                                                class="slide-item"> Sale Murghi Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_chick']) }}"
                                                 class="slide-item"> Purchase Chick Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_chick']) }}"
@@ -830,7 +830,7 @@
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_return_feed']) }}"
                                                 class="slide-item">Sale Return Feed Report</a></li>
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_return_feed']) }}"
-                                                class="slide-item"> Sale Return Feed Report</a></li>
+                                                class="slide-item"> Purchase Return Feed Report</a></li>
 
                                         <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_medicine']) }}"
                                                 class="slide-item"> Purchase Medicine Report</a></li>

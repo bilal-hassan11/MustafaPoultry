@@ -38,7 +38,7 @@ h5{
         <div class="row">
             <div class="col">
                 <div class="challan_wrapper">
-                    <h3 class="text-center">HYDERABAD FEEDS | Ledger Statement</h3>
+                    <h3 class="text-center">Tawakkal Marketing Traders | Ledger Statement</h3>
                     <h4 class="text-center"><i class="bi bi-people-fill"></i>{{$account_name->name}} {{$days}}  DAYS</h4>
                   
                     <h5 class="text-center">From {{$from_date}} to {{$to_date}}</h5>
