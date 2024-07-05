@@ -96,7 +96,7 @@ trait StockTrait
      */
     public function getClosingStockInfo($model, $date, $itemId = null): float
     {
-        $dateFormatted = Carbon::parse($date)->format('Y-m-d');
+        //$dateFormatted = Carbon::parse($date)->format('Y-m-d');
         $query = $model->select(
             'item_id',
             'expiry_date',
@@ -104,7 +104,7 @@ trait StockTrait
             DB::raw('SUM(total_cost) as total_cost'),
             DB::raw('CASE WHEN SUM(quantity) != 0 THEN SUM(total_cost) / SUM(quantity) ELSE 0 END as average_price')
         )
-            ->where('date', '<', $dateFormatted)
+            ->where('date', '<', $date)
             ->groupBy('item_id', 'expiry_date');
 
         if ($itemId) {

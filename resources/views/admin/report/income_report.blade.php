@@ -15,10 +15,16 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="to_date">To</label>
-                                <input type="date" class="form-control" name="to_date" id="to-date">
+                                <input type="date" class="form-control" name="to_date" id="to_date">
                             </div>
                             <div class="col-md-1 mt-6">
                                 <input type="submit" class="btn btn-primary" value="Search">
+                            </div>
+                            <div class="col-md-1 mt-6">
+                                <a href="#" id="download-pdf" class="btn btn-outline-danger rounded-pill btn-wave"
+                                    target="_blank" title="Download">
+                                    <i class="ri-download-2-line"></i>
+                                </a>
                             </div>
                         </div>
                     </form>
@@ -38,6 +44,10 @@
                 e.preventDefault();
                 var formData = $(this).serialize();
                 fetchIncomeReport(formData);
+                var fromDate = $('#from_date').val();
+                var toDate = $('#to_date').val();
+                $('#download-pdf').attr('href', "{{ route('admin.reports.income-report') }}?from_date=" +
+                    fromDate + "&to_date=" + toDate + "&generate_pdf=1");
             });
 
             function fetchIncomeReport(formData) {
