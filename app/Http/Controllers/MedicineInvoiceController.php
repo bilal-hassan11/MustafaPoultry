@@ -142,13 +142,7 @@ class MedicineInvoiceController extends Controller
             ->where('type', 'Sale')
             ->get();
 
-        $pending_medicine = MedicineInvoice::with('account', 'item')
-            ->where('type', 'Sale')
-            ->where('net_amount', 0)
-            ->latest()
-            ->get();
-
-        return view('admin.medicine.edit_sale_medicine', compact(['title', 'pending_medicine', 'accounts', 'products', 'medicineInvoice']));
+        return view('admin.medicine.edit_sale_medicine', compact(['title', 'accounts', 'products', 'medicineInvoice']));
     }
 
     public function createSale(Request $req)
@@ -225,7 +219,7 @@ class MedicineInvoiceController extends Controller
         $date = $request->input('date');
 
         if ($request->type == 'Sale' || $request->stockType == 'Out') {
-            $stockErrors = $this->validateStockQuantities($validatedData);
+            $stockErrors = $this->validateStockQuantities($validatedData, true);
 
             if (!empty($stockErrors)) {
                 return response()->json(['errors' => $stockErrors], 422);
@@ -378,9 +372,10 @@ class MedicineInvoiceController extends Controller
         }
     }
 
-    private function validateStockQuantities($validatedData)
+    private function validateStockQuantities($validatedData, $editMode = false)
     {
-        $products = $this->medicineInvoice->getStockInfo();
+        $products = $editMode == false ? $this->medicineInvoice->ignore($validatedData['invoice_no'])->getStockInfo() :
+            $this->medicineInvoice->getStockInfo();
 
         $stockErrors = [];
         $stockQuantities = [];

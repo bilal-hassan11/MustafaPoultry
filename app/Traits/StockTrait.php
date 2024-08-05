@@ -8,6 +8,20 @@ use stdClass;
 
 trait StockTrait
 {
+    protected $ignoredInvoiceNo;
+
+    /**
+     * Set the invoice_no to be ignored.
+     *
+     * @param mixed $invoice_no
+     * @return $this
+     */
+    public function ignore($invoice_no)
+    {
+        $this->ignoredInvoiceNo = $invoice_no;
+        return $this;
+    }
+
     /**
      * Calculate the available stock quantity, average price, total cost, last purchase price, and last sale price
      * grouped by item and expiry.
@@ -17,7 +31,9 @@ trait StockTrait
     public function getStockInfo()
     {
         $table = $this->getTable();
-        $invoices = $this->select(
+        $invoice_no = $this->ignoredInvoiceNo;
+
+        $query = $this->select(
             'item_id',
             'expiry_date',
             DB::raw('SUM(quantity) as total_quantity'),
@@ -26,9 +42,14 @@ trait StockTrait
             DB::raw("(SELECT purchase_price FROM {$table} AS mi2 WHERE mi2.item_id = {$table}.item_id AND type = 'Purchase' ORDER BY mi2.date DESC LIMIT 1) AS last_purchase_price"),
             DB::raw("(SELECT sale_price FROM {$table} AS mi2 WHERE mi2.item_id = {$table}.item_id AND type = 'Sale' ORDER BY mi2.date DESC LIMIT 1) AS last_sale_price")
         )
+            ->when($invoice_no, function ($query) use ($invoice_no) {
+                $query->whereNotIn('invoice_no', [$invoice_no])
+                    ->orWhere('type', '!=', 'Sale');
+            })
             ->groupBy('item_id', 'expiry_date')
-            ->with(['item:id,name,category_id', 'item.category:id,name'])
-            ->get();
+            ->with(['item:id,name,category_id', 'item.category:id,name']);
+
+        $invoices = $query->get();
 
         $srno = 1;
         return $invoices->map(function ($invoice) use (&$srno) {
@@ -96,7 +117,6 @@ trait StockTrait
      */
     public function getClosingStockInfo($model, $date, $itemId = null): float
     {
-        //$dateFormatted = Carbon::parse($date)->format('Y-m-d');
         $query = $model->select(
             'item_id',
             'expiry_date',
