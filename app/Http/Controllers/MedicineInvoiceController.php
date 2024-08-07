@@ -374,7 +374,7 @@ class MedicineInvoiceController extends Controller
 
     private function validateStockQuantities($validatedData, $editMode = false)
     {
-        $products = $editMode == false ? $this->medicineInvoice->ignore($validatedData['invoice_no'])->getStockInfo() :
+        $products = $editMode == true ? $this->medicineInvoice->ignore($validatedData['invoice_no'])->getStockInfo() :
             $this->medicineInvoice->getStockInfo();
 
         $stockErrors = [];
