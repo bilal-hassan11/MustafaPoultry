@@ -31,3 +31,24 @@ if (!function_exists('generatePDFResponse')) {
         return $response;
     }
 }
+
+if (!function_exists('generateReportPDF')) {
+    function generateReportPDF($reportName, array $data, $format = 'A4-P', $margins = ['top' => 10, 'bottom' => 5, 'left' => 5, 'right' => 5])
+    {
+        extract($data);
+        $html = view("admin.report.{$reportName}", $data)->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => $format,
+            'margin_top' => $margins['top'],
+            'margin_bottom' => $margins['bottom'],
+            'margin_left' => $margins['left'],
+            'margin_right' => $margins['right'],
+        ]);
+
+        $mpdf->SetAutoPageBreak(true, 25);
+        $mpdf->SetHTMLFooter('<div style="text-align: right;">Page {PAGENO} of {nbpg}</div>');
+
+        return generatePDFResponse($html, $mpdf);
+    }
+}

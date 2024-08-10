@@ -324,6 +324,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
 
     Route::controller(ReportingController::class)->prefix('reports')->name('reports.')->group(function () {
         Route::get('income-report', 'getIncomeReport')->name('income-report');
+        Route::get('poultry-farm-report', 'getPoultryFarmReport')->name('poultry-farm-report');
     });
 });
 

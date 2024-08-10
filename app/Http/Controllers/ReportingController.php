@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
+use App\Models\CashBook;
 use App\Models\ChickInvoice;
 use App\Models\FeedInvoice;
 use App\Models\MedicineInvoice;
@@ -9,6 +11,7 @@ use App\Models\MurghiInvoice;
 use App\Models\OtherInvoice;
 use App\Services\FinancialReportService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 
 class ReportingController extends Controller
@@ -76,6 +79,39 @@ class ReportingController extends Controller
             return generatePDFResponse($html, $mpdf);
         } else {
             return view('admin.report.income_report', compact('incomeReports'));
+        }
+    }
+    public function getPoultryFarmReport(Request $request)
+    {
+        if ($request->has('generate_pdf')) {
+            $startDate = $request->input('from_date');
+            $endDate = $request->input('to_date');
+            $account = $request->input('account');
+
+            $medicineInvoices = MedicineInvoice::select('invoice_no', 'date', DB::raw('SUM(amount) as total_amount'))
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('account_id', $account)
+                ->groupBy('invoice_no', 'date')
+                ->orderBy('date')
+                ->get();
+
+            $feedInvoices = FeedInvoice::whereBetween('date', [$startDate, $endDate])->where('account_id', $account)->orderBy('date')->get();
+            $chickInvoices = ChickInvoice::whereBetween('date', [$startDate, $endDate])->where('account_id', $account)->orderBy('date')->get();
+            $murghiInvoices = MurghiInvoice::whereBetween('date', [$startDate, $endDate])->where('account_id', $account)->where('type', 'Purchase')->orderBy('date')->get();
+            $cashBook = CashBook::whereBetween('entry_date', [$startDate, $endDate])->where('account_id', $account)->orderBy('entry_date')->get();
+
+            $data = [
+                'medicineInvoices' => $medicineInvoices,
+                'feedInvoices' => $feedInvoices,
+                'chickInvoices' => $chickInvoices,
+                'murghiInvoices' => $murghiInvoices,
+                'cashBook' => $cashBook,
+            ];
+
+            return generateReportPDF('poultry_farm_report_pdf', $data);
+        } else {
+            $accounts = Account::get();
+            return view('admin.report.poultry_farm_report', compact('accounts'));
         }
     }
 }

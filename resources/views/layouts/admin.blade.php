@@ -803,7 +803,9 @@
                                             class="side-menu__label">Reports</span><i
                                             class="angle fa fa-angle-right"></i></a>
                                     <ul class="slide-menu">
-
+                                        <li><a href="{{ route('admin.reports.poultry-farm-report') }}"
+                                                class="slide-item">
+                                                Poultry Farm Report</a></li>
                                         <li><a href="{{ route('admin.reports.income-report') }}" class="slide-item">
                                                 Income Report</a></li>
                                         <li><a href="{{ route('admin.reports.daybook_report') }}" class="slide-item">
