@@ -159,9 +159,12 @@
                         $qty = $product->quantity;
                         $expiry_date = $product->expiry_date;
                     @endphp    
-<option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}" ${item.item_id == {{ $product->item_id }} && item.expiry_date == '{{ $product->expiry_date }}' ? 'selected' : ''}>
-                        {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
-                    </option>
+<option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}" data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}"
+    @if ($product->expiry_date) ${item.item_id == {{ $product->item_id }} && item.expiry_date == '{{ $product->expiry_date }}' ? 'selected' : ''}
+    @else
+        ${item.item_id == '{{ $product->item_id }}' ? 'selected' : '' } @endif>
+    {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
+</option>
                 @endforeach
             </select>
             @endif
