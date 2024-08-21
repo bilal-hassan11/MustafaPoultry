@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\ChickInvoice;
+use App\Models\Company;
 use App\Models\FeedInvoice;
 use App\Models\Item;
 use App\Models\MedicineInvoice;
@@ -39,8 +40,10 @@ class StockController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
+        $companies = Company::all();
         $item_id = $request->item_id;
         $category_id = $request->category;
+        $company = $request->company;
 
         if ($request->filled('item_id')) {
             $stocks = $this->stockInfo->filter(function ($item) use ($item_id) {
@@ -50,6 +53,10 @@ class StockController extends Controller
             $stocks = $this->stockInfo->filter(function ($item) use ($category_id) {
                 return $item->category_id == $category_id;
             });
+        } elseif ($request->filled('company')) {
+            $stocks = $this->stockInfo->filter(function ($item) use ($company) {
+                return $item->company_id == $company;
+            });
         } else {
             $stocks = $this->stockInfo;
         }
@@ -58,8 +65,8 @@ class StockController extends Controller
 
         if ($request->ajax()) {
             return DataTables::of($stocks)
-                ->editColumn('avg_amount', fn ($stock) => number_format($stock->average_price, 2))
-                ->editColumn('expiry_date', fn ($stock) => $stock->expiry_date ?? 'N/A')
+                ->editColumn('avg_amount', fn($stock) => number_format($stock->average_price, 2))
+                ->editColumn('expiry_date', fn($stock) => $stock->expiry_date ?? 'N/A')
                 ->with('grandTotal', number_format($grandTotal, 2))
                 ->make(true);
         } elseif ($request->has('generate_pdf')) {
@@ -76,7 +83,7 @@ class StockController extends Controller
 
             return generatePDFResponse($html, $mpdf);
         } else {
-            return view('admin.stock.index', compact('categories'));
+            return view('admin.stock.index', compact('categories', 'companies'));
         }
     }
 

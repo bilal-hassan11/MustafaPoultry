@@ -67,4 +67,9 @@ class Item extends Model
     {
         return $this->hasOne(OtherInvoice::class)->latest();
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

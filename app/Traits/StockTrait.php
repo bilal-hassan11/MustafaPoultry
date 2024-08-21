@@ -56,6 +56,7 @@ trait StockTrait
             $item = new stdClass;
             $item->id = $srno++;
             $item->item_id = $invoice->item_id;
+            $item->company_id = $invoice->item->company_id;
 
             if ($invoice->item) {
                 $item->name = $invoice->item->name;
