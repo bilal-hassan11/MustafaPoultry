@@ -95,23 +95,28 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="text-center" style="width:5%">ID</th>
+                        <th class="text-center" style="width:5%">#</th>
                         <th class="text-center">Item</th>
                         <th class="text-center" style="width:15%">Expiry Date</th>
                         <th class="text-center" style="width:10%">Quantity</th>
-                        <th class="text-center" style="width:15%">Average Amount</th>
+                        <th class="text-center" style="width:15%">Sale Price</th>
+                        <th class="text-center" style="width:15%">Purchase Price</th>
                         <th class="text-center" style="width:15%">Amount</th>
                         <th class="text-center" style="width:15%">Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($stocks as $stock)
+                    @php
+                        $counter = 1;
+                    @endphp
+                    @foreach ($stocks as $index => $stock)
                         <tr>
-                            <td class="text-center">{{ $stock->id }}</td>
+                            <td class="text-center">{{ $counter++ }}</td>
                             <td class="text-center">{{ $stock->name }}</td>
                             <td class="text-center">{{ $stock->expiry_date }}</td>
                             <td class="text-right">{{ $stock->quantity }}</td>
-                            <td class="text-right">Rs {{ number_format($stock->average_price, 2) }}</td>
+                            <td class="text-right">Rs {{ number_format($stock->last_sale_price ?? 0, 2) }}</td>
+                            <td class="text-right">Rs {{ number_format($stock->last_purchase_price ?? 0, 2) }}</td>
                             <td class="text-right">Rs {{ $stock->total_cost }}</td>
                             <td>
                         </tr>
@@ -119,7 +124,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-right">
+                        <td colspan="6" class="text-right">
                             <h4>Grand Total :</h4>
                         </td>
                         <td class="text-right">Rs {{ number_format($stocks->sum('total_cost'), 2) }}</td>

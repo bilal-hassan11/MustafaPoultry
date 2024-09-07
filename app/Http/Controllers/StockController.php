@@ -61,10 +61,15 @@ class StockController extends Controller
             $stocks = $this->stockInfo;
         }
 
+        $stocks = $stocks->filter(function ($item) {
+            return $item->quantity > 0;
+        });
+
         $grandTotal = $stocks->sum('total_cost');
 
         if ($request->ajax()) {
             return DataTables::of($stocks)
+                ->addIndexColumn()
                 ->editColumn('avg_amount', fn($stock) => number_format($stock->average_price, 2))
                 ->editColumn('expiry_date', fn($stock) => $stock->expiry_date ?? 'N/A')
                 ->with('grandTotal', number_format($grandTotal, 2))

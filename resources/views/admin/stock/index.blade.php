@@ -50,10 +50,11 @@
                                 <table class="table table-bordered" id="stockTable">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>ID</th>
+                                            <th>#</th>
                                             <th>Item</th>
                                             <th>Quantity</th>
-                                            <th>Average Amount</th>
+                                            <th>Sale Price</th>
+                                            <th>Purchase Price</th>
                                             <th>Amount</th>
                                             <th>Expiry Date</th>
                                         </tr>
@@ -62,7 +63,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="4" style="text-align: right">
+                                            <th colspan="5" style="text-align: right">
                                                 Grand Total
                                             </th>
                                             <th id="grand-total" style="text-align:right">
@@ -101,8 +102,10 @@
                         },
                     },
                     columns: [{
-                            data: 'id',
-                            name: 'id'
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'name',
@@ -117,11 +120,20 @@
                             }
                         },
                         {
-                            data: 'avg_amount',
-                            name: 'avg_amount',
+                            data: 'last_sale_price',
+                            name: 'last_sale_price',
                             render: function(data, type, row) {
                                 return '<span style="text-align: right; display: block;">Rs ' +
-                                    data +
+                                    (data !== null && data !== undefined ? data : 0) +
+                                    '</span>';
+                            }
+                        },
+                        {
+                            data: 'last_purchase_price',
+                            name: 'last_purchase_price',
+                            render: function(data, type, row) {
+                                return '<span style="text-align: right; display: block;">Rs ' +
+                                    (data !== null && data !== undefined ? data : 0) +
                                     '</span>';
                             }
                         },

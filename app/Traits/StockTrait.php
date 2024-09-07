@@ -71,11 +71,11 @@ trait StockTrait
             $item->expiry_date = $invoice->expiry_date;
             $item->quantity = $invoice->total_quantity;
             $item->average_price = $invoice->average_price;
-            $item->total_cost = $invoice->total_cost;
+            $item->total_cost = $invoice->total_quantity * $invoice->last_purchase_price; //$invoice->total_cost;
             $item->last_purchase_price = $invoice->last_purchase_price;
             $item->last_sale_price = $invoice->last_sale_price;
 
-            return $item;
+            return  $item;
         });
     }
 
