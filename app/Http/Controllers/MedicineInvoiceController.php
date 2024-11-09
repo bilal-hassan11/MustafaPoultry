@@ -157,7 +157,7 @@ class MedicineInvoiceController extends Controller
         $stock = $this->medicineInvoice->getStockInfo();
 
         $products = $stock->filter(function ($product) {
-            return $product->category_id == 4;
+            return $product->category_id == 4 && $product->quantity > 0;
         });
 
         $sale_medicine = $medicineInvoice::with('account', 'item')
@@ -534,7 +534,8 @@ class MedicineInvoiceController extends Controller
         if (request()->has('generate_pdf')) {
             $html = view('admin.medicine.invoice_pdf', compact('medicineInvoice', 'type', 'previous_balance'))->render();
             $mpdf = new Mpdf([
-                'format' => 'A4-P', 'margin_top' => 10,
+                'format' => 'A4-P',
+                'margin_top' => 10,
                 'margin_bottom' => 2,
                 'margin_left' => 2,
                 'margin_right' => 2,
