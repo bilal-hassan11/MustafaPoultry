@@ -12,7 +12,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="companyFilter">Filter by Company</label>
                                 <select id="companyFilter" class="form-control form-control-sm select2">
-                                    <option value="">Select Company</option>
+                                    <option value="">ALL</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}">{{ $company->name }}</option>
                                     @endforeach
@@ -21,7 +21,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="categoryFilter">Filter by Category</label>
                                 <select id="categoryFilter" class="form-control form-control-sm select2">
-                                    <option value="">Select Category</option>
+                                    <option value="">ALL</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
@@ -30,7 +30,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="itemFilter">Filter by Item</label>
                                 <select id="itemFilter" class="form-control form-control-sm select2">
-                                    <option value="">Select Item</option>
+                                    <option value="">ALL</option>
                                 </select>
                             </div>
 
