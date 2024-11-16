@@ -185,20 +185,21 @@
                 </tr>
                 `;
                 $("#row").append(row);
-                $('select.product_val').last().select2({
+
+                $('#row .product_val:last').select2({
                     width: '100%',
                 }).val(item.item_id).trigger('change');
 
-                $(".product_val").last().change(function() {
+                $("#row .product_val:last").change(function() {
                     updatePurchasePrice($(this));
                 });
 
-                $(".dis_in_percentage").last().on('input', function() {
+                $("#row .dis_in_percentage:last").on('input', function() {
                     let $row = $(this).closest('tr');
                     updateDiscountPercentage($row);
                 });
 
-                $(".dis_in_rs").last().on('input', function() {
+                $("#row .dis_in_rs:last").on('input', function() {
                     let $row = $(this).closest('tr');
                     updateDiscountRs($row);
                 });

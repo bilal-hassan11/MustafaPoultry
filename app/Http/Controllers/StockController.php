@@ -44,7 +44,7 @@ class StockController extends Controller
         $item_id = $request->item;
         $category_id = $request->category;
         $company = $request->company;
-        $stocks = collect();
+        $stocks = $this->stockInfo;
 
         if ($request->filled('item')) {
             $stocks = $this->stockInfo->filter(function ($item) use ($item_id) {
