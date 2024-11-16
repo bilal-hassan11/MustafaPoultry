@@ -11,7 +11,7 @@ class Item extends Model
     use HasFactory, DianujHashidsTrait;
 
     protected $table = 'items';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'company_id'];
 
     public function category()
     {

@@ -41,25 +41,29 @@ class StockController extends Controller
     {
         $categories = Category::all();
         $companies = Company::all();
-        $item_id = $request->item_id;
+        $item_id = $request->item;
         $category_id = $request->category;
         $company = $request->company;
+        $stocks = collect();
 
-        if ($request->filled('item_id')) {
+        if ($request->filled('item')) {
             $stocks = $this->stockInfo->filter(function ($item) use ($item_id) {
                 return $item->item_id == $item_id;
             });
-        } elseif ($request->filled('category')) {
+        } elseif ($request->filled('category') && !$request->filled('company')) {
             $stocks = $this->stockInfo->filter(function ($item) use ($category_id) {
                 return $item->category_id == $category_id;
             });
-        } elseif ($request->filled('company')) {
+        } elseif ($request->filled('company') && !$request->filled('category')) {
             $stocks = $this->stockInfo->filter(function ($item) use ($company) {
                 return $item->company_id == $company;
             });
-        } else {
-            $stocks = $this->stockInfo;
+        } elseif ($request->filled('category') && $request->filled('company')) {
+            $stocks = $this->stockInfo->filter(function ($item) use ($category_id, $company) {
+                return $item->category_id == $category_id && $item->company_id == $company;
+            });
         }
+
 
         $stocks = $stocks->filter(function ($item) {
             return $item->quantity > 0;
