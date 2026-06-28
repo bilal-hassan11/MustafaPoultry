@@ -856,6 +856,30 @@
 
                                     </ul>
                                 </li>
+                                
+                                <li class="sub-category">
+                                    <h3>Users & Permissions</h3>
+                                </li>
+                                
+                                <li class="slide">
+                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                                        <i class="side-menu__icon fe fe-users"></i>
+                                        <span class="side-menu__label">Staff, Roles & Permissions</span>
+                                        <i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li class="side-menu-label1"><a href="javascript:void(0);">Staff, Roles & Permissions</a></li>
+                                        @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Staffs Access'))
+                                            <li><a href="{{ route('admin.staffs.all') }}" class="slide-item">Staff Users</a></li>
+                                        @endif
+                                        @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Roles Access'))
+                                            <li><a href="{{ route('admin.roles.index') }}" class="slide-item">Roles</a></li>
+                                        @endif
+                                        @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Permissions Access'))
+                                            <li><a href="{{ route('admin.permissions.index') }}" class="slide-item">Permissions</a></li>
+                                        @endif
+                                    </ul>
+                                </li>
 
                                 <li class="sub-category">
                                     <h3>Inventory Stocks</h3>

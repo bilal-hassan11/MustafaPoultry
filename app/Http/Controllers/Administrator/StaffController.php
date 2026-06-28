@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrator;
 
 use App\Helpers\CommonHelpers;
 use App\Models\Admin as Staff;
+use App\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Services\Slug;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class StaffController extends Controller
         $data = array(
             'title' => 'All Staff Users',
             'staffs' => Staff::where('id', '!=', auth('admin')->user()->id)
+                            ->with('roles')
                             ->when(isset($request->name), function($query) use ($request){
                                 $query->where('first_name', 'like', '%'.$request->name.'%')->orWhere('last_name', 'like', '%'.$request->name.'%');
                             })
@@ -37,21 +39,20 @@ class StaffController extends Controller
     public function add()
     {   
         $data = array(
-            'title'       => 'Add Staff User',
-            'permissions' => \App\Models\Permission::get(),
+            'title' => 'Add Staff User',
+            'roles' => Role::all(),
         );
         return view('admin.staffs.add_staff')->with($data);
     }
 
     public function edit($staff_id)
     {
-        $staff = Staff::hashidOrFail($staff_id);
+        $staff = Staff::with('roles')->hashidFindOrFail($staff_id);
         $data = array(
             'title' => 'Edit Staff User',
             'user' => $staff,
-            'permissions' => \App\Models\Permission::all(),
-            'user_permissions' => array_column($staff->user_permissions, 'name'),
-
+            'roles' => Role::all(),
+            'user_roles' => $staff->roles->pluck('id')->toArray(),
         );
 
         return view('admin.staffs.add_staff')->with($data);
@@ -60,10 +61,8 @@ class StaffController extends Controller
     public function save(Request $request, Slug $slug)
     {
         $rules = [
-            // 'first_name' => ['required', 'string', 'max:80'],
-            'name' => ['string', 'max:80'],
-            'user_type' => ['required', 'string', 'in:admin,normal'],
-            // 'company_id' => ['required'],
+            'first_name' => ['required', 'string', 'max:80'],
+            'last_name' => ['required', 'string', 'max:80'],
             'email' => ['required', 'string', 'email', 'max:190'],
         ];
 
@@ -86,10 +85,11 @@ class StaffController extends Controller
             ];
         } else {
             $staff = new Staff();
-            // $staff->added_by_id = auth()->user()->id;
             $staff->is_active = 1;
             $staff->username = $request->username;
             $staff->password = Hash::make($request->password);
+            // Set default user_type
+            $staff->user_type = 'normal';
 
             $msg = [
                 'success' => 'Staff User has been added',
@@ -108,25 +108,19 @@ class StaffController extends Controller
             $staff->image = $profile_img;
         }
 
-        $permissions = [];
-        if(isset($request->permissions) && safeCount($request->permissions) > 0){
-            foreach($request->permissions as $permission){
-                $_permission = \App\Models\Permission::firstOrNew(['name' => $permission]);
-                if($_permission->id == null){
-                    $_permission->slug = $slug->createSlug('permissions', $permission);
-                    $_permission->save();
-                }
-
-                $permissions[] = ['name' => $_permission->slug];
-            }
-        }
-
         $staff->email = $request->email;
-        $staff->username = $request->name;
-        $staff->user_type = $request->user_type;
-        $staff->user_permissions = $permissions;
-        // $staff->company_id = $request->company_id;
+        $staff->first_name = $request->first_name;
+        $staff->last_name = $request->last_name;
+        // Clear user_permissions since we're only using roles now
+        $staff->user_permissions = [];
         $staff->save();
+
+        // Sync roles (single role now)
+        if (isset($request->role)) {
+            $staff->roles()->sync([$request->role]);
+        } else {
+            $staff->roles()->sync([]);
+        }
 
         return response()->json($msg);
     }

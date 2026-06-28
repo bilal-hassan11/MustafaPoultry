@@ -10,4 +10,9 @@ class Permission extends BaseModel
     // public function type(){
     //     return $this->belongsTo(PermissionType::class, 'type_id');
     // }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_permissions');
+    }
 }

@@ -172,14 +172,22 @@
 			</ul>
 		</li>
 		
-		@if(auth()->user()->can('add-staff') )		
-    		<li><a href="#"><i data-feather="lock"></i>Staff &amp; Permission</a>
+		@if(auth()->user()->user_type == 'admin' || auth()->user()->can('Staffs Access') || auth()->user()->can('Permissions Access') || auth()->user()->can('Roles Access'))		
+    		<li><a href="#"><i data-feather="lock"></i>Staff, Roles &amp; Permissions</a>
     		  <ul>
+    			@if(auth()->user()->user_type == 'admin' || auth()->user()->can('Staffs Access'))
     			<li><a href="{{route('admin.staffs.all')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Staff</a>
     			</li>
-    			<li><a href="{{route('admin.permissions.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Permissions</a>
-    			  		  
+    			@endif
+    			@if(auth()->user()->user_type == 'admin' || auth()->user()->can('Roles Access'))
+    			<li><a href="{{route('admin.roles.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Roles</a>
     			</li>
+    			@endif
+    			@if(auth()->user()->user_type == 'admin' || auth()->user()->can('Permissions Access'))
+    			<li><a href="{{route('admin.permissions.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Permissions</a>
+    		  		
+    			</li>
+    			@endif
     		  </ul>		  
     		</li>
         @endif

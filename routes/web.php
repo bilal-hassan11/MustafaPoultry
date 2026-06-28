@@ -12,6 +12,7 @@ use App\Http\Controllers\Administrator\HomeController;
 use App\Http\Controllers\Administrator\StaffController;
 use App\Http\Controllers\Administrator\ItemController;
 use App\Http\Controllers\Administrator\PermissionController;
+use App\Http\Controllers\Administrator\RolesController;
 use App\Http\Controllers\Administrator\ReportController;
 use App\Http\Controllers\ReportingController;
 use App\Http\Controllers\ArtisanController;
@@ -72,7 +73,7 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::post('/save', 'save')->name('save');
         Route::post('/update_password', 'update_password')->name('update_password');
         Route::get('/update-status/{staff_id}', 'updateStatus')->name('update_status');
-        Route::delete('/delete/{staff_id}', 'delete')->name('delete');
+        Route::post('/delete', 'delete')->name('delete');
 
         //profile pages
         Route::get('/update-profile', 'update_profile')->name('update_profile');
@@ -85,6 +86,16 @@ Route::middleware('auth:admin')->name('admin.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/save', 'save')->name('save');
         Route::get('/delete/{permission_id}', 'delete')->name('delete');
+    });
+
+    //roles routes
+    Route::controller(RolesController::class)->prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/edit/{roleId}', 'edit')->name('edit');
+        Route::post('/store', 'store')->name('store');
+        Route::post('/update/{roleId}', 'update')->name('update');
+        Route::post('/destroy', 'destroy')->name('destroy');
     });
 
     //account type routes

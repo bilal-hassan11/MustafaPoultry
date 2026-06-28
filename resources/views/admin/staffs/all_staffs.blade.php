@@ -1,92 +1,115 @@
 @extends('layouts.admin')
 @section('content')
+<div class="main-content app-content mt-6">
+  <div class="side-app">
+    <!-- CONTAINER --> 
+    <div class="main-container container-fluid">
+      <!-- PAGE-HEADER END --> <!-- ROW-1 --> 
 
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="box">
-            <div class="box-header with-border">
-              <h2 class="box-title text-dark">Filters</h2>
+      <div class="row">
+        <div class="col-12 col-sm-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title mb-0">All Staff Users Filters</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
               <form action="{{ route('admin.staffs.all') }}" method="GET">
                 @csrf
-                <div class="row">
-                  <div class="col-md-5">
-                    <label for="">Name</label>
-                    <input type="text" class="form-control" name="name" id="name">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" id="name" value="{{ request('name') }}">
                   </div>
-                  <div class="col-md-5">
-                    <label for="">Status</label>
-                    <select class="form-control select2" name="status" id="status">
-                        <option value="">Select status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Deactive</option>
+                  <div class="col-md-4">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-control" name="status" id="status">
+                      <option value="">Select status</option>
+                      <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active</option>
+                      <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Deactive</option>
                     </select>
                   </div>
-                  <div class="col-md-2">
-                    <input type="submit" class="btn btn-primary" value="Search">
+                  <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Search</button>
                   </div>
                 </div>
               </form>
             </div>
           </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="card">
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-12 col-sm-12">
+          <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h3 class="card-title mb-0">All Staff Detail</h3>
+              <a href="{{ route('admin.staffs.add') }}" class="btn btn-primary">Add Staff</a>
+            </div>
             <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="header-title">All Staff Details</h4>
-                    <a href="{{ route('admin.staffs.add') }}" class="btn btn-primary">Add Staff</a>
-                </div><br />
-                <table  class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100" id="example">
-                    <thead>
-                        <tr class="text-dark">
+              <div class="table-responsive">
+                <div id="data-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <table id="example54" class="table table-bordered text-nowrap mb-0 dataTable no-footer" role="grid" aria-describedby="data-table_info">
+
+                        <thead>
+                          <tr class="text-dark">
                             <th width="20">S.No</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Type</th>
+                            <th>Roles</th>
                             <th>Added On</th>
                             <th>Status</th>
                             <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($staffs as $k => $staff)
-                        <tr class="text-dark">
-                            <td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @foreach($staffs as $k => $staff)
+                            <tr class="text-dark">
+                              <td>
                                 <p class="m-0 text-center">{{ $k + 1 }}</p>
-                            </td>
-                            <td>{{ $staff->full_name }}</td>
-                            <td> <span class="waves-effect waves-light btn btn-rounded btn-primary-light">{{ $staff->email }}</span></td>
-                            <td><small class="badge bg-{{$staff->user_type == 'admin' ? 'danger' : 'info'}}">{{ ucwords($staff->user_type) }}</small></td>
-                            <td>
+                              </td>
+                              <td>{{ $staff->full_name }}</td>
+                              <td> <span class="waves-effect waves-light btn btn-rounded btn-primary-light">{{ $staff->email }}</span></td>
+                              <td>
+                                @foreach($staff->roles as $role)
+                                  <span class="badge bg-primary">{{ $role->name }}</span>
+                                @endforeach
+                              </td>
+                              <td>
                                 <p class="m-0"><small>{{ get_date($staff->created_at) }}</small></p>
-                            </td>
-                            
-                            <td class="text-center">
+                              </td>
+                              <td class="text-center">
                                 <div class="form-check form-switch">
-                                    <input type="checkbox" onchange="ajaxRequest(this)" data-url="{{ route('admin.staffs.update_status', $staff->hashid) }}" {{ $staff->is_active ? 'checked' : ''}} class="form-check-input nopopup" id="staff_status_{{$k}}">
-                                    <label class="form-check-label" for="staff_status_{{$k}}">{{$staff->is_active ? 'Active' : 'Disabled'}}</label>
+                                  <input type="checkbox" onchange="ajaxRequest(this)" data-url="{{ route('admin.staffs.update_status', $staff->hashid) }}" {{ $staff->is_active ? 'checked' : ''}} class="form-check-input nopopup" id="staff_status_{{$k}}">
+                                  <label class="form-check-label" for="staff_status_{{$k}}">{{$staff->is_active ? 'Active' : 'Disabled'}}</label>
                                 </div>
-                            </td>
-                            <td width="120">
-                                <a href="{{route('admin.staffs.edit', $staff->hashid)}}" >
-                                <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
+                              </td>
+                              <td width="120">
+                                <div class="btn-list"> 
+                                  <a href="{{route('admin.staffs.edit', $staff->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> 
+                                    <i class="ri-pencil-fill lh-1"></i> 
+                                  </a> 
+                                  <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.staffs.delete') }}"  class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete" data-user_id="{{ $staff->hashid }}">
+                                    <i class="ri-delete-bin-5-fill lh-1"></i>
+                                  </button> 
+                                </div>
+                              </td>
+                            </tr>
+                          @endforeach
+                        </tbody>
 
-                                </a>
-                                <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.staffs.delete', $staff->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    
-                        @endforeach
-                    </tbody>
-                </table>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 @endsection
 

@@ -59,4 +59,14 @@ class Admin extends Authenticatable implements JWTSubject
             get: fn () => $this->user_type == 'admin',
         );
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'admin_roles');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles->contains('slug', $role);
+    }
 }

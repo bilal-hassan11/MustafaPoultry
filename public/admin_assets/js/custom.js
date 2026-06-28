@@ -102,6 +102,19 @@ function initAjaxForm() {
 
 function ajaxRequest(_self) {
     var href = $(_self).data('url');
+    
+    // Check if we have role_id or user_id to append
+    var role_id = $(_self).data("role_id");
+    var user_id = $(_self).data("user_id");
+    
+    if (role_id) {
+        href = href + '?role_id=' + role_id;
+    }
+    
+    if (user_id) {
+        href = href + '?user_id=' + user_id;
+    }
+    
     var nopopup = $(_self).hasClass('nopopup');
     var btn_txt = $(_self).data("btnText");
     var data_msg = $(_self).data("msg");
@@ -129,7 +142,11 @@ function run_ajax(href, ele){
     page_loader('show');
     $.ajax({
         url: href,
+        method: "POST",
         dataType: "json",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         complete: function () {
             page_loader('hide');
         },

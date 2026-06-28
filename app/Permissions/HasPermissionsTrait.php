@@ -17,6 +17,9 @@ trait HasPermissionsTrait
       if ($this->user_type == $role) {
         return true;
       }
+      if ($this->roles->contains('slug', $role)) {
+        return true;
+      }
     }
     return false;
   }
@@ -27,15 +30,20 @@ trait HasPermissionsTrait
       return true;
     }
 
-    // $permissions = collect($this->user_permissions)->keyBy('name')->keys()->all();
+    // Check via roles
+    foreach ($this->roles as $role) {
+      if ($role->hasPermission($permission)) {
+        return true;
+      }
+    }
 
+    // Backward compatibility: check direct user permissions
     $permissions = collect($this->user_permissions);
     return (bool) $permissions->where('name', $permission)->count();
   }
 
   public function can($permission, $arguments = [])
   {
-    // dd($this->hasPermission($permission));
     return (bool) $this->hasPermission($permission, $arguments);
   }
 
@@ -44,8 +52,13 @@ trait HasPermissionsTrait
     if ($this->user_type == 'admin') {
       return true;
     }
-    $permissions = collect($this->user_permissions);
-    return (bool) $permissions->whereIn('name', $_permissions)->count();
+    
+    foreach ($_permissions as $permission) {
+      if ($this->hasPermission($permission)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public function cant($permission, $arguments = [])

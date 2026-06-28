@@ -27,6 +27,12 @@ trait DianujHashidsTrait
         return $query->findOrFail($id);
     }
 
+    public function scopeHashidFindOrFail(Builder $query, $id)
+    {
+        $id = hashids_decode($id);
+        return $query->findOrFail($id);
+    }
+
     public function scopeWhereInHashIds(Builder $query, $ids)
     {   
         $ids = array_map(function ($id){
