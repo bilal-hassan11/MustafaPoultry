@@ -18,8 +18,22 @@ class CashController extends Controller
 {
     use SendsWhatsAppMessages;
     use GeneratePdfTrait;
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(Request $req)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Cash Books Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $newDateTime = Carbon::now()->addMonth(2);
         $d = $newDateTime->toDateString();
 
@@ -82,6 +96,16 @@ class CashController extends Controller
 
     public function store(CashBookRequest $req)
     {
+        if (check_empty($req->cash_id)) {
+            if (!auth('admin')->user()->hasPermissionTo('Cash Books Edit')) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
+            if (!auth('admin')->user()->hasPermissionTo('Cash Books Create')) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+        
         //check if today cash in hand
 
 
@@ -192,8 +216,10 @@ class CashController extends Controller
 
     public function edit($id)
     {
-
-
+        if (!auth('admin')->user()->hasPermissionTo('Cash Books Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $i = CashBook::findOrFail(hashids_decode($id));
         $month = date('Y-m-d');
         $tot_cr = CashBook::wheredate('created_at', $month)->sum('receipt_ammount');

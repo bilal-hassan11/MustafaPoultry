@@ -17,7 +17,9 @@
             <div class="card">
               <div class="card-header d-flex align-items-center justify-content-between">
                   <h3 class="card-title mb-0">All Roles Detail</h3>
+                  @can('Roles Create')
                   <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">Add New Role</a>
+                  @endcan
               </div>
               <div class="card-body">
                 <div class="table-responsive">
@@ -55,12 +57,16 @@
                                     <td width="120">
                                       @if($role->slug !== 'super-admin')
                                           <div class="btn-list"> 
+                                              @can('Roles Edit')
                                               <a href="{{route('admin.roles.edit', $role->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> 
                                                   <i class="ri-pencil-fill lh-1"></i> 
                                               </a> 
+                                              @endcan
+                                              @can('Roles Delete')
                                               <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.roles.destroy') }}"  class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete" data-role_id="{{ $role->hashid }}">
                                                   <i class="ri-delete-bin-5-fill lh-1"></i>
                                               </button> 
+                                              @endcan
                                           </div>
                                       @else
                                           <span class="badge bg-danger">Super Admin</span>

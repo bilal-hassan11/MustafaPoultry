@@ -9,8 +9,22 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(Request $req)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Accounts Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'     => 'Accounts',
             'grand_parent' => AccountType::whereNull('parent_id')->get(),
@@ -24,6 +38,10 @@ class AccountController extends Controller
 
     public function add($grand_parent_id, $parent_id)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Accounts Create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title' => 'Add Accounts',
             'grand_parent_id' => $grand_parent_id,
@@ -40,11 +58,16 @@ class AccountController extends Controller
 
     public function store(AccountRequest $req)
     {
-        //dd($req->all());
         if (check_empty($req->account_id)) {
+            if (!auth('admin')->user()->hasPermissionTo('Accounts Edit')) {
+                abort(403, 'Unauthorized action.');
+            }
             $account = Account::findOrFail(hashids_decode($req->account_id));
             $msg     = 'Account updated successfully';
         } else {
+            if (!auth('admin')->user()->hasPermissionTo('Accounts Create')) {
+                abort(403, 'Unauthorized action.');
+            }
             $account = new Account;
             $msg     = 'Account added successfully';
         }
@@ -72,6 +95,10 @@ class AccountController extends Controller
 
     public function edit($id)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Accounts Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title' => 'Edit Account',
             'grand_parent' => AccountType::whereNull('parent_id')->get(),
@@ -88,6 +115,10 @@ class AccountController extends Controller
 
     public function delete($id)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Accounts Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         Account::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Account deleted successfully',

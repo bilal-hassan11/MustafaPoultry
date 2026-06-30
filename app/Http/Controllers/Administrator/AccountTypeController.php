@@ -9,7 +9,21 @@ use Illuminate\Http\Request;
 
 class AccountTypeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(){
+        if (!auth('admin')->user()->hasPermissionTo('Account Types Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'         => 'Account Type',
             'grand_parents' => AccountType::whereNull('parent_id')->get(),
@@ -19,6 +33,15 @@ class AccountTypeController extends Controller
     }
 
     public function store(FormTypeRequest $req){
+        if (isset($req->account_type_id) && !empty($req->account_type_id)) {
+            if (!auth('admin')->user()->hasPermissionTo('Account Types Edit')) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
+            if (!auth('admin')->user()->hasPermissionTo('Account Types Create')) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
         
         $validated = $req->validated();
 
@@ -41,6 +64,10 @@ class AccountTypeController extends Controller
     }
 
     public function edit($id){
+        if (!auth('admin')->user()->hasPermissionTo('Account Types Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'         => 'Account Type',
             'grand_parents' => AccountType::whereNull('parent_id')->get(),
@@ -52,6 +79,10 @@ class AccountTypeController extends Controller
     }
 
     public function delete($id){
+        if (!auth('admin')->user()->hasPermissionTo('Account Types Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         AccountType::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Account type deleted successfully',

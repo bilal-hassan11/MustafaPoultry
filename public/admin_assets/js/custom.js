@@ -21,7 +21,7 @@ function initAjaxForm() {
 
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     })
     $("form.ajaxForm button[type='submit']").removeAttr('disabled');
@@ -102,17 +102,21 @@ function initAjaxForm() {
 
 function ajaxRequest(_self) {
     var href = $(_self).data('url');
+    var data = {};
+    var method = $(_self).data('method') || 'POST';
     
-    // Check if we have role_id or user_id to append
+    console.log('ajaxRequest called', { href, method, element: _self });
+    
+    // Check if we have role_id or user_id to pass as data
     var role_id = $(_self).data("role_id");
     var user_id = $(_self).data("user_id");
     
     if (role_id) {
-        href = href + '?role_id=' + role_id;
+        data.role_id = role_id;
     }
     
     if (user_id) {
-        href = href + '?user_id=' + user_id;
+        data.user_id = user_id;
     }
     
     var nopopup = $(_self).hasClass('nopopup');
@@ -129,20 +133,22 @@ function ajaxRequest(_self) {
             confirmButtonText: (btn_txt && btn_txt != '') ? btn_txt : "Yes, confirm it!"
         }).then(function (t) {
             if (t.value){
-                run_ajax(href, _self);
+                run_ajax(href, _self, data, method);
             }
         });
     }else{
-        run_ajax(href, _self);
+        run_ajax(href, _self, data, method);
     }
 }
 
 
-function run_ajax(href, ele){
+function run_ajax(href, ele, data, method){
+    console.log('run_ajax called', { href, data, method });
     page_loader('show');
     $.ajax({
         url: href,
-        method: "POST",
+        method: method,
+        data: data,
         dataType: "json",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

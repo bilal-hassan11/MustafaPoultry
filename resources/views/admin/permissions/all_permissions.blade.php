@@ -18,7 +18,9 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
                         <h3 class="card-title mb-0">Permissions Detail</h3>
+                        @can('Permissions Create')
                         <a href="javascript:void(0)" onclick="add_permission()" class="btn btn-primary">Add New Permission</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body">
@@ -50,12 +52,16 @@
                                       </td>
                                       <td width="120">
                                         <div class="btn-list"> 
+                                            @can('Permissions Edit')
                                             <a onclick="add_permission(true, '{{$permission->hashid}}', '{{$permission->name}}')" href="javascript:void(0)" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> 
                                                 <i class="ri-pencil-fill lh-1"></i> 
                                             </a> 
+                                            @endcan
+                                            @can('Permissions Delete')
                                             <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.permissions.delete', $permission->hashid) }}"  class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete">
                                                 <i class="ri-delete-bin-5-fill lh-1"></i>
                                             </button> 
+                                            @endcan
                                         </div>
                                       </td>
                                   </tr>

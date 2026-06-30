@@ -51,7 +51,7 @@ Route::get('/clear-cache', function () {
 });
 
 
-Route::middleware('auth:admin')->name('admin.')->group(function () {
+Route::middleware(['auth:admin', 'single.session'])->name('admin.')->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
     //Artisan Commands

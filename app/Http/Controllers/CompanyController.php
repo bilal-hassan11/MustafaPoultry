@@ -16,9 +16,21 @@ use App\Models\AccountType;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
 
     public function index(){
-
+        if (!auth('admin')->user()->hasPermissionTo('Companies Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = [
 
             "title" => "Company",
@@ -29,8 +41,16 @@ class CompanyController extends Controller
         return view('admin.company.index')->with($data);
     }
     public function store(Request $req){
+        if (check_empty($req->company_id)) {
+            if (!auth('admin')->user()->hasPermissionTo('Companies Edit')) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
+            if (!auth('admin')->user()->hasPermissionTo('Companies Create')) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
         
-
         if(check_empty($req->company_id)){
             $company = Company::findOrFail(hashids_decode($req->company_id));
             $msg  = 'company updated successfully';
@@ -55,6 +75,10 @@ class CompanyController extends Controller
     }
 
     public function edit($id){
+        if (!auth('admin')->user()->hasPermissionTo('Companies Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'     => 'Company',
             "categories" => Category::latest()->get(),
@@ -67,6 +91,10 @@ class CompanyController extends Controller
     }
 
     public function delete($id){
+        if (!auth('admin')->user()->hasPermissionTo('Companies Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         Company::destroy(hashids_decode($id));
 
         return response()->json([

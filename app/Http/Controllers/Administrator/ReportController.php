@@ -23,6 +23,19 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            if (!auth('admin')->user()->hasPermissionTo('Reports Access')) {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
+    }
+
     public function feed_item_wise_stock_report(Request $req){
        
         if(isset($req->to_date)){

@@ -12,7 +12,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(Request $req){
+        if (!auth('admin')->user()->hasPermissionTo('Items Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title' => 'Items',
             'getitems' => Item::latest()->where('type','sale')->get(),
@@ -29,6 +43,9 @@ class ItemController extends Controller
     }
 
     public function purchase_item(Request $req){
+        if (!auth('admin')->user()->hasPermissionTo('Items Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $data = array(
             'title' => 'Purchase Items',
@@ -48,6 +65,10 @@ class ItemController extends Controller
     }
 
     public function add(){
+        if (!auth('admin')->user()->hasPermissionTo('Items Create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title' => 'Add item',
             'categories'    => Category::where('status', 1)->latest()->get(),
@@ -58,6 +79,15 @@ class ItemController extends Controller
     }
 
     public function store(ItemRequest $req){
+        if (check_empty($req->item_id)) {
+            if (!auth('admin')->user()->hasPermissionTo('Items Edit')) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
+            if (!auth('admin')->user()->hasPermissionTo('Items Create')) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
 
         if(check_empty($req->item_id)){
             $item = Item::findOrFail(hashids_decode($req->item_id));
@@ -91,6 +121,10 @@ class ItemController extends Controller
     }
 
     public function edit($id){
+        if (!auth('admin')->user()->hasPermissionTo('Items Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'             => 'Edit item',
             'categories'        => Category::where('status', 1)->latest()->get(),
@@ -101,6 +135,10 @@ class ItemController extends Controller
     }
 
     public function delete($id){
+        if (!auth('admin')->user()->hasPermissionTo('Items Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         Item::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Item deleted successfully',

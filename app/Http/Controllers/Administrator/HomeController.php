@@ -18,6 +18,10 @@ class HomeController extends AdminController
 {
     public function index()
     {
+        if (!auth('admin')->user()->hasPermissionTo('Dashboard Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $current_month = date('m');
 
         // Sale Feed

@@ -14,7 +14,19 @@ use Carbon\Carbon;
 
 class ExpenseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
     public function index(){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Access')) {
+            abort(403, 'Unauthorized action.');
+        }
        
         $data = array(
             'title'         => 'Expense Category',
@@ -24,6 +36,9 @@ class ExpenseController extends Controller
     }
 
     public function store(Request $req){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Create')) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $req->validate([
                 'name'          => ['required', 'max:255'],
@@ -48,6 +63,9 @@ class ExpenseController extends Controller
     }
 
     public function edit($id){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         
         $data = array(
@@ -60,6 +78,9 @@ class ExpenseController extends Controller
     }
 
     public function delete($id){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
         ExpenseCategory::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Expense Category deleted successfully',
@@ -68,6 +89,9 @@ class ExpenseController extends Controller
     }
 
     public function expense(Request $req){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Access')) {
+            abort(403, 'Unauthorized action.');
+        }
 
        
         $data = array(
@@ -80,6 +104,9 @@ class ExpenseController extends Controller
 
 
     public function expensestore(Request $req){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Create')) {
+            abort(403, 'Unauthorized action.');
+        }
        
         if(check_empty($req->expense_id)){
             
@@ -142,6 +169,9 @@ class ExpenseController extends Controller
     }
 
     public function expenseedit($id){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $data = array(
             'title'             => 'Edit Expense',
@@ -154,6 +184,9 @@ class ExpenseController extends Controller
     }
 
     public function expensedelete($id){
+        if (!auth('admin')->user()->hasPermissionTo('Expenses Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
         
         Expense::destroy(hashids_decode($id));
 

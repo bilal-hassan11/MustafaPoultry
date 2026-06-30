@@ -20,11 +20,20 @@ class ReportingController extends Controller
 
     public function __construct(FinancialReportService $financialReportService)
     {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
         $this->financialReportService = $financialReportService;
     }
 
     public function getIncomeReport(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Reports Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $startDate = $request->input('from_date');
         $endDate = $request->input('to_date');
         $invoiceTypes = ['Medicine', 'Chick', 'Murghi', 'Feed', 'Others'];
@@ -83,6 +92,9 @@ class ReportingController extends Controller
     }
     public function getPoultryFarmReport(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Reports Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         if ($request->has('generate_pdf')) {
             $startDate = $request->input('from_date');
             $endDate = $request->input('to_date');

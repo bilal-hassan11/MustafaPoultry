@@ -22,7 +22,7 @@ class Admin extends Authenticatable implements JWTSubject
         'user_permissions' => 'object',
     ];
 
-    protected $fillable = ['first_name', 'last_name', 'username', 'password', 'email',  'user_permissions', 'user_type', 'image', 'is_active'];
+    protected $fillable = ['first_name', 'last_name', 'username', 'password', 'email',  'user_permissions', 'user_type', 'image', 'is_active', 'session_token'];
 
     protected $hidden = [
         'password', 'remember_token',

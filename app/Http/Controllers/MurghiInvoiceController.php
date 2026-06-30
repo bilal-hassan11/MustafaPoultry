@@ -22,6 +22,15 @@ class MurghiInvoiceController extends Controller
     public function __construct(MurghiInvoice $MurghiInvoice)
     {
         $this->MurghiInvoice = $MurghiInvoice;
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            if (!auth('admin')->user()->hasPermissionTo('Murghi Invoices Access')) {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
     }
 
     public function createPurchase(Request $req)

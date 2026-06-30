@@ -22,6 +22,15 @@ class MedicineInvoiceController extends Controller
     public function __construct(MedicineInvoice $medicineInvoice)
     {
         $this->medicineInvoice = $medicineInvoice;
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            if (!auth('admin')->user()->hasPermissionTo('Medicine Invoices Access')) {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
     }
 
     public function createPurchase(Request $req)

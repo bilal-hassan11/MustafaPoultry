@@ -43,7 +43,9 @@
           <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
               <h3 class="card-title mb-0">All Staff Detail</h3>
+              @can('Staffs Create')
               <a href="{{ route('admin.staffs.add') }}" class="btn btn-primary">Add Staff</a>
+              @endcan
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -80,19 +82,25 @@
                                 <p class="m-0"><small>{{ get_date($staff->created_at) }}</small></p>
                               </td>
                               <td class="text-center">
+                                @can('Staffs Edit')
                                 <div class="form-check form-switch">
-                                  <input type="checkbox" onchange="ajaxRequest(this)" data-url="{{ route('admin.staffs.update_status', $staff->hashid) }}" {{ $staff->is_active ? 'checked' : ''}} class="form-check-input nopopup" id="staff_status_{{$k}}">
-                                  <label class="form-check-label" for="staff_status_{{$k}}">{{$staff->is_active ? 'Active' : 'Disabled'}}</label>
+                                    <input type="checkbox" onchange="ajaxRequest(this)" data-method="GET" data-url="{{ route('admin.staffs.update_status', $staff->hashid) }}" {{ $staff->is_active ? 'checked' : ''}} class="form-check-input nopopup" id="staff_status_{{$k}}">
+                                    <label class="form-check-label" for="staff_status_{{$k}}">{{$staff->is_active ? 'Active' : 'Disabled'}}</label>
                                 </div>
+                                @endcan
                               </td>
                               <td width="120">
                                 <div class="btn-list"> 
+                                  @can('Staffs Edit')
                                   <a href="{{route('admin.staffs.edit', $staff->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> 
                                     <i class="ri-pencil-fill lh-1"></i> 
                                   </a> 
+                                  @endcan
+                                  @can('Staffs Delete')
                                   <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.staffs.delete') }}"  class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete" data-user_id="{{ $staff->hashid }}">
                                     <i class="ri-delete-bin-5-fill lh-1"></i>
                                   </button> 
+                                  @endcan
                                 </div>
                               </td>
                             </tr>

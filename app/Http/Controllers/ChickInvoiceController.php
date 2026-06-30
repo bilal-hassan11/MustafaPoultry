@@ -22,10 +22,22 @@ class ChickInvoiceController extends Controller
     public function __construct(ChickInvoice $ChickInvoice)
     {
         $this->ChickInvoice = $ChickInvoice;
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Access')) {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
     }
 
     public function createPurchase(Request $req)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $title = "Purchase Chick";
         $invoice_no = generateUniqueID(new ChickInvoice, 'Purchase', 'invoice_no');
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
@@ -60,6 +72,9 @@ class ChickInvoiceController extends Controller
 
     public function editPurchase($invoice_no)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
         $title = "Edit Purchase Chick";
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
         $products = Item::where('category_id', 2)->get();
@@ -72,6 +87,9 @@ class ChickInvoiceController extends Controller
     }
     public function editSale($invoice_no)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
         $title = "Edit Sale Chick";
         $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
         $products = $this->ChickInvoice->getStockInfo();
@@ -89,7 +107,10 @@ class ChickInvoiceController extends Controller
     }
 
     public function createSale(Request $req)
-    {   
+    {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         //dd($req->all());
 
         $title = "Sale Chick";
@@ -133,6 +154,9 @@ class ChickInvoiceController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Create')) {
+            abort(403, 'Unauthorized action.');
+        }
         $validatedData = $request->validate([
             'invoice_no' =>  'required',
             'date' => 'required|date',
@@ -263,6 +287,9 @@ class ChickInvoiceController extends Controller
 
     public function singleReturn(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Create')) {
+            abort(403, 'Unauthorized action.');
+        }
         $validatedData = $request->validate([
             'Chick_invoice_id' => 'required|exists:Chick_invoices,id',
             'quantity' => 'required|integer|min:1',
@@ -370,6 +397,9 @@ class ChickInvoiceController extends Controller
 
     public function show($invoice_no)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Chick Invoices Access')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $url = request()->url();
         preg_match('/\/(\w+)(?=\/\d+)/', $url, $matches);

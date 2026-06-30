@@ -9,6 +9,8 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="header-title">Add Account Type</h4>
                 </div>
+                @can('Account Types Create')
+                @if(!isset($is_update))
                 <form action="{{ route('admin.account_types.store') }}" class="ajaxForm" method="POST">
                     @csrf
                     <div class="row">
@@ -32,6 +34,35 @@
                         </div>
                     </div>
                 </form>
+                @endif
+                @endcan
+                @can('Account Types Edit')
+                @if(isset($is_update))
+                <form action="{{ route('admin.account_types.store') }}" class="ajaxForm" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-5 form-group">
+                            <label for="">Account Type</label>
+                            <select class="form-control" name="parent_id" id="" required>
+                                <option value="">Select Account Type</option>
+                                <option value="{{ hashids_encode('0') }}" @if(isset($is_update) &&@$edit_account->parent_id == null) selected @endif>Grand Parent</option>
+                                @foreach($grand_parents AS $parent)
+                                    <option value="{{ $parent->hashid }}" @if(@$edit_account->parent_id == $parent->id) selected @endif>{{ $parent->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="">Account Type name</label>
+                            <input type="text" class="form-control" placeholder="Enter account type name" value="{{ @$edit_account->name }}" name="name" id="name" required>
+                        </div>
+                        <div class="col-md-2 mt-2">
+                            <input type="hidden" value="{{ @$edit_account->hashid }}" name="account_type_id" id="account_type_id">
+                            <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
+                        </div>
+                    </div>
+                </form>
+                @endif
+                @endcan
             </div>
         </div>
     </div>        
@@ -59,13 +90,16 @@
                         <td >{{ @$account->grand_parent->name }}</td>
                         <td class="waves-effect waves-light btn btn-rounded btn-primary-light">{{ $account->name }}</td>
                         <td >
+                            @can('Account Types Edit')
                             <a href="{{route('admin.account_types.edit', $account->hashid)}}" >
                             <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
-
                             </a>
+                            @endcan
+                            @can('Account Types Delete')
                             <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.account_types.delete', $account->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                                 <i class="fas fa-trash"></i>
                             </button>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

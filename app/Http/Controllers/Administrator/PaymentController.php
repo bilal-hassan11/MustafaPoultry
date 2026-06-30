@@ -14,7 +14,21 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(){
+        if (!auth('admin')->user()->hasPermissionTo('Payment Books Access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'         => 'Add Payment Book',
             'payment'    => Payment::with(['account','d_account'])->latest()->get(),
@@ -25,6 +39,15 @@ class PaymentController extends Controller
     }
 
     public function store(Request $req){
+        if (isset($req->payment_id) && !empty($req->payment_id)) {
+            if (!auth('admin')->user()->hasPermissionTo('Payment Books Edit')) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
+            if (!auth('admin')->user()->hasPermissionTo('Payment Books Create')) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
         
         
 
@@ -123,6 +146,10 @@ class PaymentController extends Controller
     }
 
     public function edit($id){
+        if (!auth('admin')->user()->hasPermissionTo('Payment Books Edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $data = array(
             'title'         => 'Edit Payment Book',
             'payment'    => Payment::with(['account','d_account'])->latest()->get(),
@@ -134,6 +161,10 @@ class PaymentController extends Controller
     }
 
     public function delete($id){
+        if (!auth('admin')->user()->hasPermissionTo('Payment Books Delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         Category::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Category deleted successfully',

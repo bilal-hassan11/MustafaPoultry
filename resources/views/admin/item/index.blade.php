@@ -56,6 +56,11 @@
               <div class="card ">
                 <div class="card-header">
                     <h3 class="card-title mb-0">All Sale Items Detail</h3>
+                    @can('Items Create')
+                    <div class="ms-auto pageheader-btn"> 
+                        <a class="modal-effect btn btn-primary d-grid me-2" href="{{ route('admin.items.add') }}">Add Item</a>
+                    </div> 
+                    @endcan
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -106,14 +111,17 @@
                                           @endif
                                       </td>
                                       <td>{!! wordwrap($item->remarks, 10, "<br />\n", true) !!}</td>
-                                      <td width="120">
+                                      <td width="180">
                                         <div class="btn-list"> 
+                                          @can('Items Edit')
                                           <a  href="{{route('admin.items.edit', $item->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                          @endcan
+                                          @can('Items Delete')
+                                          <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.items.delete', $item->hashid) }}"  class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                              <i class="ri-delete-bin-line"></i>
+                                          </button>
+                                          @endcan
                                         </div>
-                                        
-                                          <!-- <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.items.delete', $item->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
-                                              <i class="fas fa-trash"></i>
-                                          </button> -->
                                       </td>
                                   </tr>
                                 @endforeach

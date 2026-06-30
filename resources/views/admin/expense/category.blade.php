@@ -21,19 +21,41 @@
                   <div class="card-block">
                     <div class="item_row">
                       
-                    <form action="{{ route('admin.expenses.store') }}" class="ajaxForm" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-10">
-                                <label for="">Category Name</label>
-                                <input type="text" class="form-control" placeholder="Enter category name" value="{{ @$edit_category->name }}" name="name" id="name" required>
+                    @if(!isset($is_update))
+                        @can('Expenses Create')
+                        <form action="{{ route('admin.expenses.store') }}" class="ajaxForm" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label for="">Category Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter category name" value="{{ @$edit_category->name }}" name="name" id="name" required>
+                                </div>
+                                <div class="col-md-2 mt-6">
+                                    <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
+                                    <input type="submit" class="btn btn-primary" value="Add">
+                                </div>
                             </div>
-                            <div class="col-md-2 mt-6">
-                                <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
-                                <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
+                        </form>
+                        @endcan
+                    @endif
+
+                    @if(isset($is_update))
+                        @can('Expenses Edit')
+                        <form action="{{ route('admin.expenses.store') }}" class="ajaxForm" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label for="">Category Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter category name" value="{{ @$edit_category->name }}" name="name" id="name" required>
+                                </div>
+                                <div class="col-md-2 mt-6">
+                                    <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
+                                    <input type="submit" class="btn btn-primary" value="Update">
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                        @endcan
+                    @endif
                       <br /><br />
                     </div>
 
@@ -71,15 +93,17 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td><span class="waves-effect waves-light btn btn-info-light">{{ @$category->name }}</span></td>
-                                                <td width="120">
+                                                <td width="180">
                                                     <div class="btn-list"> 
+                                                        @can('Expenses Edit')
                                                         <a  href="{{route('admin.expenses.edit', $category->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
-                                                        
+                                                        @endcan
+                                                        @can('Expenses Delete')
+                                                        <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.expenses.delete', $category->hashid) }}"  class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                            <i class="ri-delete-bin-line"></i>
+                                                        </button>
+                                                        @endcan
                                                     </div>
-                                                   
-                                                    <!--<button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.categories.delete', $category->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">-->
-                                                    <!--    <i class="fas fa-trash"></i>-->
-                                                    <!--</button>-->
                                                 </td>
                                             </tr>
                                         @endforeach

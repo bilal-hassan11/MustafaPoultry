@@ -22,6 +22,15 @@ class FeedInvoiceController extends Controller
     public function __construct(FeedInvoice $FeedInvoice)
     {
         $this->FeedInvoice = $FeedInvoice;
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            if (!auth('admin')->user()->hasPermissionTo('Feed Invoices Access')) {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
     }
 
     public function createPurchase(Request $req)

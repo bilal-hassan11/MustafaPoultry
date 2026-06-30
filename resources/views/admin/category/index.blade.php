@@ -20,7 +20,8 @@
                 
                   <div class="card-block">
                     <div class="item_row">
-                      
+                      @can('Categories Create')
+                      @if(!isset($is_update))
                       <form action="{{ route('admin.categories.store') }}" class="ajaxForm" method="POST">
                           @csrf
                           <div class="row">
@@ -30,10 +31,29 @@
                               </div>
                               <div class="col-md-2 mt-5">
                                   <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
-                                  <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
+                                  <input type="submit" class="btn btn-primary" value="Add">
                               </div>
                           </div>
                       </form>
+                      @endif
+                      @endcan
+                      @can('Categories Edit')
+                      @if(isset($is_update))
+                      <form action="{{ route('admin.categories.store') }}" class="ajaxForm" method="POST">
+                          @csrf
+                          <div class="row">
+                              <div class="col-md-10">
+                                  <label for="">Category Name</label>
+                                  <input type="text" class="form-control" placeholder="Enter category name" value="{{ @$edit_category->name }}" name="name" id="name" required>
+                              </div>
+                              <div class="col-md-2 mt-5">
+                                  <input type="hidden" value="{{ @$edit_category->hashid }}" name="category_id" id="category_id">
+                                  <input type="submit" class="btn btn-primary" value="Update">
+                              </div>
+                          </div>
+                      </form>
+                      @endif
+                      @endcan
                       <br /><br />
                     </div>
 
@@ -71,11 +91,17 @@
                                           <tr>
                                               <td>{{ $loop->iteration }}</td>
                                               <td>{{ $category->name }}</td>
-                                              <td width="120">
+                                              <td width="180">
+                                                  @can('Categories Edit')
                                                   <a href="{{route('admin.categories.edit', $category->hashid)}}" >
                                                   <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
                                                   </a>
-                                                  
+                                                  @endcan
+                                                  @can('Categories Delete')
+                                                  <a href="{{route('admin.categories.delete', $category->hashid)}}" class="deleteBtn">
+                                                  <span class="waves-effect waves-light btn btn-rounded btn-danger-light"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                                  </a>
+                                                  @endcan
                                               </td>
                                           </tr>
                                       @endforeach

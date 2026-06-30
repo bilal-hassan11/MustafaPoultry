@@ -25,6 +25,13 @@ class StockController extends Controller
         OtherInvoice $otherInvoice,
         MurghiInvoice $murghiInvoice
     ) {
+        $this->middleware(function ($request, $next) {
+            if (!auth('admin')->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+        
         $medicineStockInfo = $medicineInvoice->getStockInfo();
         $chickStockInfo = $chickInvoice->getStockInfo();
         $feedStockInfo = $feedInvoice->getStockInfo();
@@ -39,6 +46,9 @@ class StockController extends Controller
     }
     public function index(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Stock Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $categories = Category::all();
         $companies = Company::all();
         $item_id = $request->item;
@@ -104,6 +114,9 @@ class StockController extends Controller
 
     public function expiryStockReport(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Stock Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $medicineInvoice = new MedicineInvoice();
         $query = $medicineInvoice->getStockInfo();
 
@@ -139,6 +152,9 @@ class StockController extends Controller
 
     public function lowStockReport(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Stock Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $medicineInvoice = new MedicineInvoice();
         $query = $medicineInvoice->getStockInfo()->filter(function ($item) {
             return $item->quantity < 10;
@@ -157,6 +173,9 @@ class StockController extends Controller
 
     public function maxSellingReport(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Stock Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $query = MedicineInvoice::with('item')
             ->where('type', 'Sale')
             ->groupBy('item_id')
@@ -180,6 +199,9 @@ class StockController extends Controller
 
     public function lowSellingReport(Request $request)
     {
+        if (!auth('admin')->user()->hasPermissionTo('Stock Access')) {
+            abort(403, 'Unauthorized action.');
+        }
         $query = MedicineInvoice::with('item')
             ->where('type', 'Sale')
             ->groupBy('item_id')

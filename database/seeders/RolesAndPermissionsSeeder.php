@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Role;
 use App\Models\Permission;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Services\Slug;
 
@@ -24,6 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
+        // All modules present in the application
         $modules = [
             'Dashboard',
             'Staffs',
@@ -43,10 +44,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'Other Invoices',
             'Stock',
             'Expenses',
-            'Reports'
+            'Reports',
         ];
 
-        $actions = ['Access', 'Create', 'Edit', 'Delete', 'Print'];
+        $actions = ['Access', 'Create', 'Edit', 'Delete'];
 
         foreach ($modules as $module) {
             foreach ($actions as $action) {
@@ -55,22 +56,28 @@ class RolesAndPermissionsSeeder extends Seeder
                 if (!$existingPermission) {
                     Permission::create([
                         'name' => $permissionName,
-                        'slug' => $this->slugService->createSlug('permissions', $permissionName)
+                        'slug' => $this->slugService->createSlug('permissions', $permissionName),
                     ]);
                 }
             }
         }
 
-        // Create Super Admin role
+        // Create Super Admin role with all permissions
         $superAdminRole = Role::firstOrCreate(
             ['name' => 'Super Admin'],
             [
-                'slug' => $this->slugService->createSlug('roles', 'Super Admin'),
-                'description' => 'Full system access'
+                'slug'        => 'super-admin',
+                'description' => 'Full system access',
             ]
         );
 
-        // Assign all permissions to Super Admin
+        // Sync ALL permissions to Super Admin role
         $superAdminRole->permissions()->sync(Permission::pluck('id')->toArray());
+
+        // Assign Super Admin role to the admin user (user_type = 'admin')
+        $adminUser = Admin::where('user_type', 'admin')->first();
+        if ($adminUser) {
+            $adminUser->roles()->syncWithoutDetaching([$superAdminRole->id]);
+        }
     }
 }

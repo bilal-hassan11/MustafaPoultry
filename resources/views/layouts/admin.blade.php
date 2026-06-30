@@ -27,6 +27,8 @@
     <link href="{{ asset('assets') }}/switcher/demo.css" rel="stylesheet" />
     <!-- Include Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <script type="text/javascript">
         <!--
         ztob = document.all;
@@ -554,13 +556,16 @@
                                 <li class="sub-category">
                                     <h3>Main</h3>
                                 </li>
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Dashboard Access'))
                                 <li class="slide is-expanded"> <a class="side-menu__item active"
                                         data-bs-toggle="slide" href="{{ route('admin.home') }}"><i
                                             class="side-menu__icon fe fe-home"></i><span
                                             class="side-menu__label">Dashboard</span></a> </li>
+                                @endif
                                 <li class="sub-category">
                                     <h3>Accounts</h3>
                                 </li>
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Accounts Access'))
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"> <i
                                             class="side-menu__icon fe fe-sliders"></i> <span
@@ -596,7 +601,9 @@
                                         </li>
                                     </ul>
                                 </li>
+                                @endif
 
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Cash Books Access'))
                                 <li class="slide">
                                     <a class="side-menu__item " data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
@@ -608,10 +615,14 @@
                                                 CashBook</a></li>
                                     </ul>
                                 </li>
+                                @endif
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Payment Books Access'))
                                 <li> <a class="side-menu__item" href="{{ route('admin.paymentbooks.index') }}"><i
                                             class="side-menu__icon fe fe-grid"></i><span
                                             class="side-menu__label">Payment Book</span></a> </li>
+                                @endif
 
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Expenses Access'))
                                 <li class="slide">
                                     <a class="side-menu__item " data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
@@ -626,21 +637,11 @@
                                                 Expenses</a></li>
                                     </ul>
                                 </li>
+                                @endif
                                 <li class="sub-category">
                                     <h3>Inventory Items</h3>
                                 </li>
-                                <!-- <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i
-                                            class="side-menu__icon fe fe-file"></i><span
-                                            class="side-menu__label">Category</span><i
-                                            class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0);">Category</a></li>
-                                        <li><a href="{{ route('admin.categories.index') }}" class="slide-item"> Add
-                                                Category</a></li>
-
-                                    </ul>
-                                </li> -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Companies Access'))
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
@@ -653,6 +654,8 @@
 
                                     </ul>
                                 </li>
+                                @endif
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Items Access'))
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file"></i><span
@@ -668,6 +671,8 @@
 
                                     </ul>
                                 </li>
+                                @endif
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Chick Invoices Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/chick-invoices/purchase') || request()->is('web_admin/chick-invoices/sale') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-qq"
@@ -687,7 +692,9 @@
 
                                     </ul>
                                 </li>
+                                @endif
                                 <!-- Feed -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Feed Invoices Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/feed-invoices/purchase') || request()->is('web_admin/feed-invoices/sale') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-square"
@@ -707,7 +714,9 @@
 
                                     </ul>
                                 </li>
+                                @endif
                                 <!-- Medicine -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Medicine Invoices Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/medicine-invoices/purchase') || request()->is('web_admin/medicine-invoices/sale') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-medkit"
@@ -726,7 +735,9 @@
 
                                     </ul>
                                 </li>
+                                @endif
                                 <!-- Murghi -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Murghi Invoices Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/murghi-invoices/purchase') || request()->is('web_admin/murghi-invoices/sale') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-android"
@@ -744,12 +755,12 @@
                                         <li><a href="{{ route('admin.murghi-invoices.purchase_sale') }}"
                                                 class="slide-item {{ request()->is('web_admin/murghi-invoices/purchase-sale  ') ? 'active open' : '' }}">
                                                 Purchase/Sale Murghi</a></li>
-                                        <!-- <li><a href="{{ route('admin.reports.all_report', ['id' => 'purchase_murghi']) }}" class="slide-item"> Purchase Murghi Report</a></li>
-                              <li><a href="{{ route('admin.reports.all_report', ['id' => 'sale_murghi']) }}" class="slide-item"> Sale Murghi Report</a></li> -->
 
                                     </ul>
                                 </li>
+                                @endif
                                 <!-- Other -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Other Invoices Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/other-invoices/purchase') || request()->is('web_admin/other-invoices/sale') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i
@@ -765,8 +776,10 @@
                                                 Sale Other</a></li>
                                     </ul>
                                 </li>
+                                @endif
 
                                 <!-- Adjust Stock -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Stock Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('medicine-invoices/adjust-in') || request()->is('medicine-invoices/adjust-out') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i
@@ -789,6 +802,7 @@
                                         <span class="side-menu__label">Available Stock</span>
                                     </a>
                                 </li>
+                                @endif
 
                                 <li class="sub-category">
                                     <h3>Reports</h3>
@@ -796,6 +810,7 @@
 
 
                                 <!-- Feed -->
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Reports Access'))
                                 <li class="slide">
                                     <a class="side-menu__item {{ request()->is('web_admin/report/Reports/*') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-square"
@@ -856,11 +871,13 @@
 
                                     </ul>
                                 </li>
+                                @endif
                                 
                                 <li class="sub-category">
                                     <h3>Users & Permissions</h3>
                                 </li>
                                 
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Staffs Access') || auth()->user()->can('Roles Access') || auth()->user()->can('Permissions Access'))
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                                         <i class="side-menu__icon fe fe-users"></i>
@@ -880,10 +897,12 @@
                                         @endif
                                     </ul>
                                 </li>
+                                @endif
 
                                 <li class="sub-category">
                                     <h3>Inventory Stocks</h3>
                                 </li>
+                                @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Stock Access'))
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i
                                             class="side-menu__icon fe fe-file-text"></i><span
@@ -903,6 +922,7 @@
                                                 class="slide-item">Medicine Itemwise Stock Report </a></li>
                                     </ul>
                                 </li>
+                                @endif
 
                             </ul>
                             <div class="slide-right" id="slide-right">
@@ -1376,7 +1396,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 
-    <script src="{{ asset('admin_assets') }}/js/custom.js"></script>
+    <script src="{{ asset('admin_assets') }}/js/custom.js?v={{ time() }}"></script>
     @yield('page-scripts')
 </body>
 

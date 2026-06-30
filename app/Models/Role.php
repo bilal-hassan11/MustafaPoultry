@@ -18,6 +18,8 @@ class Role extends BaseModel
 
     public function hasPermission($permission)
     {
-        return $this->permissions->contains('slug', $permission);
+        // Support both permission name and slug lookups
+        return $this->permissions->contains('name', $permission)
+            || $this->permissions->contains('slug', $permission);
     }
 }

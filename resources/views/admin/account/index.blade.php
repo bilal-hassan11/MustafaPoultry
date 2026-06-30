@@ -62,9 +62,16 @@
                                               <td><strong>{{ $account->status == 0 ? "Active":"Deactive"   }} </strong></td>
                                               <td>{!! wordwrap($account->address, 10, "<br />\n", true) !!}</td>
                                               
-                                              <td width="120">
+                                              <td width="180">
                                                 <div class="btn-list"> 
+                                                  @can('Accounts Edit')
                                                   <a  href="{{route('admin.accounts.edit', $account->hashid)}}" class="btn btn-icon btn-primary btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Edit"> <i class="ri-pencil-fill lh-1"></i> </a> 
+                                                  @endcan
+                                                  @can('Accounts Delete')
+                                                  <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.accounts.delete', $account->hashid) }}" class="btn btn-icon btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                  </button>
+                                                  @endcan
                                                 </div>
                                               </td>
                                           </tr>
