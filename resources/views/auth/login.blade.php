@@ -74,6 +74,14 @@
 										</span>
 									</p>
 									@endif
+
+									@if ($errors->has('session'))
+									<p class="alert alert-warning mt-2">
+										<span class="help-block">
+											<strong>{{ $errors->first('session') }}</strong>
+										</span>
+									</p>
+									@endif
 								
 									<div class="mb-3">
 										<div class="form-check">

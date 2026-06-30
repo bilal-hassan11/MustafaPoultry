@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'is_active' => \App\Http\Middleware\CheckIfUserIsActive::class,
         'is_admin' => \App\Http\Middleware\CheckIfAdmin::class,
         'permission' => \App\Http\Middleware\CheckPermission::class,
+        'single.session' => \App\Http\Middleware\CheckSingleSession::class,
         ];
 }
