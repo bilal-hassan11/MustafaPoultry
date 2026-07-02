@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class ItemController extends Controller
 {
     public function __construct()
@@ -22,53 +23,56 @@ class ItemController extends Controller
         });
     }
 
-    public function index(Request $req){
+    public function index(Request $req)
+    {
         if (!auth('admin')->user()->hasPermissionTo('Items Access')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $data = array(
             'title' => 'Items',
-            'getitems' => Item::latest()->where('type','sale')->get(),
-            'items' => Item::latest()->where('type','sale')
-                        ->when(isset($req->item_id), function($query) use ($req){
-                            $query->where('id', $req->item_id);
-                        })
-                        ->when(isset($req->status), function($query) use ($req){
-                            $query->where('status', $req->status);
-                        })    
-                        ->get(),
+            'getitems' => Item::latest()->where('type', 'purchase')->get(),
+            'items' => Item::latest()->where('type', 'purchase')
+                ->when(isset($req->item_id), function ($query) use ($req) {
+                    $query->where('id', $req->item_id);
+                })
+                ->when(isset($req->status), function ($query) use ($req) {
+                    $query->where('status', $req->status);
+                })
+                ->get(),
         );
         return view('admin.item.index')->with($data);
     }
 
-    public function purchase_item(Request $req){
+    public function purchase_item(Request $req)
+    {
         if (!auth('admin')->user()->hasPermissionTo('Items Access')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $data = array(
             'title' => 'Purchase Items',
             'getitems' => Category::latest()->get(),
-            'tot_stock' => Item::latest()->where('type','purchase')->sum('stock_qty'),
-            'tot_stock_value' => Item::latest()->where('type','purchase')->select(DB::raw('sum(stock_qty*price) AS total_sales')),
-            'items' => Item::latest()->where('type','purchase')
-                        ->when(isset($req->category_id), function($query) use ($req){
-                            $query->where('category_id', $req->category_id);
-                        })
-                        ->when(isset($req->status), function($query) use ($req){
-                            $query->where('status', $req->status);
-                        })    
-                        ->get(),
+            'tot_stock' => Item::latest()->where('type', 'purchase')->sum('stock_qty'),
+            'tot_stock_value' => Item::latest()->where('type', 'purchase')->select(DB::raw('sum(stock_qty*price) AS total_sales')),
+            'items' => Item::latest()->where('type', 'purchase')
+                ->when(isset($req->category_id), function ($query) use ($req) {
+                    $query->where('category_id', $req->category_id);
+                })
+                ->when(isset($req->status), function ($query) use ($req) {
+                    $query->where('status', $req->status);
+                })
+                ->get(),
         );
         return view('admin.item.purchase_item')->with($data);
     }
 
-    public function add(){
+    public function add()
+    {
         if (!auth('admin')->user()->hasPermissionTo('Items Create')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $data = array(
             'title' => 'Add item',
             'categories'    => Category::where('status', 1)->latest()->get(),
@@ -78,7 +82,8 @@ class ItemController extends Controller
         return view('admin.item.add')->with($data);
     }
 
-    public function store(ItemRequest $req){
+    public function store(ItemRequest $req)
+    {
         if (check_empty($req->item_id)) {
             if (!auth('admin')->user()->hasPermissionTo('Items Edit')) {
                 abort(403, 'Unauthorized action.');
@@ -89,10 +94,10 @@ class ItemController extends Controller
             }
         }
 
-        if(check_empty($req->item_id)){
+        if (check_empty($req->item_id)) {
             $item = Item::findOrFail(hashids_decode($req->item_id));
             $msg  = 'Item updated successfully';
-        }else{
+        } else {
             $item = new Item;
             $msg  = 'Item added successfully';
         }
@@ -120,11 +125,12 @@ class ItemController extends Controller
         ]);
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         if (!auth('admin')->user()->hasPermissionTo('Items Edit')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $data = array(
             'title'             => 'Edit item',
             'categories'        => Category::where('status', 1)->latest()->get(),
@@ -134,11 +140,12 @@ class ItemController extends Controller
         return view('admin.item.add')->with($data);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         if (!auth('admin')->user()->hasPermissionTo('Items Delete')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         Item::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Item deleted successfully',

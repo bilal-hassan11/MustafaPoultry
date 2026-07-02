@@ -254,7 +254,7 @@
                                                                     class="waves-effect waves-light btn btn-rounded btn-info-light">{{ $sale->item->name ?? '' }}</span>
                                                             </td>
                                                             <td style="width: 10%; !important">
-                                                                {{ number_format(abs(@$sale->net_amount / @$sale->quantity), 2) }}
+                                                                {{ ($sale->quantity ?? 0) != 0 ? number_format(abs($sale->net_amount / $sale->quantity), 2) : '0.00' }}
                                                             </td>
                                                             <?php $tot_q += $sale->quantity; ?>
                                                             <td style="width: 10%; !important">{{ abs($sale->quantity) }}
@@ -336,7 +336,7 @@
                                 $qty = $product->quantity;
                                 $expiry_date = $product->expiry_date;
                             @endphp    
-                            <option value="{{ $product->id }}" data-price="{{ $product->last_sale_price }}" data-purchase_price="{{ $product->average_price }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
+                            <option value="{{ $product->id }}" data-price="{{ $product->sale_price ?? 0 }}" data-purchase_price="{{ $product->purchase_price ?? 0 }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
                                 {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
                             </option>
                            @endforeach

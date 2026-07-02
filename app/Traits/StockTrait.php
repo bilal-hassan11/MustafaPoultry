@@ -47,7 +47,7 @@ trait StockTrait
                     ->orWhere('type', '!=', 'Sale');
             })
             ->groupBy('item_id', 'expiry_date')
-            ->with(['item:id,name,category_id,company_id', 'item.category:id,name']);
+            ->with(['item:id,name,category_id,company_id,purchase_price,sale_price', 'item.category:id,name']);
 
         $invoices = $query->get();
 
@@ -62,10 +62,14 @@ trait StockTrait
                 $item->category_id = $invoice->item->category_id;
                 $item->category_name = optional($invoice->item->category)->name ?? 'Unknown';
                 $item->company_id = $invoice->item->company_id;
+                $item->purchase_price = $invoice->item->purchase_price ?? 0;
+                $item->sale_price = $invoice->item->sale_price ?? 0;
             } else {
                 $item->name = 'Unknown';
                 $item->category_id = 'Unknown';
                 $item->category_name = 'Unknown';
+                $item->purchase_price = 0;
+                $item->sale_price = 0;
             }
 
             $item->expiry_date = $invoice->expiry_date;
