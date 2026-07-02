@@ -157,6 +157,7 @@ class FeedInvoiceController extends Controller
             'amount.*' => 'required|numeric',
             'discount_in_rs.*' => 'nullable|numeric',
             'discount_in_percent.*' => 'nullable|numeric',
+            'commission_percent.*' => 'nullable|numeric',
             'expiry_date.*' => 'nullable|date',
             'whatsapp_status' => 'nullable|boolean',
         ]);
@@ -192,7 +193,10 @@ class FeedInvoiceController extends Controller
             foreach ($items as $index => $itemId) {
 
                 $price = in_array($request->type, ['Sale', 'Adjust Out']) ? $validatedData['sale_price'][$index] : $validatedData['purchase_price'][$index];
-                $netAmount = ($price * $validatedData['quantity'][$index]) - ($validatedData['discount_in_rs'][$index] ?? 0);
+                $amountAfterDiscount = ($price * $validatedData['quantity'][$index]) - ($validatedData['discount_in_rs'][$index] ?? 0);
+                $commissionPercent = $validatedData['commission_percent'][$index] ?? 0;
+                $commissionAmount = round($amountAfterDiscount * $commissionPercent / 100, 2);
+                $netAmount = $amountAfterDiscount + $commissionAmount;
                 $costAmount = $validatedData['quantity'][$index] * $validatedData['purchase_price'][$index];
 
                 $FeedInvoice = FeedInvoice::create([
@@ -210,6 +214,8 @@ class FeedInvoiceController extends Controller
                     'amount' => $validatedData['amount'][$index],
                     'discount_in_rs' => $validatedData['discount_in_rs'][$index] ?? 0,
                     'discount_in_percent' => $validatedData['discount_in_percent'][$index] ?? 0,
+                    'commission_percent' => $commissionPercent,
+                    'commission_amount' => $commissionAmount,
                     'total_cost' => in_array($request->type, ['Sale', 'Adjust Out']) ? -$costAmount : $netAmount,
                     'net_amount' => $netAmount,
                     'expiry_date' => $validatedData['expiry_date'][$index] ?? null,

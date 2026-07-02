@@ -26,6 +26,8 @@ class MedicineInvoice extends Model
         'amount',
         'discount_in_rs',
         'discount_in_percent',
+        'commission_percent',
+        'commission_amount',
         'total_cost',
         'net_amount',
         'expiry_date',

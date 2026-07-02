@@ -69,20 +69,21 @@
                         <table class="table table-bordered text-center" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th style="width: 30%;">Item</th>
-                                    <th style="width: 10%;">Quantity</th>
-                                    <th style="width: 12%;">Rate</th>
-                                    <th style="width: auto;">Expiry</th>
-                                    <th style="width: auto;">Dis In (Rs)</th>
-                                    <th style="width: auto;">Dis In (%)</th>
-                                    <th style="width: auto;">Amount</th>
+                                    <th style="width: 25%;">Item</th>
+                                    <th style="width: 8%;">Quantity</th>
+                                    <th style="width: 10%;">Rate</th>
+                                    <th style="width: 8%;">Expiry</th>
+                                    <th style="width: 10%;">Dis (Rs)</th>
+                                    <th style="width: 10%;">Dis (%)</th>
+                                    <th style="width: 10%;">Commission (%)</th>
+                                    <th style="width: 10%;">Net Amount</th>
                                 </tr>
                             </thead>
                             <tbody id="row">
                             </tbody>
                             <tfoot>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         <label>Subtotal</label>
                                     </td>
                                     <td>
@@ -94,23 +95,31 @@
                                             title="Add Row"></button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="6" style="text-align: right;">
-                                        Discount
-                                    </td>
+                                <tr style="text-align: right;">
+                                    <td colspan="7">Discount</td>
                                     <td>
                                         <input type="text" name="total_discount" class="form-control text-right"
                                             value="0" style="text-align: right;" readonly>
                                     </td>
+                                    <td></td>
                                 </tr>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
+                                    <td colspan="7">Commission</td>
+                                    <td>
+                                        <input type="text" name="total_commission" class="form-control text-right"
+                                            value="0" style="text-align: right;" readonly>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="7">
                                         <label>Net Amount</label>
                                     </td>
                                     <td>
                                         <input type="text" name="net_bill" class="form-control text-right"
                                             value="0" style="text-align: right;" readonly>
                                     </td>
+                                    <td></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -346,42 +355,52 @@
             function addRow() {
                 let row = `
             <tr class="rows">
-                <td class="product_col">
+                <td>
                     @if ($products)
-                    <select class="form-control product product_val" name="id[]" id="products" required>
+                    <select class="form-control product product_val" name="id[]" required>
                         <option value="">Select Items</option>
                         @foreach ($products as $product)
                             @php
                                 $qty = $product->quantity;
                                 $expiry_date = $product->expiry_date;
-                            @endphp    
-                            <option value="{{ $product->id }}" data-price="{{ $product->sale_price ?? 0 }}" data-purchase_price="{{ $product->purchase_price ?? 0 }}" data-qty="{{ $qty }}"  data-expiry_date="{{ $expiry_date }}" data-item_id="{{ $product->item_id }}">
+                            @endphp
+                            <option value="{{ $product->id }}"
+                                data-price="{{ $product->sale_price ?? 0 }}"
+                                data-purchase_price="{{ $product->purchase_price ?? 0 }}"
+                                data-qty="{{ $qty }}"
+                                data-expiry_date="{{ $expiry_date }}"
+                                data-item_id="{{ $product->item_id }}">
                                 {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
                             </option>
-                           @endforeach
+                        @endforeach
                     </select>
                     @endif
                     <input type="hidden" name="item_id[]" class="item_id">
                 </td>
-                <td class="quantity_col">
-                    <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="1" step="any" style="text-align: right;" required>
+                <td>
+                    <input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" step="any" required>
                 </td>
-                <input type="hidden" name="purchase_price[]" class="form-control purchaseRate text-right" value="1" step="any" style="text-align: right;">
-                <td class="sale_rate_col">
-                    <input type="number" name="sale_price[]" class="form-control saleRate text-right" value="1" step="any" style="text-align: right;" required>
+                <td>
+                    <input type="hidden" name="purchase_price[]" class="purchaseRate" value="0">
+                    <input type="number" name="sale_price[]" class="form-control saleRate" value="0" step="any" required>
                 </td>
-                <td class="expiry_date">
-                    <input type="text" name="expiry_date[]" class="form-control expiry_date text-right" readonly>
+                <td>
+                    <input type="text" name="expiry_date[]" class="form-control expiry_date" readonly>
                 </td>
-                <input type="hidden" name="amount[]" class="form-control amount text-right" value="0" step="any" style="text-align: right;">
-                <td class="dis_in_rs_col">
-                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="0" step="any" style="text-align: right;">
+                <input type="hidden" name="amount[]" class="amount" value="0">
+                <td>
+                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs" value="0" step="any">
                 </td>
-                <td class="dis_in_percentage_col">
-                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="0" step="any" style="text-align: right;">
+                <td>
+                    <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage" min="0" max="100" value="0" step="any">
+                    <small class="text-muted dis_amount_label">Rs 0.00</small>
                 </td>
-                <td class="net_amount_col">
-                    <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="0" step="any" style="text-align: right;" readonly required>
+                <td>
+                    <input type="number" name="commission_percent[]" class="form-control commission_percent" min="0" max="100" value="0" step="any">
+                    <small class="text-muted commission_label">Rs 0.00</small>
+                </td>
+                <td>
+                    <input type="text" name="net_amount[]" class="form-control net_amount" value="0" readonly required>
                 </td>
                 <td>
                     <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
@@ -390,12 +409,8 @@
             `;
                 $("#row").append(row);
 
-                // Initialize select2 for the new row
-                $('select.product_val').select2({
-                    width: '100%',
-                });
+                $('select.product_val').select2({ width: '100%' });
 
-                // Attach event handlers to the newly added row
                 $(".product_val").last().change(function() {
                     updatePriceQty($(this));
                 });
@@ -403,7 +418,6 @@
                 $(".dis_in_rs").last().on('input', function() {
                     Calculation(true);
                 });
-
             }
 
             // Add initial row
@@ -414,18 +428,16 @@
 
             // Update price, quantity, and expiry date based on the selected product
             function updatePriceQty($selectElement) {
-                let salePrice = $selectElement.find('option:selected').data('price');
-                let qty = $selectElement.find('option:selected').data('qty');
-                let expirydate = $selectElement.find('option:selected').data('expiry_date');
+                let salePrice     = $selectElement.find('option:selected').data('price');
+                let qty           = $selectElement.find('option:selected').data('qty');
+                let expirydate    = $selectElement.find('option:selected').data('expiry_date');
                 let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
-                let itemID = $selectElement.find('option:selected').data('item_id');
+                let itemID        = $selectElement.find('option:selected').data('item_id');
                 $selectElement.closest('tr').find('.saleRate').val(salePrice);
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
                 $selectElement.closest('tr').find('.expiry_date').val(expirydate);
-                $selectElement.closest('tr').find('.quantity').attr('max', qty);
-                $selectElement.closest('tr').find('.quantity').attr('title', 'Available stock :' + qty);
-                $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' +
-                    purchasePrice);
+                $selectElement.closest('tr').find('.quantity').attr('max', qty).attr('title', 'Available stock: ' + qty);
+                $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' + purchasePrice);
                 $selectElement.closest('tr').find('.item_id').val(itemID);
                 Calculation();
             }
@@ -474,21 +486,31 @@
                 Calculation();
             });
 
+            // Debounce helper — delays execution until user stops typing
+            function debounce(fn, delay) {
+                let timer;
+                return function() {
+                    clearTimeout(timer);
+                    timer = setTimeout(fn, delay);
+                };
+            }
+            let debouncedCalc = debounce(function() { Calculation(); }, 300);
+
             // Event handler for input changes
-            $("body").on("input keyup blur", ".quantity, .saleRate, .dis_in_percentage", function() {
-                Calculation();
-            });
+            $("body").on("input", ".quantity, .saleRate, .dis_in_percentage, .commission_percent", debouncedCalc);
+            $("body").on("blur",  ".quantity, .saleRate, .dis_in_percentage, .commission_percent", function() { Calculation(); });
 
             // Calculation function
             function Calculation(isManualUpdate = false) {
                 let subtotal = 0;
                 let totalDiscount = 0;
+                let totalCommission = 0;
                 let netbill = 0;
 
                 $("tr.rows").each(function() {
                     let $row = $(this);
-                    let qty = parseFloat($row.find(".quantity").val()) || 0;
-                    let rate = parseFloat($row.find(".saleRate").val()) || 0;
+                    let qty    = parseFloat($row.find(".quantity").val()) || 0;
+                    let rate   = parseFloat($row.find(".saleRate").val()) || 0;
                     let amount = qty * rate;
                     let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
 
@@ -497,21 +519,30 @@
                         $row.find(".dis_in_rs").val(discountAmount.toFixed(2));
                     } else {
                         let discountAmount = parseFloat($row.find(".dis_in_rs").val()) || 0;
-                        let discountPercentage = (discountAmount / amount) * 100;
+                        let discountPercentage = amount > 0 ? (discountAmount / amount) * 100 : 0;
                         $row.find(".dis_in_percentage").val(discountPercentage.toFixed(2));
                     }
 
-                    let finalAmount = amount - parseFloat($row.find(".dis_in_rs").val()) || 0;
+                    let discountRs    = parseFloat($row.find(".dis_in_rs").val()) || 0;
+                    let afterDiscount = amount - discountRs;
+                    let commissionPct = parseFloat($row.find(".commission_percent").val()) || 0;
+                    let commissionAmt = afterDiscount * commissionPct / 100;
+                    let finalAmount   = afterDiscount + commissionAmt;
+
+                    $row.find(".dis_amount_label").text("Rs " + discountRs.toFixed(2));
+                    $row.find(".commission_label").text("Rs " + commissionAmt.toFixed(2));
                     $row.find(".amount").val(amount.toFixed(2));
                     $row.find(".net_amount").val(finalAmount.toFixed(2));
 
-                    subtotal += amount;
-                    totalDiscount += parseFloat($row.find(".dis_in_rs").val()) || 0;
-                    netbill += finalAmount;
+                    subtotal        += amount;
+                    totalDiscount   += discountRs;
+                    totalCommission += commissionAmt;
+                    netbill         += finalAmount;
                 });
 
                 $("input[name='subtotal']").val(subtotal.toFixed(2));
                 $("input[name='total_discount']").val(totalDiscount.toFixed(2));
+                $("input[name='total_commission']").val(totalCommission.toFixed(2));
                 $("input[name='net_bill']").val(netbill.toFixed(2));
             }
         });
