@@ -131,7 +131,8 @@
                 <div class="col-12 col-sm-12">
                     <div class="card ">
                         <div class="card-header">
-                            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                            <div
+                                class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
                                 <div class="ms-auto pageheader-btn">
                                     <a class="modal-effect btn btn-primary d-grid  me-2" data-bs-effect="effect-newspaper"
                                         data-bs-toggle="modal" href="#modaldemo8">Pending Sales</a>
@@ -184,7 +185,7 @@
                 </div>
                 <!-- COL END -->
             </div>
-           
+
             <div class="row">
                 <div class="col-xl-12">
 
@@ -203,7 +204,7 @@
                                             <thead>
                                                 <tr class="text-dark">
                                                     <th>Account</th>
-                                                   <th>Action</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -211,10 +212,10 @@
                                                     <tr class="text-dark">
 
                                                         <td style="width: 15%; !important"><span
-                                                                class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '' , $pending->item->name ?? '' ,  abs($pending->quantity)  }}</span>
+                                                                class="waves-effect waves-light btn btn-rounded btn-danger-light">{{ $pending->account->name ?? '', $pending->item->name ?? '', abs($pending->quantity) }}</span>
                                                         </td>
 
-                                                        
+
                                                         <td style="width: 20%; !important">
 
                                                             <a href="{{ route('admin.medicine-invoices.edit.sale', ['invoice_no' => $pending->invoice_no]) }}"
@@ -409,7 +410,9 @@
             `;
                 $("#row").append(row);
 
-                $('select.product_val').select2({ width: '100%' });
+                $('select.product_val').select2({
+                    width: '100%'
+                });
 
                 $(".product_val").last().change(function() {
                     updatePriceQty($(this));
@@ -428,15 +431,16 @@
 
             // Update price, quantity, and expiry date based on the selected product
             function updatePriceQty($selectElement) {
-                let salePrice     = $selectElement.find('option:selected').data('price');
-                let qty           = $selectElement.find('option:selected').data('qty');
-                let expirydate    = $selectElement.find('option:selected').data('expiry_date');
+                let salePrice = $selectElement.find('option:selected').data('price');
+                let qty = $selectElement.find('option:selected').data('qty');
+                let expirydate = $selectElement.find('option:selected').data('expiry_date');
                 let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
-                let itemID        = $selectElement.find('option:selected').data('item_id');
+                let itemID = $selectElement.find('option:selected').data('item_id');
                 $selectElement.closest('tr').find('.saleRate').val(salePrice);
                 $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
                 $selectElement.closest('tr').find('.expiry_date').val(expirydate);
-                $selectElement.closest('tr').find('.quantity').attr('max', qty).attr('title', 'Available stock: ' + qty);
+                $selectElement.closest('tr').find('.quantity').attr('max', qty).attr('title', 'Available stock: ' +
+                    qty);
                 $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' + purchasePrice);
                 $selectElement.closest('tr').find('.item_id').val(itemID);
                 Calculation();
@@ -494,11 +498,15 @@
                     timer = setTimeout(fn, delay);
                 };
             }
-            let debouncedCalc = debounce(function() { Calculation(); }, 300);
+            let debouncedCalc = debounce(function() {
+                Calculation();
+            }, 300);
 
             // Event handler for input changes
             $("body").on("input", ".quantity, .saleRate, .dis_in_percentage, .commission_percent", debouncedCalc);
-            $("body").on("blur",  ".quantity, .saleRate, .dis_in_percentage, .commission_percent", function() { Calculation(); });
+            $("body").on("blur", ".quantity, .saleRate, .dis_in_percentage, .commission_percent", function() {
+                Calculation();
+            });
 
             // Calculation function
             function Calculation(isManualUpdate = false) {
@@ -509,8 +517,8 @@
 
                 $("tr.rows").each(function() {
                     let $row = $(this);
-                    let qty    = parseFloat($row.find(".quantity").val()) || 0;
-                    let rate   = parseFloat($row.find(".saleRate").val()) || 0;
+                    let qty = parseFloat($row.find(".quantity").val()) || 0;
+                    let rate = parseFloat($row.find(".saleRate").val()) || 0;
                     let amount = qty * rate;
                     let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) || 0;
 
@@ -523,21 +531,21 @@
                         $row.find(".dis_in_percentage").val(discountPercentage.toFixed(2));
                     }
 
-                    let discountRs    = parseFloat($row.find(".dis_in_rs").val()) || 0;
+                    let discountRs = parseFloat($row.find(".dis_in_rs").val()) || 0;
                     let afterDiscount = amount - discountRs;
                     let commissionPct = parseFloat($row.find(".commission_percent").val()) || 0;
                     let commissionAmt = afterDiscount * commissionPct / 100;
-                    let finalAmount   = afterDiscount + commissionAmt;
+                    let finalAmount = afterDiscount + commissionAmt;
 
                     $row.find(".dis_amount_label").text("Rs " + discountRs.toFixed(2));
                     $row.find(".commission_label").text("Rs " + commissionAmt.toFixed(2));
                     $row.find(".amount").val(amount.toFixed(2));
                     $row.find(".net_amount").val(finalAmount.toFixed(2));
 
-                    subtotal        += amount;
-                    totalDiscount   += discountRs;
+                    subtotal += amount;
+                    totalDiscount += discountRs;
                     totalCommission += commissionAmt;
-                    netbill         += finalAmount;
+                    netbill += finalAmount;
                 });
 
                 $("input[name='subtotal']").val(subtotal.toFixed(2));
