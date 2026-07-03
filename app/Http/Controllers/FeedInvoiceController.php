@@ -41,6 +41,14 @@ class FeedInvoiceController extends Controller
         return redirect()->route('admin.feed-invoices.purchase');
     }
 
+    /**
+     * Redirect the bare /feed-invoices/ URL to the purchase listing.
+     */
+    public function index()
+    {
+        return redirect()->route('admin.feed-invoices.purchase');
+    }
+
     public function createPurchase(Request $req)
     {
         $title = "Purchase Feed";
