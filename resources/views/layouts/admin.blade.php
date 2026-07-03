@@ -696,7 +696,7 @@
                                 <!-- Feed -->
                                 @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Feed Invoices Access'))
                                 <li class="slide">
-                                    <a class="side-menu__item {{ request()->is('web_admin/feed-invoices/purchase') || request()->is('web_admin/feed-invoices/sale') ? 'active' : '' }}"
+                                    <a class="side-menu__item {{ request()->is('web_admin/feed-invoices/purchase') || request()->is('web_admin/feed-invoices/sale') || request()->is('web_admin/feed-invoices/purchase-return*') || request()->is('web_admin/feed-invoices/sale-return*') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-square"
                                             aria-hidden="true"></i>&nbsp&nbsp&nbsp <span
                                             class="side-menu__label">Feeds</span><i
@@ -708,9 +708,13 @@
                                                 Purchase Feed</a></li>
                                         <li><a href="{{ route('admin.feed-invoices.sale') }}"
                                                 class="slide-item {{ request()->is('web_admin/feed-invoices/sale') ? 'active open' : '' }}">
-                                                Sale
-                                                Feed</a></li>
-
+                                                Sale Feed</a></li>
+                                        <li><a href="{{ route('admin.feed-invoices.purchase_return.index') }}"
+                                                class="slide-item {{ request()->is('web_admin/feed-invoices/purchase-return*') ? 'active open' : '' }}">
+                                                Purchase Feed Return</a></li>
+                                        <li><a href="{{ route('admin.feed-invoices.sale_return.index') }}"
+                                                class="slide-item {{ request()->is('web_admin/feed-invoices/sale-return*') ? 'active open' : '' }}">
+                                                Sale Feed Return</a></li>
 
                                     </ul>
                                 </li>
