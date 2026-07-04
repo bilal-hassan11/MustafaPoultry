@@ -11,25 +11,25 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-2 mb-3">
-                                <input type="hidden" name="type" class="form-control text-right" value="Sale">
-                                <input type="hidden" name="editMode" class="form-control text-right" value="1">
+                                <input type="hidden" name="type"     value="Sale">
+                                <input type="hidden" name="editMode" value="1">
                                 <label for="invoice_no" class="required">Invoice No</label>
                                 <input type="text" name="invoice_no" class="form-control"
-                                    value="{{ old('invoice_no', $medicineInvoice[0]->invoice_no) ?? '' }}" readonly>
+                                    value="{{ old('invoice_no', $medicineInvoice[0]->invoice_no) }}" readonly>
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label for="date" class="required">Date</label>
                                 <input type="date" name="date" class="form-control"
-                                    value="{{ $medicineInvoice[0]->date ?? '' }}">
+                                    value="{{ $medicineInvoice[0]->date }}">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="ref_no" class="required">Reference No</label>
-                                <input type="text" name="ref_no" class="form-control" placeholder="Reference No"
+                                <label for="ref_no">Reference No</label>
+                                <input type="text" name="ref_no" class="form-control"
                                     value="{{ $medicineInvoice[0]->ref_no ?? '' }}">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="description" class="required">Description</label>
-                                <input type="text" name="description" class="form-control" placeholder="Description"
+                                <label for="description">Description</label>
+                                <input type="text" name="description" class="form-control"
                                     value="{{ $medicineInvoice[0]->description ?? '' }}">
                             </div>
                         </div>
@@ -41,7 +41,8 @@
                                     @foreach ($accounts as $account)
                                         <option value="{{ $account->id }}"
                                             {{ $account->id == $medicineInvoice[0]->account_id ? 'selected' : '' }}>
-                                            {{ $account->name }}</option>
+                                            {{ $account->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -50,26 +51,26 @@
                             <div class="col-md-4 mb-3">
                                 <label for="transport_name">Transport Name</label>
                                 <input type="text" name="transport_name" class="form-control"
-                                    placeholder="Transport Name" value="{{ $medicineInvoice[0]->transport_name ?? '' }}">
+                                    value="{{ $medicineInvoice[0]->transport_name ?? '' }}">
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label for="vehicle_no">Vehicle No</label>
-                                <input type="text" name="vehicle_no" class="form-control" placeholder="Vehicle No"
+                                <input type="text" name="vehicle_no" class="form-control"
                                     value="{{ $medicineInvoice[0]->vehicle_no ?? '' }}">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="driver_name">Driver Name</label>
-                                <input type="text" name="driver_name" class="form-control" placeholder="Driver Name"
+                                <input type="text" name="driver_name" class="form-control"
                                     value="{{ $medicineInvoice[0]->driver_name ?? '' }}">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="contact_no">Contact No</label>
-                                <input type="text" name="contact_no" class="form-control" placeholder="Contact No"
+                                <input type="text" name="contact_no" class="form-control"
                                     value="{{ $medicineInvoice[0]->contact_no ?? '' }}">
                             </div>
                             <div class="col-md-3 mb-4">
                                 <label for="builty_no">Builty No</label>
-                                <input type="text" name="builty_no" class="form-control" placeholder="Builty No"
+                                <input type="text" name="builty_no" class="form-control"
                                     value="{{ $medicineInvoice[0]->builty_no ?? '' }}">
                             </div>
                         </div>
@@ -79,260 +80,256 @@
                         <table class="table table-bordered text-center" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th style="width: 30%;">Item</th>
-                                    <th style="width: 10%;">Quantity</th>
-                                    <th style="width: 12%;">Rate</th>
-                                    <th style="width: auto;">Expiry</th>
-                                    <th style="width: auto;">Dis In (Rs)</th>
-                                    <th style="width: auto;">Dis In (%)</th>
-                                    <th style="width: auto;">Amount</th>
+                                    <th style="width: 25%;">Item</th>
+                                    <th style="width: 8%;">Quantity</th>
+                                    <th style="width: 10%;">Rate</th>
+                                    <th style="width: 8%;">Expiry</th>
+                                    <th style="width: 10%;">Dis (Rs)</th>
+                                    <th style="width: 10%;">Dis (%)</th>
+                                    <th style="width: 10%;">Commission (%)</th>
+                                    <th style="width: 10%;">Net Amount</th>
                                 </tr>
                             </thead>
-                            <tbody id="row">
-                            </tbody>
+                            <tbody id="row"></tbody>
                             <tfoot>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
-                                        <label>Subtotal</label>
-                                    </td>
+                                    <td colspan="7"><label>Subtotal</label></td>
                                     <td>
-                                        <input type="text" name="subtotal" class="form-control text-right"
-                                            value="0" style="text-align: right;" readonly>
+                                        <input type="text" name="subtotal" class="form-control"
+                                               style="text-align:right;" readonly>
                                     </td>
                                     <td>
                                         <button type="button" class="btn-sm btn-info fa fa-plus add-row"
-                                            title="Add Row"></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" style="text-align: right;">
-                                        Discount
-                                    </td>
-                                    <td>
-                                        <input type="text" name="total_discount" class="form-control text-right"
-                                            value="0" style="text-align: right;" readonly>
+                                                title="Add Row"></button>
                                     </td>
                                 </tr>
                                 <tr style="text-align: right;">
-                                    <td colspan="6">
-                                        <label>Net Amount</label>
-                                    </td>
+                                    <td colspan="7">Discount</td>
                                     <td>
-                                        <input type="text" name="net_bill" class="form-control text-right"
-                                            value="0" style="text-align: right;" readonly>
+                                        <input type="text" name="total_discount" class="form-control"
+                                               style="text-align:right;" readonly>
                                     </td>
+                                    <td></td>
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="7">Commission</td>
+                                    <td>
+                                        <input type="text" name="total_commission" class="form-control"
+                                               style="text-align:right;" readonly>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="7"><label>Net Amount</label></td>
+                                    <td>
+                                        <input type="text" name="net_bill" class="form-control"
+                                               style="text-align:right;" readonly>
+                                    </td>
+                                    <td></td>
                                 </tr>
                             </tfoot>
                         </table>
-                        <button type="submit" id="saveButton" class="btn btn-primary mt-2">Save</button>
+                        <button type="submit" id="saveButton" class="btn btn-primary mt-2">Update</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 @endsection
+
 @section('page-scripts')
-    <script type="text/javascript">
-        let medicineInvoiceItems = {!! json_encode($medicineInvoice) !!};
+<script>
+    {{--
+        $products here is the stock-info collection (objects with item_id, quantity,
+        last_sale_price, last_purchase_price, expiry_date, name).
+        The option value must be item_id (real items.id) so it matches item.item_id
+        from the saved invoice rows.
+    --}}
+    let stockData  = {!! json_encode(collect($products)->values()->toArray()) !!};
+    let savedItems = {!! json_encode($medicineInvoice->toArray()) !!};
 
-        $(document).ready(function() {
+    $(document).ready(function () {
 
-            // Initial Select2 initialization for existing rows
-            $('select.product_val').select2({
-                width: '100%',
+        savedItems.forEach(item => addRow(item, true));
+        $(".add-row").click(function () { addRow({}, false); });
+
+        /**
+         * @param {Object}  item       – saved invoice row or {}
+         * @param {boolean} isPopulate – true = restoring saved data
+         */
+        function addRow(item, isPopulate) {
+            item       = item       || {};
+            isPopulate = isPopulate !== undefined ? isPopulate : false;
+
+            // Build options — value is item_id (real items.id) so matching works
+            let opts = stockData.map(p => {
+                let label = p.name + (p.expiry_date ? ' – ' + p.expiry_date : '')
+                          + ' [Stock: ' + p.quantity + ']';
+                return `<option value="${p.item_id}"
+                            data-price="${p.last_sale_price || p.sale_price || 0}"
+                            data-purchase_price="${p.last_purchase_price || p.purchase_price || 0}"
+                            data-qty="${p.quantity}"
+                            data-expiry_date="${p.expiry_date || ''}">
+                            ${label}
+                         </option>`;
+            }).join('');
+
+            let row = `
+            <tr class="rows">
+                <td>
+                    <select class="form-control product_val" name="id[]" required>
+                        <option value="">Select Item</option>${opts}
+                    </select>
+                    <input type="hidden" name="item_id[]" class="item_id"
+                           value="${item.item_id || ''}">
+                </td>
+                <td>
+                    <input type="number" name="quantity[]" class="form-control quantity"
+                           min="1" value="${item.quantity ? Math.abs(item.quantity) : 1}"
+                           step="any" required>
+                </td>
+                <td>
+                    <input type="hidden" name="purchase_price[]" class="purchaseRate"
+                           value="${item.purchase_price || 0}">
+                    <input type="number" name="sale_price[]" class="form-control saleRate"
+                           value="${item.sale_price || 0}" step="any" required>
+                </td>
+                <td>
+                    <input type="text" name="expiry_date[]" class="form-control expiry_date"
+                           value="${item.expiry_date || ''}" readonly>
+                </td>
+                <input type="hidden" name="amount[]" class="amount"
+                       value="${item.amount || 0}">
+                <td>
+                    <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs"
+                           value="${item.discount_in_rs || 0}" step="any">
+                    <small class="text-muted dis_amount_label">Rs 0.00</small>
+                </td>
+                <td>
+                    <input type="number" name="discount_in_percent[]"
+                           class="form-control dis_in_percentage"
+                           min="0" max="100" value="${item.discount_in_percent || 0}" step="any">
+                </td>
+                <td>
+                    <input type="number" name="commission_percent[]"
+                           class="form-control commission_percent"
+                           min="0" max="100" value="${item.commission_percent || 0}" step="any">
+                    <small class="text-muted commission_label">Rs 0.00</small>
+                </td>
+                <td>
+                    <input type="text" name="net_amount[]" class="form-control net_amount"
+                           value="${item.net_amount || 0}" readonly required>
+                </td>
+                <td>
+                    <button type="button" class="btn-sm btn-danger fa fa-trash delete_row"
+                            title="Remove Row"></button>
+                </td>
+            </tr>`;
+
+            $('#row').append(row);
+
+            let $sel = $('#row .product_val:last').select2({ width: '100%' });
+
+            if (isPopulate && item.item_id) {
+                // Set value without triggering the price-update handler
+                $sel.val(item.item_id).trigger('change.select2');
+            }
+
+            // Wire live-update handler AFTER initial value is set
+            $sel.on('change', function () {
+                let $opt = $(this).find('option:selected');
+                let $row = $(this).closest('tr');
+                $row.find('.saleRate').val($opt.data('price'));
+                $row.find('.purchaseRate').val($opt.data('purchase_price'));
+                $row.find('.expiry_date').val($opt.data('expiry_date'));
+                $row.find('.quantity').attr('max', $opt.data('qty'))
+                                      .attr('title', 'Available stock: ' + $opt.data('qty'));
+                $row.find('.item_id').val($opt.val());
+                Calculation();
             });
 
-            // Function to populate data (if needed)
-            populateData(medicineInvoiceItems);
+            $(".dis_in_rs").last().on('input', function () { Calculation(true); });
+        }
 
-            // Event listener for adding a new row
-            $(".add-row").click(addRow);
-
-            // Function to add a new row
-            function addRow(item = {}) {
-                let row = `
-        <tr class="rows">
-            <td class="product_col">
-                @if ($products)
-                <select class="form-control product product_val" name="id[]" required>
-                    <option value="">Select Items</option>
-                    @foreach ($products as $product)
-                        @php
-                            $qty = $product->quantity;
-                            $expiry_date = $product->expiry_date;
-                        @endphp    
-                        <option value="{{ $product->id }}" 
-                                data-price="{{ $product->last_sale_price }}" 
-                                data-purchase_price="{{ $product->average_price }}" 
-                                data-qty="{{ $qty }}" 
-                                data-expiry_date="{{ $expiry_date }}" 
-                                data-item_id="{{ $product->item_id }}"
-                                @if ($product->expiry_date) ${item.item_id == {{ $product->item_id }} && item.expiry_date == '{{ $product->expiry_date }}' ? 'selected' : ''}
-                                @else
-                                    ${item.item_id == '{{ $product->item_id }}' ? 'selected' : '' } @endif>
-                            {{ $product->name . ($product->expiry_date ? ' - ' . $product->expiry_date : '') }}
-                        </option>
-                    @endforeach
-                </select>
-                @endif
-                <input type="hidden" name="item_id[]" class="item_id" value="${item.item_id || ''}">
-            </td>
-            <td class="quantity_col">
-                <input type="number" name="quantity[]" class="form-control quantity text-right" min="1" value="${Math.abs(item.quantity) || 1}" step="any" style="text-align: right;" required>
-            </td>
-            <input type="hidden" name="purchase_price[]" class="form-control purchaseRate text-right" value="${item.purchase_price || 1}" step="any" style="text-align: right;">
-            <td class="sale_rate_col">
-                <input type="number" name="sale_price[]" class="form-control saleRate text-right" value="${item.sale_price || 1}" step="any" style="text-align: right;" required>
-            </td>
-            <td class="expiry_date">
-                <input type="text" name="expiry_date[]" class="form-control expiry_date text-right" readonly value="${item.expiry_date || ''}">
-            </td>
-            <input type="hidden" name="amount[]" class="form-control amount text-right" step="any" style="text-align: right;" value="${item.amount || 0}">
-            <td class="dis_in_rs_col">
-                <input type="number" name="discount_in_rs[]" class="form-control dis_in_rs text-right" value="${item.discount_in_rs || 0}" step="any" style="text-align: right;">
-            </td>
-            <td class="dis_in_percentage_col">
-                <input type="number" name="discount_in_percent[]" class="form-control dis_in_percentage text-right" min="0" max="100" value="${item.discount_in_percent || 0}" step="any" style="text-align: right;">
-            </td>
-            <td class="net_amount_col">
-                <input type="text" name="net_amount[]" class="form-control net_amount text-right" value="${item.net_amount || 0}" step="any" style="text-align: right;" readonly required>
-            </td>
-            <td>
-                <button type="button" class="btn-sm btn-danger fa fa-trash delete_row" title="Remove Row"></button>
-            </td>
-        </tr>
-        `;
-                // Append the new row to the table
-                $("#row").append(row);
-
-                // Apply Select2 to only the newly added select element
-                $("#row .product_val:last").select2({
-                    width: '100%',
-                });
-
-                // Attach event handlers to the newly added row's elements
-                $("#row .product_val:last").change(function() {
-                    updatePriceQty($(this));
-                });
-
-                $("#row .dis_in_rs:last").on('input', function() {
-                    Calculation(true);
-                });
+        // ── Form submit ───────────────────────────────────────────────────────
+        $('#formData').submit(function (e) {
+            e.preventDefault();
+            if ($('#row').children().length === 0) {
+                toastr.warning('Please add at least one item.');
+                return;
             }
+            $('#saveButton').attr('disabled', true);
+            $.ajax({
+                url: "{{ route('admin.medicine-invoices.store') }}",
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function () {
+                    Swal.fire({ icon: 'success', title: 'Success', text: 'Invoice updated successfully!' })
+                        .then(() => { setTimeout(() => window.location.reload(), 500); });
+                },
+                error: function (xhr) {
+                    let errors = xhr.responseJSON ? xhr.responseJSON.errors : null;
+                    if (errors) { $.each(errors, function (k, v) { toastr.error(v[0]); }); }
+                    else { toastr.error(xhr.responseJSON ? xhr.responseJSON.error : 'Server error.'); }
+                    $('#saveButton').attr('disabled', false);
+                }
+            });
+        });
 
+        // ── Row deletion ──────────────────────────────────────────────────────
+        $('body').on('click', '.delete_row', function () {
+            $(this).closest('tr').remove();
+            Calculation();
+        });
 
+        // ── Debounced live recalc ─────────────────────────────────────────────
+        function debounce(fn, d) { let t; return function () { clearTimeout(t); t = setTimeout(fn, d); }; }
+        let dCalc = debounce(() => Calculation(), 300);
+        $('body').on('input', '.quantity,.saleRate,.dis_in_percentage,.commission_percent', dCalc);
+        $('body').on('blur',  '.quantity,.saleRate,.dis_in_percentage,.commission_percent',
+                     function () { Calculation(); });
 
-            function populateData(items) {
-                items.forEach(item => {
-                    addRow(item);
-                });
-                Calculation();
-            }
+        // ── Totals ────────────────────────────────────────────────────────────
+        function Calculation(isManualUpdate) {
+            let subtotal = 0, totalDiscount = 0, totalCommission = 0, netbill = 0;
 
+            $('tr.rows').each(function () {
+                let $row     = $(this);
+                let qty      = parseFloat($row.find('.quantity').val())          || 0;
+                let rate     = parseFloat($row.find('.saleRate').val())           || 0;
+                let amount   = qty * rate;
+                let disPct   = parseFloat($row.find('.dis_in_percentage').val()) || 0;
 
-            // Update price, quantity, and expiry date based on the selected product
-            function updatePriceQty($selectElement) {
-                let salePrice = $selectElement.find('option:selected').data('price');
-                let qty = $selectElement.find('option:selected').data('qty');
-                let expirydate = $selectElement.find('option:selected').data('expiry_date');
-                let purchasePrice = $selectElement.find('option:selected').data('purchase_price');
-                let itemID = $selectElement.find('option:selected').data('item_id');
-                $selectElement.closest('tr').find('.saleRate').val(salePrice);
-                $selectElement.closest('tr').find('.purchaseRate').val(purchasePrice);
-                $selectElement.closest('tr').find('.expiry_date').val(expirydate);
-                $selectElement.closest('tr').find('.quantity').attr('max', qty);
-                $selectElement.closest('tr').find('.quantity').attr('title', 'Available stock :' + qty);
-                $selectElement.closest('tr').find('.saleRate').attr('title', 'Cost Price: ' +
-                    purchasePrice);
-                $selectElement.closest('tr').find('.item_id').val(itemID);
-                Calculation();
-            }
-
-            // Form submission
-            $("#formData").submit(function(e) {
-                e.preventDefault();
-
-                if ($("#row").children().length === 0) {
-                    toastr.warning('Please add at least one item.');
-                    return;
+                if (!isManualUpdate) {
+                    $row.find('.dis_in_rs').val((amount * disPct / 100).toFixed(2));
+                } else {
+                    let disAmt = parseFloat($row.find('.dis_in_rs').val()) || 0;
+                    $row.find('.dis_in_percentage')
+                        .val(amount > 0 ? (disAmt / amount * 100).toFixed(2) : 0);
                 }
 
-                let formData = $(this).serialize();
-                $("#saveButton").attr("disabled", true);
+                let disRs     = parseFloat($row.find('.dis_in_rs').val())          || 0;
+                let afterDis  = amount - disRs;
+                let commPct   = parseFloat($row.find('.commission_percent').val()) || 0;
+                let commAmt   = afterDis * commPct / 100;
+                let final     = afterDis + commAmt;
 
-                $.ajax({
-                    url: "{{ route('admin.medicine-invoices.store') }}",
-                    method: "POST",
-                    data: formData,
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Invoice saved successfully!',
-                        }).then(() => {
-                            setTimeout(function() {
-                                window.location.reload();
-                            }, 500);
-                        });
-                    },
-                    error: function(response) {
-                        let errors = response.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            toastr.error(value[0]);
-                        });
+                $row.find('.dis_amount_label').text('Rs ' + disRs.toFixed(2));
+                $row.find('.commission_label').text('Rs ' + commAmt.toFixed(2));
+                $row.find('.amount').val(amount.toFixed(2));
+                $row.find('.net_amount').val(final.toFixed(2));
 
-                        $("#saveButton").attr("disabled", false);
-                    }
-                });
+                subtotal         += amount;
+                totalDiscount    += disRs;
+                totalCommission  += commAmt;
+                netbill          += final;
             });
 
-            // Delete row
-            $("body").on("click", ".delete_row", function() {
-                $(this).parents("tr").remove();
-                Calculation();
-            });
-
-            // Event handler for input changes
-            $("body").on("input keyup blur", ".quantity, .saleRate, .dis_in_percentage", function() {
-                Calculation();
-            });
-
-            // Calculation function
-            function Calculation(isManualUpdate = false) {
-                let subtotal = 0;
-                let totalDiscount = 0;
-                let netbill = 0;
-
-                $("tr.rows").each(function() {
-                    let $row = $(this);
-                    let qty = parseFloat($row.find(".quantity").val()) || 0;
-                    let rate = parseFloat($row.find(".saleRate").val()) || 0;
-                    let amount = qty * rate;
-                    let disInPercentage = parseFloat($row.find(".dis_in_percentage").val()) ||
-                        0;
-
-                    if (!isManualUpdate) {
-                        let discountAmount = amount * disInPercentage / 100;
-                        $row.find(".dis_in_rs").val(discountAmount.toFixed(2));
-                    } else {
-                        let discountAmount = parseFloat($row.find(".dis_in_rs").val()) || 0;
-                        let discountPercentage = (discountAmount / amount) * 100;
-                        $row.find(".dis_in_percentage").val(discountPercentage.toFixed(2));
-                    }
-
-                    let finalAmount = amount - parseFloat($row.find(".dis_in_rs").val()) || 0;
-                    $row.find(".amount").val(amount.toFixed(2));
-                    $row.find(".net_amount").val(finalAmount.toFixed(2));
-
-                    subtotal += amount;
-                    totalDiscount += parseFloat($row.find(".dis_in_rs").val()) || 0;
-                    netbill += finalAmount;
-                });
-
-                $("input[name='subtotal']").val(subtotal.toFixed(2));
-                $("input[name='total_discount']").val(totalDiscount.toFixed(2));
-                $("input[name='net_bill']").val(netbill.toFixed(2));
-            }
-        });
-    </script>
+            $("input[name='subtotal']").val(subtotal.toFixed(2));
+            $("input[name='total_discount']").val(totalDiscount.toFixed(2));
+            $("input[name='total_commission']").val(totalCommission.toFixed(2));
+            $("input[name='net_bill']").val(netbill.toFixed(2));
+        }
+    });
+</script>
 @endsection

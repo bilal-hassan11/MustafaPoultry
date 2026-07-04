@@ -252,6 +252,22 @@ Route::middleware(['auth:admin', 'single.session'])->name('admin.')->group(funct
         Route::post('/adjust-stock', 'storeAdjsutment')->name('store_adjustment');
         Route::post('/store-sale', 'storeSale')->name('store-sale');
         Route::post('/return', 'singleReturn')->name('single-return');
+
+        // Purchase Medicine Return CRUD — static before wildcard
+        Route::get('/purchase-return', 'purchaseReturnIndex')->name('purchase_return.index');
+        Route::get('/purchase-return/create', 'purchaseReturnCreate')->name('purchase_return.create');
+        Route::post('/purchase-return/store', 'purchaseReturnStore')->name('purchase_return.store');
+        Route::get('/purchase-return/edit/{invoice_no}', 'purchaseReturnEdit')->name('purchase_return.edit');
+        Route::get('/purchase-return/delete/{invoice_no}', 'purchaseReturnDelete')->name('purchase_return.delete');
+        Route::get('/purchase-return/{invoice_no}', 'purchaseReturnShow')->name('purchase_return.show');
+
+        // Sale Medicine Return CRUD — static before wildcard
+        Route::get('/sale-return', 'saleReturnIndex')->name('sale_return.index');
+        Route::get('/sale-return/create', 'saleReturnCreate')->name('sale_return.create');
+        Route::post('/sale-return/store', 'saleReturnStore')->name('sale_return.store');
+        Route::get('/sale-return/edit/{invoice_no}', 'saleReturnEdit')->name('sale_return.edit');
+        Route::get('/sale-return/delete/{invoice_no}', 'saleReturnDelete')->name('sale_return.delete');
+        Route::get('/sale-return/{invoice_no}', 'saleReturnShow')->name('sale_return.show');
     });
 
     Route::controller(StockController::class)->prefix('stock')->name('stock.')->group(function () {

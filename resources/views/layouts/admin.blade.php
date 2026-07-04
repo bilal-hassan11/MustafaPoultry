@@ -722,7 +722,7 @@
                                 <!-- Medicine -->
                                 @if(auth()->user()->user_type == 'admin' || auth()->user()->can('Medicine Invoices Access'))
                                 <li class="slide">
-                                    <a class="side-menu__item {{ request()->is('web_admin/medicine-invoices/purchase') || request()->is('web_admin/medicine-invoices/sale') ? 'active' : '' }}"
+                                    <a class="side-menu__item {{ request()->is('web_admin/medicine-invoices/purchase') || request()->is('web_admin/medicine-invoices/sale') || request()->is('web_admin/medicine-invoices/purchase-return*') || request()->is('web_admin/medicine-invoices/sale-return*') ? 'active' : '' }}"
                                         data-bs-toggle="slide" href="javascript:void(0);"><i class="fa fa-medkit"
                                             aria-hidden="true"></i> &nbsp&nbsp&nbsp<span
                                             class="side-menu__label">Medicine</span><i
@@ -735,7 +735,12 @@
                                         <li><a href="{{ route('admin.medicine-invoices.sale') }}"
                                                 class="slide-item {{ request()->is('web_admin/medicine-invoices/sale') ? 'active open' : '' }}">
                                                 Sale Medicine</a></li>
-
+                                        <li><a href="{{ route('admin.medicine-invoices.purchase_return.index') }}"
+                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/purchase-return*') ? 'active open' : '' }}">
+                                                Purchase Medicine Return</a></li>
+                                        <li><a href="{{ route('admin.medicine-invoices.sale_return.index') }}"
+                                                class="slide-item {{ request()->is('web_admin/medicine-invoices/sale-return*') ? 'active open' : '' }}">
+                                                Sale Medicine Return</a></li>
 
                                     </ul>
                                 </li>

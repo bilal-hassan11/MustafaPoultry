@@ -160,7 +160,7 @@
                 $("#row").append(row);
                 $('select.product_val').last().select2({
                     width: '100%',
-                }).val(item.item_id).trigger('change');
+                }).val(item.item_id).trigger('change.select2');
 
                 $(".product_val").last().change(function() {
                     updatePurchasePrice($(this));

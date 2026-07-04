@@ -510,6 +510,504 @@ class MedicineInvoiceController extends Controller
         }
     }
 
+    // =========================================================================
+    // PURCHASE MEDICINE RETURN — CRUD
+    // =========================================================================
+
+    /**
+     * List all Purchase Medicine Return invoices with filters.
+     */
+    public function purchaseReturnIndex(Request $req)
+    {
+        $title    = "Purchase Medicine Return";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = Item::where('category_id', 4)->get();
+
+        $returns = MedicineInvoice::with('account', 'item')
+            ->where('type', 'Purchase Return')
+            ->when($req->filled('account_id'), fn($q) => $q->where('account_id', hashids_decode($req->account_id)))
+            ->when($req->filled('invoice_no'),  fn($q) => $q->where('invoice_no', $req->invoice_no))
+            ->when($req->filled('item_id'),     fn($q) => $q->where('item_id', hashids_decode($req->item_id)))
+            ->when($req->filled('from_date') && $req->filled('to_date'),
+                   fn($q) => $q->whereBetween('date', [$req->from_date, $req->to_date]))
+            ->latest()
+            ->get();
+
+        return view('admin.medicine.purchase_medicine_return',
+                    compact('title', 'accounts', 'products', 'returns'));
+    }
+
+    /**
+     * Show the create form for Purchase Medicine Return.
+     */
+    public function purchaseReturnCreate()
+    {
+        $title      = "Create Purchase Medicine Return";
+        $invoice_no = generateUniqueID(new MedicineInvoice, 'Purchase Return', 'invoice_no');
+        $accounts   = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+
+        // Only show items with positive stock — Purchase Return removes stock
+        $stockInfo = $this->medicineInvoice->getStockInfo();
+        $products  = $stockInfo->filter(fn($p) => $p->category_id == 4 && $p->quantity > 0)->values();
+
+        return view('admin.medicine.create_purchase_medicine_return',
+                    compact('title', 'invoice_no', 'accounts', 'products'));
+    }
+
+    /**
+     * Edit an existing Purchase Medicine Return invoice.
+     */
+    public function purchaseReturnEdit($invoice_no)
+    {
+        $title    = "Edit Purchase Medicine Return";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+
+        // Fresh instance so we don't mutate the shared $this->medicineInvoice
+        $stockInfo = (new MedicineInvoice)->ignore($invoice_no)->getStockInfo();
+        $products  = $stockInfo->filter(fn($p) => $p->category_id == 4)->values();
+
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Purchase Return')
+            ->with('account', 'item')
+            ->get();
+
+        if ($medicineInvoice->isEmpty()) {
+            abort(404, 'Purchase Medicine Return invoice not found');
+        }
+
+        return view('admin.medicine.edit_purchase_medicine_return',
+                    compact('title', 'accounts', 'products', 'medicineInvoice'));
+    }
+
+    /**
+     * Show detail page for a Purchase Medicine Return invoice.
+     */
+    public function purchaseReturnShow($invoice_no)
+    {
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Purchase Return')
+            ->with('account', 'item')
+            ->get();
+
+        if ($medicineInvoice->isEmpty()) {
+            abort(404, 'Purchase Medicine Return invoice not found');
+        }
+
+        $type             = 'Purchase Return';
+        $previous_balance = $medicineInvoice[0]->account->getBalance($medicineInvoice[0]->date);
+
+        if (request()->has('generate_pdf')) {
+            $html = view('admin.medicine.invoice_pdf',
+                         compact('medicineInvoice', 'type', 'previous_balance'))->render();
+            $mpdf = new Mpdf(['format' => 'A4-P', 'margin_top' => 10,
+                              'margin_bottom' => 2, 'margin_left' => 2, 'margin_right' => 2]);
+            $mpdf->SetAutoPageBreak(true, 15);
+            $mpdf->SetHTMLFooter('<div style="text-align:right;">Page {PAGENO} of {nbpg}</div>');
+            return generatePDFResponse($html, $mpdf);
+        }
+
+        return view('admin.medicine.show_medicine_return',
+                    compact('medicineInvoice', 'type', 'previous_balance'));
+    }
+
+    /**
+     * Store (create or update) a Purchase Medicine Return invoice.
+     * Purchase Return → stock_type Out, quantity negative, total_cost negative.
+     * Ledger: debit = netAmount (reduces supplier payable).
+     */
+    public function purchaseReturnStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'invoice_no'            => 'required',
+            'date'                  => 'required|date',
+            'account'               => 'required|exists:accounts,id',
+            'ref_no'                => 'nullable|string|max:255',
+            'description'           => 'nullable|string',
+            'item_id.*'             => 'required|exists:items,id',
+            'purchase_price.*'      => 'required|numeric|min:0',
+            'sale_price.*'          => 'required|numeric|min:0',
+            'quantity.*'            => 'required|numeric|min:0.01',
+            'amount.*'              => 'required|numeric|min:0',
+            'discount_in_rs.*'      => 'nullable|numeric|min:0',
+            'discount_in_percent.*' => 'nullable|numeric|min:0|max:100',
+            'expiry_date.*'         => 'nullable|date',
+            'transport_name'        => 'nullable|string|max:255',
+            'vehicle_no'            => 'nullable|string|max:255',
+            'driver_name'           => 'nullable|string|max:255',
+            'contact_no'            => 'nullable|string|max:255',
+            'builty_no'             => 'nullable|string|max:255',
+        ]);
+
+        // Stock validation — Purchase Return reduces stock
+        $ignoredInvoiceNo = $request->has('editMode') ? $request->invoice_no : null;
+        $stockErrors = $this->validatePurchaseReturnStock($validatedData, $ignoredInvoiceNo);
+        if (!empty($stockErrors)) {
+            return response()->json(['errors' => $stockErrors], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            if ($request->has('editMode')) {
+                $invoiceNumber    = $request->invoice_no;
+                $existing         = MedicineInvoice::where('invoice_no', $invoiceNumber)
+                    ->where('type', 'Purchase Return')->get();
+                $existingIds      = $existing->pluck('id');
+                MedicineInvoice::whereIn('id', $existingIds)->delete();
+                AccountLedger::whereIn('medicine_invoice_id', $existingIds)
+                    ->where('type', 'Purchase Return')->delete();
+            } else {
+                $invoiceNumber = generateUniqueID(new MedicineInvoice, 'Purchase Return', 'invoice_no');
+            }
+
+            foreach ($validatedData['item_id'] as $index => $itemId) {
+                $qty       = $validatedData['quantity'][$index];
+                $price     = $validatedData['purchase_price'][$index];
+                $discount  = $validatedData['discount_in_rs'][$index] ?? 0;
+                $amount    = $price * $qty;
+                $netAmount = $amount - $discount;
+
+                $inv = MedicineInvoice::create([
+                    'date'               => $validatedData['date'],
+                    'account_id'         => $validatedData['account'],
+                    'ref_no'             => $validatedData['ref_no'] ?? null,
+                    'description'        => $validatedData['description'] ?? null,
+                    'invoice_no'         => $invoiceNumber,
+                    'type'               => 'Purchase Return',
+                    'stock_type'         => 'Out',
+                    'item_id'            => $itemId,
+                    'purchase_price'     => $price,
+                    'sale_price'         => $validatedData['sale_price'][$index],
+                    'quantity'           => -$qty,
+                    'amount'             => $amount,
+                    'discount_in_rs'     => $discount,
+                    'discount_in_percent'=> $validatedData['discount_in_percent'][$index] ?? 0,
+                    'commission_percent' => 0,
+                    'commission_amount'  => 0,
+                    'total_cost'         => -$netAmount,
+                    'net_amount'         => $netAmount,
+                    'expiry_date'        => $validatedData['expiry_date'][$index] ?? null,
+                    'whatsapp_status'    => 'Not Sent',
+                    'transport_name'     => $validatedData['transport_name'] ?? null,
+                    'vehicle_no'         => $validatedData['vehicle_no'] ?? null,
+                    'driver_name'        => $validatedData['driver_name'] ?? null,
+                    'contact_no'         => $validatedData['contact_no'] ?? null,
+                    'builty_no'          => $validatedData['builty_no'] ?? null,
+                ]);
+
+                $item = Item::find($itemId);
+                AccountLedger::create([
+                    'medicine_invoice_id' => $inv->id,
+                    'type'                => 'Purchase Return',
+                    'date'                => $validatedData['date'],
+                    'account_id'          => $validatedData['account'],
+                    'description'         => 'Purchase Return #: ' . $invoiceNumber
+                                            . ', Item: ' . $item->name
+                                            . ', Qty: ' . $qty . ', Rate: ' . $price,
+                    'debit'               => $netAmount,
+                    'credit'              => 0,
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['success' => true], 201);
+        } catch (\Exception $e) {
+            info($e);
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Soft-delete a Purchase Medicine Return invoice and its ledger entries.
+     */
+    public function purchaseReturnDelete($invoice_no)
+    {
+        $invoices = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Purchase Return')->get();
+
+        if ($invoices->isEmpty()) {
+            abort(404, 'Purchase Medicine Return invoice not found');
+        }
+
+        DB::beginTransaction();
+        try {
+            $ids = $invoices->pluck('id');
+            MedicineInvoice::whereIn('id', $ids)->delete();
+            AccountLedger::whereIn('medicine_invoice_id', $ids)
+                ->where('type', 'Purchase Return')->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Delete failed: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.medicine-invoices.purchase_return.index')
+            ->with('success', 'Purchase Medicine Return deleted successfully.');
+    }
+
+    /**
+     * Validate that available stock covers the requested return quantity.
+     */
+    private function validatePurchaseReturnStock(array $validatedData, ?string $ignoredInvoiceNo = null): array
+    {
+        $model     = $ignoredInvoiceNo
+            ? (new MedicineInvoice)->ignore($ignoredInvoiceNo)
+            : $this->medicineInvoice;
+        $stockInfo = $model->getStockInfo();
+        $errors    = [];
+        $requested = [];
+
+        foreach ($validatedData['item_id'] as $index => $itemId) {
+            $requested[$itemId] = ($requested[$itemId] ?? 0) + $validatedData['quantity'][$index];
+        }
+
+        foreach ($requested as $itemId => $requestedQty) {
+            $available = $stockInfo->filter(fn($p) => $p->item_id == $itemId)->sum('quantity');
+            if ($available < $requestedQty) {
+                $item = Item::find($itemId);
+                $name = $item ? $item->name : "Item #{$itemId}";
+                $errors["item_id.{$itemId}"] = [
+                    "Insufficient stock for \"{$name}\". Available: {$available}, Requested: {$requestedQty}."
+                ];
+            }
+        }
+
+        return $errors;
+    }
+
+    // =========================================================================
+    // SALE MEDICINE RETURN — CRUD
+    // =========================================================================
+
+    /**
+     * List all Sale Medicine Return invoices with filters.
+     */
+    public function saleReturnIndex(Request $req)
+    {
+        $title    = "Sale Medicine Return";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = Item::where('category_id', 4)->get();
+
+        $returns = MedicineInvoice::with('account', 'item')
+            ->where('type', 'Sale Return')
+            ->when($req->filled('account_id'), fn($q) => $q->where('account_id', hashids_decode($req->account_id)))
+            ->when($req->filled('invoice_no'),  fn($q) => $q->where('invoice_no', $req->invoice_no))
+            ->when($req->filled('item_id'),     fn($q) => $q->where('item_id', hashids_decode($req->item_id)))
+            ->when($req->filled('from_date') && $req->filled('to_date'),
+                   fn($q) => $q->whereBetween('date', [$req->from_date, $req->to_date]))
+            ->latest()
+            ->get();
+
+        return view('admin.medicine.sale_medicine_return',
+                    compact('title', 'accounts', 'products', 'returns'));
+    }
+
+    /**
+     * Show the create form for Sale Medicine Return.
+     */
+    public function saleReturnCreate()
+    {
+        $title      = "Create Sale Medicine Return";
+        $invoice_no = generateUniqueID(new MedicineInvoice, 'Sale Return', 'invoice_no');
+        $accounts   = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        // Sale Return adds stock — no stock check needed, use all items
+        $products   = Item::where('category_id', 4)->get();
+
+        return view('admin.medicine.create_sale_medicine_return',
+                    compact('title', 'invoice_no', 'accounts', 'products'));
+    }
+
+    /**
+     * Edit an existing Sale Medicine Return invoice.
+     */
+    public function saleReturnEdit($invoice_no)
+    {
+        $title    = "Edit Sale Medicine Return";
+        $accounts = Account::with(['grand_parent', 'parent'])->latest()->orderBy('name')->get();
+        $products = Item::where('category_id', 4)->get();
+
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Sale Return')
+            ->with('account', 'item')
+            ->get();
+
+        if ($medicineInvoice->isEmpty()) {
+            abort(404, 'Sale Medicine Return invoice not found');
+        }
+
+        return view('admin.medicine.edit_sale_medicine_return',
+                    compact('title', 'accounts', 'products', 'medicineInvoice'));
+    }
+
+    /**
+     * Show detail page for a Sale Medicine Return invoice.
+     */
+    public function saleReturnShow($invoice_no)
+    {
+        $medicineInvoice = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Sale Return')
+            ->with('account', 'item')
+            ->get();
+
+        if ($medicineInvoice->isEmpty()) {
+            abort(404, 'Sale Medicine Return invoice not found');
+        }
+
+        $type             = 'Sale Return';
+        $previous_balance = $medicineInvoice[0]->account->getBalance($medicineInvoice[0]->date);
+
+        if (request()->has('generate_pdf')) {
+            $html = view('admin.medicine.invoice_pdf',
+                         compact('medicineInvoice', 'type', 'previous_balance'))->render();
+            $mpdf = new Mpdf(['format' => 'A4-P', 'margin_top' => 10,
+                              'margin_bottom' => 2, 'margin_left' => 2, 'margin_right' => 2]);
+            $mpdf->SetAutoPageBreak(true, 15);
+            $mpdf->SetHTMLFooter('<div style="text-align:right;">Page {PAGENO} of {nbpg}</div>');
+            return generatePDFResponse($html, $mpdf);
+        }
+
+        return view('admin.medicine.show_medicine_return',
+                    compact('medicineInvoice', 'type', 'previous_balance'));
+    }
+
+    /**
+     * Store (create or update) a Sale Medicine Return invoice.
+     * Sale Return → stock_type In, quantity positive, total_cost positive.
+     * Ledger: credit = netAmount (reduces customer receivable).
+     * No stock availability check — returning goods always allowed.
+     */
+    public function saleReturnStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'invoice_no'            => 'required',
+            'date'                  => 'required|date',
+            'account'               => 'required|exists:accounts,id',
+            'ref_no'                => 'nullable|string|max:255',
+            'description'           => 'nullable|string',
+            'item_id.*'             => 'required|exists:items,id',
+            'purchase_price.*'      => 'required|numeric|min:0',
+            'sale_price.*'          => 'required|numeric|min:0',
+            'quantity.*'            => 'required|numeric|min:0.01',
+            'amount.*'              => 'required|numeric|min:0',
+            'discount_in_rs.*'      => 'nullable|numeric|min:0',
+            'discount_in_percent.*' => 'nullable|numeric|min:0|max:100',
+            'commission_percent.*'  => 'nullable|numeric|min:0|max:100',
+            'expiry_date.*'         => 'nullable|date',
+            'transport_name'        => 'nullable|string|max:255',
+            'vehicle_no'            => 'nullable|string|max:255',
+            'driver_name'           => 'nullable|string|max:255',
+            'contact_no'            => 'nullable|string|max:255',
+            'builty_no'             => 'nullable|string|max:255',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            if ($request->has('editMode')) {
+                $invoiceNumber = $request->invoice_no;
+                $existing      = MedicineInvoice::where('invoice_no', $invoiceNumber)
+                    ->where('type', 'Sale Return')->get();
+                $existingIds   = $existing->pluck('id');
+                MedicineInvoice::whereIn('id', $existingIds)->delete();
+                AccountLedger::whereIn('medicine_invoice_id', $existingIds)
+                    ->where('type', 'Sale Return')->delete();
+            } else {
+                $invoiceNumber = generateUniqueID(new MedicineInvoice, 'Sale Return', 'invoice_no');
+            }
+
+            foreach ($validatedData['item_id'] as $index => $itemId) {
+                $qty           = $validatedData['quantity'][$index];
+                $salePrice     = $validatedData['sale_price'][$index];
+                $costPrice     = $validatedData['purchase_price'][$index];
+                $discount      = $validatedData['discount_in_rs'][$index] ?? 0;
+                $commPct       = $validatedData['commission_percent'][$index] ?? 0;
+                $amount        = $salePrice * $qty;
+                $afterDiscount = $amount - $discount;
+                $commAmount    = round($afterDiscount * $commPct / 100, 2);
+                $netAmount     = $afterDiscount + $commAmount;
+
+                $inv = MedicineInvoice::create([
+                    'date'               => $validatedData['date'],
+                    'account_id'         => $validatedData['account'],
+                    'ref_no'             => $validatedData['ref_no'] ?? null,
+                    'description'        => $validatedData['description'] ?? null,
+                    'invoice_no'         => $invoiceNumber,
+                    'type'               => 'Sale Return',
+                    'stock_type'         => 'In',
+                    'item_id'            => $itemId,
+                    'purchase_price'     => $costPrice,
+                    'sale_price'         => $salePrice,
+                    'quantity'           => $qty,
+                    'amount'             => $amount,
+                    'discount_in_rs'     => $discount,
+                    'discount_in_percent'=> $validatedData['discount_in_percent'][$index] ?? 0,
+                    'commission_percent' => $commPct,
+                    'commission_amount'  => $commAmount,
+                    'total_cost'         => $qty * $costPrice,
+                    'net_amount'         => $netAmount,
+                    'expiry_date'        => $validatedData['expiry_date'][$index] ?? null,
+                    'whatsapp_status'    => 'Not Sent',
+                    'transport_name'     => $validatedData['transport_name'] ?? null,
+                    'vehicle_no'         => $validatedData['vehicle_no'] ?? null,
+                    'driver_name'        => $validatedData['driver_name'] ?? null,
+                    'contact_no'         => $validatedData['contact_no'] ?? null,
+                    'builty_no'          => $validatedData['builty_no'] ?? null,
+                ]);
+
+                $item = Item::find($itemId);
+                AccountLedger::create([
+                    'medicine_invoice_id' => $inv->id,
+                    'type'                => 'Sale Return',
+                    'date'                => $validatedData['date'],
+                    'account_id'          => $validatedData['account'],
+                    'description'         => 'Sale Return #: ' . $invoiceNumber
+                                            . ', Item: ' . $item->name
+                                            . ', Qty: ' . $qty . ', Rate: ' . $salePrice,
+                    'debit'               => 0,
+                    'credit'              => $netAmount,
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['success' => true], 201);
+        } catch (\Exception $e) {
+            info($e);
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Soft-delete a Sale Medicine Return invoice and its ledger entries.
+     */
+    public function saleReturnDelete($invoice_no)
+    {
+        $invoices = MedicineInvoice::where('invoice_no', $invoice_no)
+            ->where('type', 'Sale Return')->get();
+
+        if ($invoices->isEmpty()) {
+            abort(404, 'Sale Medicine Return invoice not found');
+        }
+
+        DB::beginTransaction();
+        try {
+            $ids = $invoices->pluck('id');
+            MedicineInvoice::whereIn('id', $ids)->delete();
+            AccountLedger::whereIn('medicine_invoice_id', $ids)
+                ->where('type', 'Sale Return')->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Delete failed: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.medicine-invoices.sale_return.index')
+            ->with('success', 'Sale Medicine Return deleted successfully.');
+    }
+
+    // =========================================================================
+    // EXISTING SHOW METHOD
+    // =========================================================================
+
     /**
      * Display the specified resource.
      */
